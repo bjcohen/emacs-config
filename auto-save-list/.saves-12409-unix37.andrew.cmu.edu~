@@ -1,0 +1,16 @@
+/afs/andrew.cmu.edu/usr23/bjcohen/18-349/lab4/kernel/include/task.h
+/tmp/#!afs!andrew.cmu.edu!usr23!bjcohen!18-349!lab4!kernel!include!task.h#
+/afs/andrew.cmu.edu/usr23/bjcohen/18-349/lab4/kernel/sched/ctx_switch.c
+/tmp/#!afs!andrew.cmu.edu!usr23!bjcohen!18-349!lab4!kernel!sched!ctx_switch.c#
+/afs/andrew.cmu.edu/usr23/bjcohen/18-349/lab4/kernel/sched/run_queue.c
+/tmp/#!afs!andrew.cmu.edu!usr23!bjcohen!18-349!lab4!kernel!sched!run_queue.c#
+/afs/andrew.cmu.edu/usr23/bjcohen/18-349/lab4/kernel/sched/sched.c
+/tmp/#!afs!andrew.cmu.edu!usr23!bjcohen!18-349!lab4!kernel!sched!sched.c#
+/afs/andrew.cmu.edu/usr23/bjcohen/18-349/lab4/kernel/sched/ctx_switch_asm.S
+/tmp/#!afs!andrew.cmu.edu!usr23!bjcohen!18-349!lab4!kernel!sched!ctx_switch_asm.S#
+/afs/andrew.cmu.edu/usr23/bjcohen/18-349/lab4/kernel/include/stdarg.h
+/tmp/#!afs!andrew.cmu.edu!usr23!bjcohen!18-349!lab4!kernel!include!stdarg.h#
+/afs/andrew.cmu.edu/usr23/bjcohen/18-349/lab4/kernel/sched/sched_i.h
+/tmp/#!afs!andrew.cmu.edu!usr23!bjcohen!18-349!lab4!kernel!sched!sched_i.h#
+/afs/andrew.cmu.edu/usr23/bjcohen/18-349/lab4/TAGS
+/tmp/#!afs!andrew.cmu.edu!usr23!bjcohen!18-349!lab4!TAGS#
