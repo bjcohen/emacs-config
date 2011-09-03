@@ -1,6 +1,7 @@
-This is TeX, Version 3.141592 (Web2C 7.5.4) (format=tex 2010.11.2)  12 JAN 2011 19:17
+This is TeX, Version 3.1415926 (TeX Live 2010) (format=tex 2011.2.16)  9 MAR 2011 17:54
 **\nonstopmode \input bootstrap.ins
-(./bootstrap.ins (/usr/share/texmf/tex/latex/base/docstrip.tex
+(./bootstrap.ins
+(/usr/local/texlive/2010/texmf-dist/tex/latex/base/docstrip.tex
 \blockLevel=\count26
 \emptyLines=\count27
 \processedLines=\count28
@@ -35,7 +36,7 @@ This is TeX, Version 3.141592 (Web2C 7.5.4) (format=tex 2010.11.2)  12 JAN 2011 
 \@maxfiles=\count54
 \@maxoutfiles=\count55
 
-Utility: `docstrip' 2.5c <2003/09/18>
+Utility: `docstrip' 2.5d <2005/07/29>
 English documentation    <1999/03/31>
 
 **********************************************************

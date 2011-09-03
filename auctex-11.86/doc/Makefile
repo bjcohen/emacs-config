@@ -21,25 +21,25 @@
 # Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-prefix=/afs/andrew.cmu.edu/usr23/bjcohen/.emacs.d/auctex$(null)
+prefix=/usr/local$(null)
 datarootdir=${prefix}/share$(null)
 datadir=${datarootdir}$(null)
 packagedir=no$(null)
 infodir=${datarootdir}/info$(null)
 docdir=${datarootdir}/doc/${PACKAGE_TARNAME}$(null)
-TEX=/usr/bin/tex
-PDFTEX=/usr/bin/pdftex
+TEX=/usr/texbin/tex
+PDFTEX=/usr/texbin/pdftex
 MAKEINFO=/usr/bin/makeinfo
 MAKEINFO_PLAIN=-D rawfile --no-headers
-INSTALL_INFO=/afs/ece/class/ee349/gumstix/opt/bin/install-info
+INSTALL_INFO=/usr/bin/install-info
 INSTALL=/usr/bin/install -c
 INSTALL_DATA=${INSTALL} -m 644
 DESTDIR=
-TEXI2HTML=:
+TEXI2HTML=/usr/bin/texi2html
 TEXI2DVI=/usr/bin/texi2dvi
 TEXI2PDF=/usr/bin/texi2pdf
 MKINSTALLDIRS = ../mkinstalldirs
-DVIPS=/usr/bin/dvips
+DVIPS=/usr/texbin/dvips
 PERL=/usr/bin/perl
 AUCTEXDATE=2010-02-21
 AUCTEXVERSION=11.86

@@ -1,13 +1,8 @@
-;;; XEmacs backwards compatibility file
-(setq user-init-file
-      (expand-file-name "init.el"
-			(expand-file-name ".xemacs" "~")))
-(setq custom-file
-      (expand-file-name "custom.el"
-			(expand-file-name ".xemacs" "~")))
-
 ;(load-file user-init-file)
-(load-file custom-file)
+;(load-file custom-file)
+
+(global-set-key (kbd "C-c C-c") 'comment-region)
+(global-set-key (kbd "C-c C-u") 'uncomment-region)
 
 (setq save-place-file "~/.emacs.d/saveplace")
 (setq-default save-place t)
@@ -17,28 +12,6 @@
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
-
-;(message "Deleting old backup files...")
-;(let ((week (* 60 60 24 7))
-;      (current (float-time (current-time))))
-;  (dolist (file (directory-files temporary-file-directory t))
-;    (when (and (backup-file-name-p file)
-;               (> (- current (float-time ( fifth ( file-attributes file))))
-;                  week))
-;      (message file)
-;      (delete-file file))))
-
-(add-to-list 'load-path "~/doxymacs-1.8.0/lisp/")
-
-(require 'doxymacs)
-
-(add-hook 'c-mode-common-hook 'doxymacs-mode)
-(add-hook 'asm-mode-common-hook 'doxymacs-mode)
-
-(defun my-doxymacs-font-lock-hook ()
-  (if (or (eq major-mode 'c-mode) (eq major-mode 'c++-mode))
-      (doxymacs-font-lock)))
-(add-hook 'font-lock-mode-hook 'my-doxymacs-font-lock-hook)
 
 (add-hook 'c-mode-common-hook
         (lambda ()
@@ -60,20 +33,6 @@
 
 (normal-top-level-add-to-load-path '("~/.emacs.d/elscreen-1.4.6/"))
 (load "elscreen" "ElScreen" t)
-
-; color-theme & Zenburn
-
-(normal-top-level-add-to-load-path '("~/.emacs.d/color-theme-6.6.0/"))
-(require 'color-theme)
-
-(normal-top-level-add-to-load-path '("~/.emacs.d/zenburn-emacs/"))
-(require 'zenburn)
-(zenburn)
-
-; hl-line
-
-; (global-hl-line-mode)
-; (set-face-background 'hl-line "#020")
 
 ; egg
 (normal-top-level-add-to-load-path '("~/.emacs.d/egg/"))
@@ -100,13 +59,24 @@
                 (font-lock-add-keywords nil
                  '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
 
-; lusty-explorer
+;; haskell mode
 
-(when (require 'lusty-explorer nil 'noerror)
+(load "~/.emacs.d/haskellmode-emacs/haskell-site-file.el")
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+;;(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+;;(add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
 
-  ;; overrride the normal file-opening, buffer switching
-  (global-set-key (kbd "C-x C-f") 'lusty-file-explorer)
-  (global-set-key (kbd "C-x b")   'lusty-buffer-explorer))
+(add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
+
+(autoload 'haskell-cabal-mode "haskell-mode" "\
+Major mode for Haskell Files
+
+\(fn)" t nil)
+
+(require 'inf-haskell)
+
+;; More ELScreen stuff
 
 ;; F9 creates a new elscreen, shift-F9 kills it
 (global-set-key (kbd "<f9>"    ) 'elscreen-create)
@@ -116,3 +86,175 @@
 ;; Windowskey+PgUP/PgDown switches between elscreens
 (global-set-key (kbd "<s-prior>") 'elscreen-previous) 
 (global-set-key (kbd "<s-next>")  'elscreen-next) 
+
+;; Compile
+
+(require 'compile)
+
+;; this means hitting the compile button always saves the buffer
+;; having to separately hit C-x C-s is a waste of time
+(setq mode-compile-always-save-buffer-p t)
+;; make the compile window stick at 12 lines tall
+(setq compilation-window-height 12)
+
+;; from enberg on #emacs
+;; if the compilation has a zero exit code, 
+;; the windows disappears after two seconds
+;; otherwise it stays
+(setq compilation-finish-function
+      (lambda (buf str)
+        (unless (string-match "exited abnormally" str)
+          ;;no errors, make the compilation window go away in a few seconds
+          (run-at-time
+           "2 sec" nil 'delete-windows-on
+           (get-buffer-create "*compilation*"))
+          (message "No Compilation Errors!"))))
+
+
+;; one-button testing, tada!
+(global-set-key [f5] 'compile)
+
+;; AucTex
+
+(add-to-list 'load-path "~/.emacs.d/auctex-11.86")
+(add-to-list 'load-path "~/.emacs.d/auctex-11.86/preview")
+
+(load "auctex.el" nil t t)
+(load "preview-latex.el" nil t t)
+
+;; TODO Highlghting
+
+(add-hook 'c-mode-common-hook
+	  (lambda ()
+	    (font-lock-add-keywords nil
+				    '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
+
+;; etags-select
+
+;;load the etags-select.el source code
+(load-file "etags-select.el")
+;;binding the key
+(global-set-key "\M-?" 'etags-select-find-tag-at-point)
+(global-set-key "\M-." 'etags-select-find-tag)
+
+(defun jds-find-tags-file ()
+  "recursively searches each parent directory for a file named 'TAGS' and returns the
+path to that file or nil if a tags file is not found. Returns nil if the buffer is
+not visiting a file"
+  (progn
+      (defun find-tags-file-r (path)
+         "find the tags file from the parent directories"
+         (let* ((parent (file-name-directory path))
+                (possible-tags-file (concat parent "TAGS")))
+           (cond
+             ((file-exists-p possible-tags-file) (throw 'found-it possible-tags-file))
+             ((string= "/TAGS" possible-tags-file) (error "no tags file found"))
+             (t (find-tags-file-r (directory-file-name parent))))))
+
+    (if (buffer-file-name)
+        (catch 'found-it 
+          (find-tags-file-r (buffer-file-name)))
+        (error "buffer is not visiting a file"))))
+
+(defun jds-set-tags-file-path ()
+  "calls `jds-find-tags-file' to recursively search up the directory tree to find
+a file named 'TAGS'. If found, set 'tags-table-list' with that path as an argument
+otherwise raises an error."
+  (interactive)
+  (setq tags-table-list (cons (jds-find-tags-file) tags-table-list)))
+
+;; delay search the TAGS file after open the source file
+(add-hook 'emacs-startup-hook 
+	'(lambda () (jds-set-tags-file-path)))
+
+(global-set-key (kbd "M-RET") 'ns-toggle-fullscreen)
+
+;; sml-mode
+
+(add-to-list 'load-path "~/.emacs.d/sml-mode-4.1/")
+(load-file "~/.emacs.d/sml-mode-4.1/sml-mode-startup.el")
+
+;; thrift-mode
+
+(let ((default-directory "~/.emacs.d/"))
+  (normal-top-level-add-subdirs-to-load-path))
+
+(require 'thrift-mode)
+
+;; hilight matching parens
+
+(show-paren-mode)
+
+(require 'ido)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ido-default-buffer-method (quote maybe-frame))
+ '(ido-default-file-method (quote maybe-frame))
+ '(ido-everywhere t)
+ '(ido-mode (quote both) nil (ido)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(normal-top-level-add-to-load-path '("~/.emacs.d/color-theme-6.6.0/"))
+(require 'color-theme)
+
+;; solarized
+
+(load-file "~/.emacs.d/color-theme-solarized.el")
+(color-theme-solarized-dark)
+
+;; ruby-mode
+
+(add-to-list 'load-path "~/.emacs.d/ruby-mode/")
+(autoload 'ruby-mode "ruby-mode" "Major mode for ruby files" t)
+(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))                    
+(add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode)) 
+
+;; Yasnippet
+
+(add-to-list 'load-path "~/.emacs.d/yasnippet-0.6.1c/")
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory "~/.emacs.d/yasnippet-0.6.1c/snippets")
+(add-hook 'after-change-major-mode-hook 'yas/minor-mode-on)
+
+;; autocomplete-mode
+
+(add-to-list 'load-path "~/.emacs.d/auto-complete")
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/ac-dict")
+;; (ac-config-default)
+(setq ac-sources '(ac-source-yasnippet ac-source-dictionary))
+;; (add-to-list 'ac-sources 'ac-source-yasnippet)
+(add-hook 'after-change-major-mode-hook 'auto-complete-mode)
+
+(defvar ac-source-etags
+  '((candidates . (lambda () 
+		    (all-completions ac-target (tags-completion-table))))
+    (requires . 3)
+    (symbol "e"))
+  "Source for etags.")
+
+;; fonts for trailing whitespace, special words in c-mode
+
+(add-hook 'makefile-mode-hook 
+	  (lambda()
+	    (setq show-trailing-whitespace t)))
+
+(add-hook 'c-mode-hook
+	  (lambda ()
+	    (font-lock-add-keywords nil
+				    '(("^[^\n]\\{80\\}\\(.*\\)$" 1 font-lock-warning-face t)))))
+
+(add-hook 'c-mode-common-hook
+	  (lambda ()
+	    (font-lock-add-keywords nil
+				    '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))

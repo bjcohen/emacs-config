@@ -24,18 +24,18 @@
 
 
 
-prefix = /afs/andrew.cmu.edu/usr23/bjcohen/.emacs.d/auctex$(null)
+prefix = /usr/local$(null)
 exec_prefix = ${prefix}$(null)
 libdir = ${exec_prefix}/lib$(null)
-packagedatadir = /usr/local/share/emacs/site-lisp/auctex$(null)
+packagedatadir = /Applications/Emacs.app/Contents/Resources/site-lisp//auctex$(null)
 datarootdir = ${prefix}/share$(null)
 datadir = ${datarootdir}$(null)
 localstatedir = ${prefix}/var$(null)
 infodir = ${datarootdir}/info$(null)
-lispdir = /usr/local/share/emacs/site-lisp$(null)
-auctexstartfile=/usr/local/share/emacs/site-lisp/auctex.el
-packagelispdir = /usr/local/share/emacs/site-lisp/auctex$(null)
-packagedatadir = /usr/local/share/emacs/site-lisp/auctex$(null)
+lispdir = /Applications/Emacs.app/Contents/Resources/site-lisp/$(null)
+auctexstartfile=/Applications/Emacs.app/Contents/Resources/site-lisp//auctex.el
+packagelispdir = /Applications/Emacs.app/Contents/Resources/site-lisp//auctex$(null)
+packagedatadir = /Applications/Emacs.app/Contents/Resources/site-lisp//auctex$(null)
 packagedir = no$(null)
 autodir = ${localstatedir}/auctex$(null)
 preview_enabled=yes
@@ -51,7 +51,7 @@ DESTDIR=
 
 PACKAGE=auctex
 PACKAGE_INFO=auctex preview-latex
-EMACS=/usr/local/bin/emacs
+EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
 ELCC=$(EMACS) -batch -q -no-site-file -no-init-file -l lpath.el
 AUTOLOAD=--eval '(let ((generated-autoload-file (expand-file-name "$@"))) \
   (mapcar (function update-file-autoloads) command-line-args-left) \
