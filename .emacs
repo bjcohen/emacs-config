@@ -208,7 +208,7 @@ otherwise raises an error."
 
 ;; solarized
 
-(load-file "~/.emacs.d/color-theme-solarized.el")
+(load-file "~/.emacs.d/solarized/emacs-colors-solarized/color-theme-solarized.el")
 (color-theme-solarized-dark)
 
 ;; ruby-mode
