@@ -132,7 +132,7 @@ Major mode for Haskell Files
 ;; etags-select
 
 ;;load the etags-select.el source code
-(load-file "etags-select.el")
+(load-file "~/.emacs.d/etags-select.el")
 ;;binding the key
 (global-set-key "\M-?" 'etags-select-find-tag-at-point)
 (global-set-key "\M-." 'etags-select-find-tag)
