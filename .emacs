@@ -122,13 +122,6 @@ Major mode for Haskell Files
 (load "auctex.el" nil t t)
 (load "preview-latex.el" nil t t)
 
-;; TODO Highlghting
-
-(add-hook 'c-mode-common-hook
-	  (lambda ()
-	    (font-lock-add-keywords nil
-				    '(("\\<\\(FIXME\\|TODO\\|BUG\\):" 1 font-lock-warning-face t)))))
-
 ;; etags-select
 
 ;;load the etags-select.el source code
