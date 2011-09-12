@@ -251,3 +251,13 @@ otherwise raises an error."
 	  (lambda ()
 	    (font-lock-add-keywords nil
 				    '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
+
+;; yay 15-411
+
+(add-to-list 'auto-mode-alist '("\\.l1$" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.l2$" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.l3$" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.l4$" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.l5$" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.l6$" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.c0$" . c-mode))
