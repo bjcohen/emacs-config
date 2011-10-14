@@ -180,22 +180,6 @@ otherwise raises an error."
 
 (require 'ido)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ido-default-buffer-method (quote maybe-frame))
- '(ido-default-file-method (quote maybe-frame))
- '(ido-everywhere t)
- '(ido-mode (quote both) nil (ido)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
 (normal-top-level-add-to-load-path '("~/.emacs.d/color-theme-6.6.0/"))
 (require 'color-theme)
 
@@ -275,3 +259,9 @@ otherwise raises an error."
 (autoload 'camldebug "tuareg/camldebug" "Run the Caml debugger" t)
 (dolist (ext '(".cmo" ".cmx" ".cma" ".cmxa" ".cmi"))
   (add-to-list 'completion-ignored-extensions ext))
+
+;; Sometimes I use these...
+
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
