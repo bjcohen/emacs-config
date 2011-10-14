@@ -261,3 +261,17 @@ otherwise raises an error."
 (add-to-list 'auto-mode-alist '("\\.l5$" . c-mode))
 (add-to-list 'auto-mode-alist '("\\.l6$" . c-mode))
 (add-to-list 'auto-mode-alist '("\\.c0$" . c-mode))
+
+;; don't use tabs
+
+(setq-default indent-tabs-mode nil)
+
+;; ocaml mode
+
+(add-to-list 'load-path "./tuareg")
+
+(add-to-list 'auto-mode-alist '("\\.ml[iylp]?" . tuareg-mode))
+(autoload 'tuareg-mode "tuareg/tuareg" "Major mode for editing Caml code" t)
+(autoload 'camldebug "tuareg/camldebug" "Run the Caml debugger" t)
+(dolist (ext '(".cmo" ".cmx" ".cma" ".cmxa" ".cmi"))
+  (add-to-list 'completion-ignored-extensions ext))

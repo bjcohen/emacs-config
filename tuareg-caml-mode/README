@@ -1,0 +1,11 @@
+These files are part of the caml-mode
+http://caml.inria.fr/cgi-bin/viewcvs.cgi/ocaml/trunk/emacs/
+
+They are provided separately because
+- the caml-mode is not installed as part of the ocaml installation
+  (especially on windows);
+- some patches may be applied to these files which are not yet present
+  in the ocaml trunk.
+
+You must install these file in a location where Emacs will find them.
+Optionally, you may run "make" to byte compile them.
