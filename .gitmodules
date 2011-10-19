@@ -1,11 +1,12 @@
 [submodule "solarized"]
-	path = solarized
-	url = git://github.com/altercation/solarized.git
-
+  path = solarized
+  url = git://github.com/altercation/solarized.git
 [submodule "770490"]
   path = 770490
   url = git://gist.github.com/770490.git
-
 [submodule "egg"]
   path = egg
   url = https://github.com/bogolisk/egg.git
+[submodule "tuareg-mode"]
+  path = tuareg-mode
+  url = https://github.com/afeinberg/tuareg-mode.git

@@ -252,11 +252,11 @@ otherwise raises an error."
 
 ;; ocaml mode
 
-(add-to-list 'load-path "./tuareg")
+(add-to-list 'load-path "./tuareg-mode")
 
 (add-to-list 'auto-mode-alist '("\\.ml[iylp]?" . tuareg-mode))
-(autoload 'tuareg-mode "tuareg/tuareg" "Major mode for editing Caml code" t)
-(autoload 'camldebug "tuareg/camldebug" "Run the Caml debugger" t)
+(autoload 'tuareg-mode "tuareg-mode/tuareg" "Major mode for editing Caml code" t)
+(autoload 'camldebug "tuareg-mode/camldebug" "Run the Caml debugger" t)
 (dolist (ext '(".cmo" ".cmx" ".cma" ".cmxa" ".cmi"))
   (add-to-list 'completion-ignored-extensions ext))
 
