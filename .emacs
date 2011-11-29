@@ -1,6 +1,9 @@
 ;(load-file user-init-file)
 ;(load-file custom-file)
 
+(let ((default-directory "."))
+  (normal-top-level-add-subdirs-to-load-path))
+
 (global-set-key (kbd "C-c C-c") 'comment-region)
 (global-set-key (kbd "C-c C-u") 'uncomment-region)
 
@@ -167,13 +170,6 @@ otherwise raises an error."
 (add-to-list 'load-path "~/.emacs.d/sml-mode-4.1/")
 (load-file "~/.emacs.d/sml-mode-4.1/sml-mode-startup.el")
 
-;; thrift-mode
-
-(let ((default-directory "~/.emacs.d/"))
-  (normal-top-level-add-subdirs-to-load-path))
-
-(require 'thrift-mode)
-
 ;; hilight matching parens
 
 (show-paren-mode)
@@ -210,41 +206,32 @@ otherwise raises an error."
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/ac-dict")
 ;; (ac-config-default)
 (setq ac-sources '(ac-source-yasnippet ac-source-dictionary))
+(setq-default ac-sources '(ac-source-yasnippet ac-source-dictionary))
 ;; (add-to-list 'ac-sources 'ac-source-yasnippet)
 (add-hook 'after-change-major-mode-hook 'auto-complete-mode)
 
 (defvar ac-source-etags
-  '((candidates . (lambda () 
-		    (all-completions ac-target (tags-completion-table))))
+  '((candidates . (lambda ()
+                    (all-completions ac-target (tags-completion-table))))
     (requires . 3)
     (symbol "e"))
   "Source for etags.")
 
 ;; fonts for trailing whitespace, special words in c-mode
 
-(add-hook 'makefile-mode-hook 
-	  (lambda()
-	    (setq show-trailing-whitespace t)))
+(add-hook 'makefile-mode-hook
+          (lambda()
+            (setq show-trailing-whitespace t)))
 
 (add-hook 'c-mode-hook
-	  (lambda ()
-	    (font-lock-add-keywords nil
-				    '(("^[^\n]\\{80\\}\\(.*\\)$" 1 font-lock-warning-face t)))))
+    (lambda ()
+      (font-lock-add-keywords nil
+            '(("^[^\n]\\{80\\}\\(.*\\)$" 1 font-lock-warning-face t)))))
 
 (add-hook 'c-mode-common-hook
-	  (lambda ()
-	    (font-lock-add-keywords nil
-				    '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
-
-;; yay 15-411
-
-(add-to-list 'auto-mode-alist '("\\.l1$" . c-mode))
-(add-to-list 'auto-mode-alist '("\\.l2$" . c-mode))
-(add-to-list 'auto-mode-alist '("\\.l3$" . c-mode))
-(add-to-list 'auto-mode-alist '("\\.l4$" . c-mode))
-(add-to-list 'auto-mode-alist '("\\.l5$" . c-mode))
-(add-to-list 'auto-mode-alist '("\\.l6$" . c-mode))
-(add-to-list 'auto-mode-alist '("\\.c0$" . c-mode))
+          (lambda ()
+            (font-lock-add-keywords nil
+                                    '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
 
 ;; don't use tabs
 
@@ -265,3 +252,20 @@ otherwise raises an error."
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
+(setq package-archives '(("ELPA" . "http://tromey.com/elpa/") 
+                                        ; ("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")))
+
+;; Clojure-mode
+
+(add-to-list 'load-path "./clojure-mode")
+(require 'clojure-mode)
+
+;; disable scrollbars
+
+(set-scroll-bar-mode nil)
+
+;; perspective
+
+(add-to-list 'load-path "./perspective-el")
+(require 'perspective)

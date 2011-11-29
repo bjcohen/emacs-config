@@ -1,4 +1,4 @@
-functor $1 () : =
+functor $1 ($2) : $3 =
 struct
 	$0
 end
