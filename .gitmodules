@@ -13,3 +13,6 @@
 [submodule "perspective-el"]
 	path = perspective-el
 	url = https://github.com/nex3/perspective-el.git
+[submodule "slime"]
+	path = slime
+	url = https://github.com/nablaone/slime.git

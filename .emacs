@@ -269,3 +269,10 @@ otherwise raises an error."
 
 (add-to-list 'load-path "~/.emacs.d/perspective-el")
 (require 'perspective)
+
+;; SLIME
+
+(add-to-list 'load-path "~/.emacs.d/slime")
+; (setq inferior-lisp-program "")
+(require 'slime)
+(slime-setup '(slime-fancy))
