@@ -258,7 +258,7 @@ otherwise raises an error."
 
 ;; Clojure-mode
 
-(add-to-list 'load-path "./clojure-mode")
+(add-to-list 'load-path "~/.emacs.d/clojure-mode")
 (require 'clojure-mode)
 
 ;; disable scrollbars
@@ -267,5 +267,5 @@ otherwise raises an error."
 
 ;; perspective
 
-(add-to-list 'load-path "./perspective-el")
+(add-to-list 'load-path "~/.emacs.d/perspective-el")
 (require 'perspective)
