@@ -16,3 +16,9 @@
 [submodule "slime"]
 	path = slime
 	url = https://github.com/nablaone/slime.git
+[submodule "deft"]
+	path = deft
+	url = git://jblevins.org/git/deft.git
+[submodule "smex"]
+	path = smex
+	url = https://github.com/nonsequitur/smex.git
