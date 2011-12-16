@@ -286,3 +286,9 @@ otherwise raises an error."
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ; Old M-x
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+;; unlearn muscle memory...
+(setq mac-command-modifier 'control)
+(setq mac-control-modifier 'super)
+(setq mac-option-modifier 'meta)
+(setq mac-right-option-modifier nil)
