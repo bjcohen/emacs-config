@@ -45,6 +45,7 @@
 
 (require 'autopair)
 (autopair-global-mode)
+(setq autopair-autowrap 'true)
 
 ; random stuff
 
@@ -175,6 +176,8 @@ otherwise raises an error."
 (show-paren-mode)
 
 (require 'ido)
+(require 'idomenu)
+(global-set-key (kbd "C-i") 'idomenu)
 
 (normal-top-level-add-to-load-path '("~/.emacs.d/color-theme-6.6.0/"))
 (require 'color-theme)
@@ -209,6 +212,7 @@ otherwise raises an error."
 (setq-default ac-sources '(ac-source-yasnippet ac-source-dictionary))
 ;; (add-to-list 'ac-sources 'ac-source-yasnippet)
 (add-hook 'after-change-major-mode-hook 'auto-complete-mode)
+(load "auto-complete-haskell.el")
 
 (defvar ac-source-etags
   '((candidates . (lambda ()
@@ -272,10 +276,10 @@ otherwise raises an error."
 
 ;; SLIME
 
-(add-to-list 'load-path "~/.emacs.d/slime")
+; (add-to-list 'load-path "~/.emacs.d/slime")
 ; (setq inferior-lisp-program "")
-(require 'slime)
-(slime-setup '(slime-fancy))
+; (require 'slime)
+; (slime-setup '(slime-fancy))
 
 ;; Smex
 (add-to-list 'load-path "~/.emacs.d/smex")
@@ -285,10 +289,18 @@ otherwise raises an error."
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ; Old M-x
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;; unlearn muscle memory...
 (setq mac-command-modifier 'control)
 (setq mac-control-modifier 'super)
 (setq mac-option-modifier 'meta)
 (setq mac-right-option-modifier nil)
+
+;; hippie-expand. TODO: setup hippie-expand
+
+(global-set-key "\M- " 'hippie-expand)
+
+;; twelf
+(setq twelf-root "/Applications/Twelf/")
+(load (concat twelf-root "emacs/twelf-init.el"))
