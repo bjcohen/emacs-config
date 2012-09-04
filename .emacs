@@ -1,6 +1,19 @@
 ;(load-file user-init-file)
 ;(load-file custom-file)
 
+;; clojure-mode, deft, egg, perspective, slime, smex, solarized
+
+;; submodules removed: egg, solarized, clojure-mode, perspective, smex
+;; other dirs removed: auto-complete, ido, autopair, color-theme, ruby-mode, elscreen, auctex, yasnippet
+
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (package-initialize)
+;  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+;  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+)
+
 (let ((default-directory "."))
   (normal-top-level-add-subdirs-to-load-path))
 
@@ -34,11 +47,10 @@
 
 ; ElScreen
 
-(normal-top-level-add-to-load-path '("~/.emacs.d/elscreen-1.4.6/"))
-(load "elscreen" "ElScreen" t)
+;(normal-top-level-add-to-load-path '("~/.emacs.d/elscreen-1.4.6/"))
+;(load "elscreen" "ElScreen" t)
 
 ; egg
-(normal-top-level-add-to-load-path '("~/.emacs.d/egg/"))
 (require 'egg)
 
 ; autopair
@@ -80,17 +92,6 @@ Major mode for Haskell Files
 
 (require 'inf-haskell)
 
-;; More ELScreen stuff
-
-;; F9 creates a new elscreen, shift-F9 kills it
-(global-set-key (kbd "<f9>"    ) 'elscreen-create)
-(global-set-key (kbd "S-<f9>"  ) 'elscreen-kill)  
-
-
-;; Windowskey+PgUP/PgDown switches between elscreens
-(global-set-key (kbd "<s-prior>") 'elscreen-previous) 
-(global-set-key (kbd "<s-next>")  'elscreen-next) 
-
 ;; Compile
 
 (require 'compile)
@@ -115,16 +116,13 @@ Major mode for Haskell Files
           (message "No Compilation Errors!"))))
 
 
-;; one-button testing, tada!
-(global-set-key [f5] 'compile)
-
 ;; AucTex
 
-(add-to-list 'load-path "~/.emacs.d/auctex-11.86")
-(add-to-list 'load-path "~/.emacs.d/auctex-11.86/preview")
+;(add-to-list 'load-path "~/.emacs.d/auctex-11.86")
+;(add-to-list 'load-path "~/.emacs.d/auctex-11.86/preview")
 
-(load "auctex.el" nil t t)
-(load "preview-latex.el" nil t t)
+;(load "auctex.el" nil t t)
+;(load "preview-latex.el" nil t t)
 
 ;; etags-select
 
@@ -176,16 +174,12 @@ otherwise raises an error."
 (show-paren-mode)
 
 (require 'ido)
-(require 'idomenu)
-(global-set-key (kbd "C-i") 'idomenu)
-
-(normal-top-level-add-to-load-path '("~/.emacs.d/color-theme-6.6.0/"))
-(require 'color-theme)
+;(require 'idomenu)
+;(global-set-key (kbd "C-i") 'idomenu)
 
 ;; solarized
-
-(load-file "~/.emacs.d/solarized/emacs-colors-solarized/color-theme-solarized.el")
-(color-theme-solarized-dark)
+(require 'solarized)
+(load-theme 'solarized-dark t)
 
 ;; ruby-mode
 
@@ -196,73 +190,57 @@ otherwise raises an error."
 
 ;; Yasnippet
 
-(add-to-list 'load-path "~/.emacs.d/yasnippet-0.6.1c/")
+;; (add-to-list 'load-path "~/.emacs.d/yasnippet-0.6.1c/")
 (require 'yasnippet)
-(yas/initialize)
-(yas/load-directory "~/.emacs.d/yasnippet-0.6.1c/snippets")
-(add-hook 'after-change-major-mode-hook 'yas/minor-mode-on)
+(yas-load-directory "~/.emacs.d/snippets")
+(yas-minor-mode)
 
 ;; autocomplete-mode
 
-(add-to-list 'load-path "~/.emacs.d/auto-complete")
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/ac-dict")
-;; (ac-config-default)
-(setq ac-sources '(ac-source-yasnippet ac-source-dictionary))
-(setq-default ac-sources '(ac-source-yasnippet ac-source-dictionary))
-;; (add-to-list 'ac-sources 'ac-source-yasnippet)
-(add-hook 'after-change-major-mode-hook 'auto-complete-mode)
-(load "auto-complete-haskell.el")
+;; (add-to-list 'load-path "~/.emacs.d/auto-complete")
+;; (require 'auto-complete-config)
+;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/ac-dict")
+;; ;; (ac-config-default)
+;; (setq ac-sources '(ac-source-yasnippet ac-source-dictionary))
+;; (setq-default ac-sources '(ac-source-yasnippet ac-source-dictionary))
+;; ;; (add-to-list 'ac-sources 'ac-source-yasnippet)
+;; (add-hook 'after-change-major-mode-hook 'auto-complete-mode)
+;; (load "auto-complete-haskell.el")
 
-(defvar ac-source-etags
-  '((candidates . (lambda ()
-                    (all-completions ac-target (tags-completion-table))))
-    (requires . 3)
-    (symbol "e"))
-  "Source for etags.")
+;; (defvar ac-source-etags
+;;   '((candidates . (lambda ()
+;;                     (all-completions ac-target (tags-completion-table))))
+;;     (requires . 3)
+;;     (symbol "e"))
+;;   "Source for etags.")
 
 ;; fonts for trailing whitespace, special words in c-mode
 
-(add-hook 'makefile-mode-hook
-          (lambda()
-            (setq show-trailing-whitespace t)))
+;; (add-hook 'makefile-mode-hook
+;;           (lambda()
+;;             (setq show-trailing-whitespace t)))
 
-(add-hook 'c-mode-hook
-    (lambda ()
-      (font-lock-add-keywords nil
-            '(("^[^\n]\\{80\\}\\(.*\\)$" 1 font-lock-warning-face t)))))
+;; (add-hook 'c-mode-hook
+;;     (lambda ()
+;;       (font-lock-add-keywords nil
+;;             '(("^[^\n]\\{80\\}\\(.*\\)$" 1 font-lock-warning-face t)))))
 
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (font-lock-add-keywords nil
-                                    '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
+;; (add-hook 'c-mode-common-hook
+;;           (lambda ()
+;;             (font-lock-add-keywords nil
+;;                                     '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
 
 ;; don't use tabs
 
 (setq-default indent-tabs-mode nil)
-
-;; ocaml mode
-
-(add-to-list 'load-path "./tuareg-mode")
-
-(add-to-list 'auto-mode-alist '("\\.ml[iylp]?" . tuareg-mode))
-(autoload 'tuareg-mode "tuareg-mode/tuareg" "Major mode for editing Caml code" t)
-(autoload 'camldebug "tuareg-mode/camldebug" "Run the Caml debugger" t)
-(dolist (ext '(".cmo" ".cmx" ".cma" ".cmxa" ".cmi"))
-  (add-to-list 'completion-ignored-extensions ext))
 
 ;; Sometimes I use these...
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
-(setq package-archives '(("ELPA" . "http://tromey.com/elpa/") 
-                                        ; ("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")))
-
 ;; Clojure-mode
 
-(add-to-list 'load-path "~/.emacs.d/clojure-mode")
 (require 'clojure-mode)
 
 ;; disable scrollbars
@@ -271,8 +249,12 @@ otherwise raises an error."
 
 ;; perspective
 
-(add-to-list 'load-path "~/.emacs.d/perspective-el")
 (require 'perspective)
+(persp-mode)
+
+;; Evil
+;(require 'evil)
+;(evil-mode 1)
 
 ;; SLIME
 
@@ -282,7 +264,6 @@ otherwise raises an error."
 ; (slime-setup '(slime-fancy))
 
 ;; Smex
-(add-to-list 'load-path "~/.emacs.d/smex")
 (require 'smex)
 (smex-initialize)
 
@@ -299,8 +280,9 @@ otherwise raises an error."
 
 ;; hippie-expand. TODO: setup hippie-expand
 
-(global-set-key "\M- " 'hippie-expand)
+; (global-set-key "\M- " 'hippie-expand)
 
 ;; twelf
-(setq twelf-root "/Applications/Twelf/")
-(load (concat twelf-root "emacs/twelf-init.el"))
+;; (setq twelf-root "/Applications/Twelf/")
+;; (load (concat twelf-root "emacs/twelf-init.el"))
+
