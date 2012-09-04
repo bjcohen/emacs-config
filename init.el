@@ -169,6 +169,7 @@ otherwise raises an error."
 (show-paren-mode)
 
 (require 'ido)
+(ido-mode)
 ;(require 'idomenu)
 ;(global-set-key (kbd "C-i") 'idomenu)
 
@@ -282,3 +283,13 @@ otherwise raises an error."
 ;; (setq twelf-root "/Applications/Twelf/")
 ;; (load (concat twelf-root "emacs/twelf-init.el"))
 
+;; golang
+(require 'go-mode-load)
+
+;; A quick & ugly PATH solution to Emacs on Mac OSX
+;; (if (string-equal "darwin" (symbol-name system-type))
+;;     (setenv "PATH" (concat "/Users/bjcohen/dev/sml/bin:" (getenv "PATH"))))
+;; (if (string-equal "darwin" (symbol-name system-type))
+;;     (setenv "PATH" (concat "/Users/bjcohen/dev/leiningen/bin:" (getenv "PATH"))))
+
+(ns-toggle-toolbar)
