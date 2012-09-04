@@ -42,8 +42,8 @@
 
 ; APEL
 
-(normal-top-level-add-to-load-path '("~/.emacs.d/apel/"))
-(normal-top-level-add-to-load-path '("~/.emacs.d/emu/"))
+;; (normal-top-level-add-to-load-path '("~/.emacs.d/apel/"))
+;; (normal-top-level-add-to-load-path '("~/.emacs.d/emu/"))
 
 ; ElScreen
 
@@ -253,8 +253,9 @@ otherwise raises an error."
 (persp-mode)
 
 ;; Evil
-;(require 'evil)
-;(evil-mode 1)
+(require 'evil)
+(evil-mode 1)
+(evil-emacs-state)
 
 ;; SLIME
 
