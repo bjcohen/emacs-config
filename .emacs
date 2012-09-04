@@ -40,11 +40,6 @@
 
 (add-hook 'gas-mode-common-hook 'doxymacs-mode)
 
-; APEL
-
-;; (normal-top-level-add-to-load-path '("~/.emacs.d/apel/"))
-;; (normal-top-level-add-to-load-path '("~/.emacs.d/emu/"))
-
 ; ElScreen
 
 ;(normal-top-level-add-to-load-path '("~/.emacs.d/elscreen-1.4.6/"))
