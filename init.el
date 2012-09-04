@@ -71,19 +71,8 @@
                  '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
 
 ;; haskell mode
-
-(load "~/.emacs.d/haskellmode-emacs/haskell-site-file.el")
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-;;(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
-;;(add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
-
-(add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
-
-(autoload 'haskell-cabal-mode "haskell-mode" "\
-Major mode for Haskell Files
-
-\(fn)" t nil)
 
 (require 'inf-haskell)
 
@@ -278,10 +267,6 @@ otherwise raises an error."
 ;; hippie-expand. TODO: setup hippie-expand
 
 ; (global-set-key "\M- " 'hippie-expand)
-
-;; twelf
-;; (setq twelf-root "/Applications/Twelf/")
-;; (load (concat twelf-root "emacs/twelf-init.el"))
 
 ;; golang
 (require 'go-mode-load)
