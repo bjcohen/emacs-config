@@ -10,9 +10,16 @@
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (package-initialize)
-;  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
-;  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 )
+
+(setq my-packages
+      '(auctex auto-complete autopair clojure-mode egg evil go-mode haskell-mode
+        perspective popup ruby-mode smex solarized-theme undo-tree yasnippet
+        iedit google-this elein bm))
+
+(mapc (lambda (p)
+        (when (not (package-installed-p p)) (package-install p)))
+      my-packages)
 
 (let ((default-directory "."))
   (normal-top-level-add-subdirs-to-load-path))
@@ -71,6 +78,7 @@
                  '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
 
 ;; haskell mode
+(require 'haskell-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
@@ -264,10 +272,6 @@ otherwise raises an error."
 (setq mac-option-modifier 'meta)
 (setq mac-right-option-modifier nil)
 
-;; hippie-expand. TODO: setup hippie-expand
-
-; (global-set-key "\M- " 'hippie-expand)
-
 ;; golang
 (require 'go-mode-load)
 
@@ -278,3 +282,16 @@ otherwise raises an error."
 ;;     (setenv "PATH" (concat "/Users/bjcohen/dev/leiningen/bin:" (getenv "PATH"))))
 
 (ns-toggle-toolbar)
+
+(require 'iedit)
+(require 'google-this)
+(require 'elein)
+(require 'bm)
+
+;; TODO: cleanup and organize more
+
+;; TODO: elscreen, autocomplete, slime, auctex
+
+;; TODO: hippie, helm
+
+;; TODO: set up snippets and AC/hippie

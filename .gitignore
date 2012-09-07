@@ -2,5 +2,5 @@ auto-save-list/.saves-*
 *~
 ac-comphist.dat
 saveplace
-elpa/archive-contents
 swank
+elpa
