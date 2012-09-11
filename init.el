@@ -15,7 +15,7 @@
 (setq my-packages
       '(auctex auto-complete autopair clojure-mode egg evil go-mode haskell-mode
         perspective popup ruby-mode smex solarized-theme undo-tree yasnippet
-        iedit google-this elein bm))
+        iedit google-this elein bm auto-complete))
 
 (mapc (lambda (p)
         (when (not (package-installed-p p)) (package-install p)))
@@ -290,8 +290,11 @@ otherwise raises an error."
 
 ;; TODO: cleanup and organize more
 
-;; TODO: elscreen, autocomplete, slime, auctex
+;; TODO: elscreen, autocomplete, auctex
 
 ;; TODO: hippie, helm
 
 ;; TODO: set up snippets and AC/hippie
+
+;; TODO: slime, ritz, tools.nrepl, nrepl.el
+
