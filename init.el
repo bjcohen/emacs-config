@@ -298,3 +298,26 @@ otherwise raises an error."
 
 ;; TODO: slime, ritz, tools.nrepl, nrepl.el
 
+;; TODO: company-mode?
+
+;; pl1
+(add-to-list 'load-path "~/.emacs.d/psl-mode/")
+(require 'psl-mode)
+
+(add-to-list 'load-path "~/.emacs.d/geiser/elisp/")
+(require 'geiser)
+
+;; (require 'quack)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(geiser-racket-binary "/Applications/Racket v5.3/bin/racket"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

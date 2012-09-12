@@ -1,3 +1,9 @@
 [submodule "slime"]
 	path = slime
 	url = https://github.com/nablaone/slime.git
+[submodule "psl-mode"]
+	path = psl-mode
+	url = https://github.com/skeeto/psl-mode.git
+[submodule "geiser"]
+	path = geiser
+	url = git://git.sv.gnu.org/geiser.git
