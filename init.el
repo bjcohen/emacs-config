@@ -15,7 +15,7 @@
 (setq my-packages
       '(auctex auto-complete autopair clojure-mode egg evil go-mode haskell-mode
         perspective popup ruby-mode smex solarized-theme undo-tree yasnippet
-        iedit google-this elein bm auto-complete))
+        iedit google-this elein bm auto-complete surround))
 
 (mapc (lambda (p)
         (when (not (package-installed-p p)) (package-install p)))
@@ -307,6 +307,9 @@ otherwise raises an error."
 (add-to-list 'load-path "~/.emacs.d/geiser/elisp/")
 (require 'geiser)
 
+(require 'surround)
+(global-surround-mode)
+
 ;; (require 'quack)
 
 (custom-set-variables
@@ -314,7 +317,9 @@ otherwise raises an error."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(geiser-racket-binary "/Applications/Racket v5.3/bin/racket"))
+ '(geiser-racket-binary "/Applications/Racket v5.3/bin/racket")
+ '(quack-default-program "racket")
+ '(quack-remap-find-file-bindings-p nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
