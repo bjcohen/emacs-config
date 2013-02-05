@@ -9,11 +9,12 @@
 (when (>= emacs-major-version 24)
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (package-refresh-contents)
   (package-initialize)
 )
 
 (setq my-packages
-      '(auctex auto-complete autopair clojure-mode egg evil go-mode haskell-mode
+      '(auto-complete autopair clojure-mode egg evil go-mode haskell-mode
         perspective popup ruby-mode smex solarized-theme undo-tree yasnippet
         iedit google-this elein bm auto-complete surround gist nrepl))
 
@@ -154,8 +155,6 @@ otherwise raises an error."
 (add-hook 'emacs-startup-hook 
 	'(lambda () (jds-set-tags-file-path)))
 
-(global-set-key (kbd "M-RET") 'ns-toggle-fullscreen)
-
 ;; sml-mode
 
 (add-to-list 'load-path "~/.emacs.d/sml-mode-4.1/")
@@ -280,7 +279,8 @@ otherwise raises an error."
 ;; (if (string-equal "darwin" (symbol-name system-type))
 ;;     (setenv "PATH" (concat "/Users/bjcohen/dev/leiningen/bin:" (getenv "PATH"))))
 
-(ns-toggle-toolbar)
+(if (eq system-type 'darwin)
+    (ns-toggle-toolbar))
 
 (require 'iedit)
 (require 'google-this)
