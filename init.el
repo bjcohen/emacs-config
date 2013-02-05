@@ -15,7 +15,7 @@
 (setq my-packages
       '(auctex auto-complete autopair clojure-mode egg evil go-mode haskell-mode
         perspective popup ruby-mode smex solarized-theme undo-tree yasnippet
-        iedit google-this elein bm auto-complete surround))
+        iedit google-this elein bm auto-complete surround gist nrepl))
 
 (mapc (lambda (p)
         (when (not (package-installed-p p)) (package-install p)))
@@ -248,7 +248,6 @@ otherwise raises an error."
 ;; Evil
 (require 'evil)
 (evil-mode 1)
-(evil-emacs-state)
 
 ;; SLIME
 
@@ -287,6 +286,8 @@ otherwise raises an error."
 (require 'google-this)
 (require 'elein)
 (require 'bm)
+
+(global-set-key (kbd "C-`") 'other-frame)
 
 ;; TODO: cleanup and organize more
 
