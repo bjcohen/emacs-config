@@ -7,3 +7,6 @@
 [submodule "geiser"]
 	path = geiser
 	url = git://git.sv.gnu.org/geiser.git
+[submodule "ESS"]
+	path = ESS
+	url = https://github.com/emacs-ess/ESS.git
