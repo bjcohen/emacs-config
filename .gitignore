@@ -4,3 +4,6 @@ ac-comphist.dat
 saveplace
 swank
 elpa
+var
+bookmarks
+custom.el

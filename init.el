@@ -1,10 +1,5 @@
-;(load-file user-init-file)
-;(load-file custom-file)
-
-;; clojure-mode, deft, egg, perspective, slime, smex, solarized
-
-;; submodules removed: egg, solarized, clojure-mode, perspective, smex
-;; other dirs removed: auto-complete, ido, autopair, color-theme, ruby-mode, elscreen, auctex, yasnippet
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(add-to-list 'exec-path "/usr/local/bin")
 
 (when (>= emacs-major-version 24)
   (require 'package)
@@ -16,18 +11,14 @@
 (setq my-packages
       '(auto-complete autopair clojure-mode egg evil go-mode haskell-mode
         perspective popup ruby-mode smex solarized-theme undo-tree yasnippet
-        iedit google-this elein bm auto-complete surround gist nrepl))
+        iedit google-this elein bm auto-complete surround gist nrepl git-gutter
+        ecb elpy auctex ess powerline ido-ubiquitous ido-sort-mtime ag ac-nrepl))
 
-(mapc (lambda (p)
-        (when (not (package-installed-p p)) (package-install p)))
-      my-packages)
+;; (mapc (lambda (p)
+;;         (when (not (package-installed-p p)) (package-install p)))
+;;       my-packages)
 
-(let ((default-directory "."))
-  (normal-top-level-add-subdirs-to-load-path))
-
-(global-set-key (kbd "C-c C-c") 'comment-region)
-(global-set-key (kbd "C-c C-u") 'uncomment-region)
-
+(add-to-list 'load-path "~/.emacs.d/")
 (setq save-place-file "~/.emacs.d/saveplace")
 (setq-default save-place t)
 (require 'saveplace)
@@ -41,20 +32,17 @@
         (lambda ()
                 (define-key c-mode-map [(ctrl tab)] 'complete-tag)))
 
-(add-to-list 'load-path "~/.emacs.d/")
 (require 'gas-mode)
 (add-to-list 'auto-mode-alist '("\\.S\\'" . gas-mode))
 (global-set-key [?\M-g] 'goto-line)  ; easier to jump to specific lines (M-g)
 
 (add-hook 'gas-mode-common-hook 'doxymacs-mode)
 
-; ElScreen
-
-;(normal-top-level-add-to-load-path '("~/.emacs.d/elscreen-1.4.6/"))
-;(load "elscreen" "ElScreen" t)
-
 ; egg
 (require 'egg)
+
+; git-gutter
+(global-git-gutter-mode t)
 
 ; autopair
 
@@ -109,13 +97,6 @@
           (message "No Compilation Errors!"))))
 
 
-;; AucTex
-
-;(add-to-list 'load-path "~/.emacs.d/auctex-11.86")
-;(add-to-list 'load-path "~/.emacs.d/auctex-11.86/preview")
-
-;(load "auctex.el" nil t t)
-;(load "preview-latex.el" nil t t)
 
 ;; etags-select
 
@@ -161,66 +142,41 @@ otherwise raises an error."
 (load-file "~/.emacs.d/sml-mode-4.1/sml-mode-startup.el")
 
 ;; hilight matching parens
-
+(defvar show-paren-overlay nil)
+(defvar show-paren-overlay-1 nil)
 (show-paren-mode)
 
 (require 'ido)
-(ido-mode)
-;(require 'idomenu)
-;(global-set-key (kbd "C-i") 'idomenu)
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(setq ido-create-new-buffer 'always)
+(ido-mode 1)
+
+(require 'ido-ubiquitous)
+(require 'ido-sort-mtime)
+(require 'idomenu)
 
 ;; solarized
 (require 'solarized)
 (load-theme 'solarized-dark t)
 
 ;; ruby-mode
-
-(add-to-list 'load-path "~/.emacs.d/ruby-mode/")
 (autoload 'ruby-mode "ruby-mode" "Major mode for ruby files" t)
 (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))                    
 (add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode)) 
 
 ;; Yasnippet
 
-;; (add-to-list 'load-path "~/.emacs.d/yasnippet-0.6.1c/")
 (require 'yasnippet)
 (yas-load-directory "~/.emacs.d/snippets")
 (yas-minor-mode)
 
 ;; autocomplete-mode
 
-;; (add-to-list 'load-path "~/.emacs.d/auto-complete")
-;; (require 'auto-complete-config)
-;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/ac-dict")
-;; ;; (ac-config-default)
-;; (setq ac-sources '(ac-source-yasnippet ac-source-dictionary))
-;; (setq-default ac-sources '(ac-source-yasnippet ac-source-dictionary))
-;; ;; (add-to-list 'ac-sources 'ac-source-yasnippet)
-;; (add-hook 'after-change-major-mode-hook 'auto-complete-mode)
-;; (load "auto-complete-haskell.el")
-
-;; (defvar ac-source-etags
-;;   '((candidates . (lambda ()
-;;                     (all-completions ac-target (tags-completion-table))))
-;;     (requires . 3)
-;;     (symbol "e"))
-;;   "Source for etags.")
-
-;; fonts for trailing whitespace, special words in c-mode
-
-;; (add-hook 'makefile-mode-hook
-;;           (lambda()
-;;             (setq show-trailing-whitespace t)))
-
-;; (add-hook 'c-mode-hook
-;;     (lambda ()
-;;       (font-lock-add-keywords nil
-;;             '(("^[^\n]\\{80\\}\\(.*\\)$" 1 font-lock-warning-face t)))))
-
-;; (add-hook 'c-mode-common-hook
-;;           (lambda ()
-;;             (font-lock-add-keywords nil
-;;                                     '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
+(require 'auto-complete)
+(add-to-list 'ac-sources 'ac-source-yasnippet)
+;; (ac-config-default)
+(load "auto-complete-haskell.el")
 
 ;; don't use tabs
 
@@ -231,9 +187,10 @@ otherwise raises an error."
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
-;; Clojure-mode
-
+;; clojure
 (require 'clojure-mode)
+(require 'nrepl)
+(require 'ac-nrepl)
 
 ;; disable scrollbars
 
@@ -247,15 +204,9 @@ otherwise raises an error."
 ;; Evil
 (require 'evil)
 (evil-mode 1)
+(setq evil-default-state 'emacs)
 
-;; SLIME
-
-; (add-to-list 'load-path "~/.emacs.d/slime")
-; (setq inferior-lisp-program "")
-; (require 'slime)
-; (slime-setup '(slime-fancy))
-
-;; Smex
+;; smex
 (require 'smex)
 (smex-initialize)
 
@@ -273,12 +224,6 @@ otherwise raises an error."
 ;; golang
 (require 'go-mode-load)
 
-;; A quick & ugly PATH solution to Emacs on Mac OSX
-;; (if (string-equal "darwin" (symbol-name system-type))
-;;     (setenv "PATH" (concat "/Users/bjcohen/dev/sml/bin:" (getenv "PATH"))))
-;; (if (string-equal "darwin" (symbol-name system-type))
-;;     (setenv "PATH" (concat "/Users/bjcohen/dev/leiningen/bin:" (getenv "PATH"))))
-
 (if (eq system-type 'darwin)
     (ns-toggle-toolbar))
 
@@ -286,48 +231,72 @@ otherwise raises an error."
 (require 'google-this)
 (require 'elein)
 (require 'bm)
+(require 'uniquify)
+
+(require 'recentf)
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
 
 (global-set-key (kbd "C-`") 'other-frame)
 
-;; TODO: cleanup and organize more
+;; python
+;; pip install elpy rope jedi
 
-;; TODO: elscreen, autocomplete, auctex
+(elpy-enable)
+(elpy-use-ipython)
+(elpy-clean-modeline)
 
-;; TODO: hippie, helm
-
-;; TODO: set up snippets and AC/hippie
-
-;; TODO: slime, ritz, tools.nrepl, nrepl.el
-
-;; TODO: company-mode?
-
-;; pl1
-(add-to-list 'load-path "~/.emacs.d/psl-mode/")
-(require 'psl-mode)
-
-(add-to-list 'load-path "~/.emacs.d/geiser/elisp/")
-(require 'geiser)
+;; surround
 
 (require 'surround)
 (global-surround-mode)
 
-;; (require 'quack)
-
 ;; ESS
-(add-to-list 'load-path "~/.emacs.d/ESS/lisp/")
 (require 'ess-site)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(geiser-racket-binary "/Applications/Racket v5.3/bin/racket")
- '(quack-default-program "racket")
- '(quack-remap-find-file-bindings-p nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;; html/js stuff
+(setq sgml-basic-offset 4)
+
+;; quick register access to this file
+(set-register ?e '(file "~/.emacs.d/init.el"))
+
+;; auto-open
+(defun my-check-modified ()
+  (interactive)
+  (if (not (verify-visited-file-modtime (current-buffer)))
+      (if (yes-or-no-p "Buffer modified, reload? ")
+          (if (buffer-modified-p)
+              (revert-buffer)
+              (revert-buffer t t))
+        (if (yes-or-no-p "Overwrite external modifications? ")
+            (clear-visited-file-modtime)
+            (set-buffer-modified-p (current-buffer))
+            (save-buffer)))))
+
+(defadvice check-modified (after ido-switch-buffer activate)
+  "Run a revert check when we switch to a buffer"
+  (my-check-modified))
+
+(ad-activate 'check-modified)
+
+;; miscellaneous stuff
+
+(setq echo-keystrokes 0.1)
+(subword-mode 1)
+
+;; erc IRC client
+(require 'erc)
+
+;; powerline
+(require 'powerline)
+(setq powerline-arrow-shape 'curve)
+(powerline-default-theme)
+
+;; silver searcher
+(require 'ag)
+
+;; custom file
+
+(setq custom-file "custom.el")
+(load custom-file)
