@@ -1,22 +1,43 @@
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-(add-to-list 'exec-path "/usr/local/bin")
+;;; package --- Summary
+;;; Commentary:
+;;; Code:
+
+
+(defvar nvm-version (shell-command-to-string "source $HOME/.profile && nvm current"))
+(defvar nvm-dir (concat (file-truename "~/.nvm") "/versions/node/" nvm-version))
+(defvar nvm-bindir (concat nvm-dir "/bin"))
+(defvar path-additions `("/usr/local/bin" ,nvm-bindir))
+
+(setenv "PATH" (concat (getenv "PATH") (mapconcat (lambda (path) (concat ":" path)) path-additions nil)))
+(setq exec-path (append exec-path path-additions))
 
 (when (>= emacs-major-version 24)
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-  (package-refresh-contents)
   (package-initialize)
+  (package-refresh-contents)
 )
 
-(setq my-packages
+(defvar my-packages
       '(auto-complete autopair clojure-mode egg evil go-mode haskell-mode
         perspective popup ruby-mode smex solarized-theme undo-tree yasnippet
-        iedit google-this elein bm auto-complete surround gist nrepl git-gutter
-        ecb elpy auctex ess powerline ido-ubiquitous ido-sort-mtime ag ac-nrepl))
+        iedit google-this elein bm auto-complete evil-surround gist git-gutter
+        ecb elpy auctex ess powerline ido-sort-mtime ag
+        coffee-mode handlebars-mode
+        flx flx-ido
+        projectile
+        helm helm-projectile
+        json-reformat
+        flymake-coffee
+        flycheck
+        tuareg
+        editorconfig
+        jinja2-mode
+        ))
 
-;; (mapc (lambda (p)
-;;         (when (not (package-installed-p p)) (package-install p)))
-;;       my-packages)
+(mapc (lambda (p)
+        (when (not (package-installed-p p)) (package-install p)))
+      my-packages)
 
 (add-to-list 'load-path "~/.emacs.d/")
 (setq save-place-file "~/.emacs.d/saveplace")
@@ -52,9 +73,9 @@
 
 ; random stuff
 
-(add-hook 'makefile-mode-hook 
+(add-hook 'makefile-mode-hook
   (lambda()
-    (setq show-trailing-whitespace t)))    
+    (setq show-trailing-whitespace t)))
 
 (add-hook 'c-mode-hook
   (lambda ()
@@ -84,7 +105,7 @@
 (setq compilation-window-height 12)
 
 ;; from enberg on #emacs
-;; if the compilation has a zero exit code, 
+;; if the compilation has a zero exit code,
 ;; the windows disappears after two seconds
 ;; otherwise it stays
 (setq compilation-finish-function
@@ -121,7 +142,7 @@ not visiting a file"
              (t (find-tags-file-r (directory-file-name parent))))))
 
     (if (buffer-file-name)
-        (catch 'found-it 
+        (catch 'found-it
           (find-tags-file-r (buffer-file-name)))
         (error "buffer is not visiting a file"))))
 
@@ -133,7 +154,7 @@ otherwise raises an error."
   (setq tags-table-list (cons (jds-find-tags-file) tags-table-list)))
 
 ;; delay search the TAGS file after open the source file
-(add-hook 'emacs-startup-hook 
+(add-hook 'emacs-startup-hook
 	'(lambda () (jds-set-tags-file-path)))
 
 ;; sml-mode
@@ -146,15 +167,24 @@ otherwise raises an error."
 (defvar show-paren-overlay-1 nil)
 (show-paren-mode)
 
+;; ido and related
 (require 'ido)
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(setq ido-create-new-buffer 'always)
+(require 'flx-ido)
 (ido-mode 1)
+(ido-everywhere 1)
+(flx-ido-mode 1)
 
-(require 'ido-ubiquitous)
+(setq ido-enable-flex-matching t)
+(setq ido-create-new-buffer 'always)
+(setq ido-use-faces nil)
+
+(require 'ido-completing-read+)
+(ido-ubiquitous-mode 1)
 (require 'ido-sort-mtime)
 (require 'idomenu)
+
+;; projectile
+(projectile-global-mode)
 
 ;; solarized
 (require 'solarized)
@@ -162,14 +192,15 @@ otherwise raises an error."
 
 ;; ruby-mode
 (autoload 'ruby-mode "ruby-mode" "Major mode for ruby files" t)
-(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))                    
-(add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode)) 
+(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
+(add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode))
 
 ;; Yasnippet
 
 (require 'yasnippet)
 (yas-load-directory "~/.emacs.d/snippets")
-(yas-minor-mode)
+(yas-global-mode 1)
+(define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand)
 
 ;; autocomplete-mode
 
@@ -189,8 +220,8 @@ otherwise raises an error."
 
 ;; clojure
 (require 'clojure-mode)
-(require 'nrepl)
-(require 'ac-nrepl)
+; (require 'nrepl)
+; (require 'ac-nrepl)
 
 ;; disable scrollbars
 
@@ -222,16 +253,17 @@ otherwise raises an error."
 (setq mac-right-option-modifier nil)
 
 ;; golang
-(require 'go-mode-load)
+; (require 'go-mode-load)
 
 (if (eq system-type 'darwin)
     (ns-toggle-toolbar))
+
+(add-hook 'after-make-frame-functions 'ns-toggle-toolbar)
 
 (require 'iedit)
 (require 'google-this)
 (require 'elein)
 (require 'bm)
-(require 'uniquify)
 
 (require 'recentf)
 (recentf-mode 1)
@@ -245,18 +277,32 @@ otherwise raises an error."
 
 (elpy-enable)
 (elpy-use-ipython)
-(elpy-clean-modeline)
+; (elpy-clean-modeline)
+(define-key elpy-mode-map (kbd "M-n") 'elpy-nav-next-iblock)
+(define-key elpy-mode-map (kbd "M-p") 'elpy-nav-previous-iblock)
+(define-key elpy-mode-map (kbd "S-n") 'elpy-nav-forward-iblock)
+(define-key elpy-mode-map (kbd "S-p") 'elpy-nav-backward-iblock)
+(setq elpy-modules (remove 'elpy-module-flymake elpy-modules))
+(add-to-list 'auto-mode-alist '("BUCK\\'" . python-mode))
+(add-hook 'python-mode-hook
+          (lambda()
+            ;; ugh crazy addepar people
+            (if (equal (file-name-nondirectory (buffer-file-name)) "BUCK")
+                (setq-local python-indent-offset 2))))
 
 ;; surround
 
-(require 'surround)
-(global-surround-mode)
+(require 'evil-surround)
+(global-evil-surround-mode)
 
 ;; ESS
 (require 'ess-site)
 
 ;; html/js stuff
-(setq sgml-basic-offset 4)
+(add-hook 'html-mode-hook
+          (lambda ()
+            (setq sgml-basic-offset 2)
+            (setq indent-tabs-mode nil)))
 
 ;; quick register access to this file
 (set-register ?e '(file "~/.emacs.d/init.el"))
@@ -296,7 +342,119 @@ otherwise raises an error."
 ;; silver searcher
 (require 'ag)
 
+;; TODO: add this back in, but not if there have been no git changes to the file
+;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(standard-display-ascii ?\t "^I")
+
+(defun my-ido-project-files ()
+  "Use ido to select a file from the project."
+  (interactive)
+  (let (my-project-root tbl)
+    (setq my-project-root project-root)
+    ;; get project files
+    (setq project-files 
+          (split-string 
+           (shell-command-to-string 
+            (concat "find "
+                    my-project-root
+                    " \\( -name \"*.svn\" -o -name \"*.git\" \\) -prune -o -type f -print | grep -E -v \"\.(pyc)$\""
+                    )) "\n"))
+    ;; populate hash table (display repr => path)
+    (setq tbl (make-hash-table :test 'equal))
+    (let (ido-list)
+      (mapc (lambda (path)
+              ;; format path for display in ido list
+              (setq key (replace-regexp-in-string "\\(.*?\\)\\([^/]+?\\)$" "\\2|\\1" path))
+              ;; strip project root
+              (setq key (replace-regexp-in-string my-project-root "" key))
+              ;; remove trailing | or /
+              (setq key (replace-regexp-in-string "\\(|\\|/\\)$" "" key))
+              (puthash key path tbl)
+              (push key ido-list)
+              )
+            project-files
+            )
+      (find-file (gethash (ido-completing-read "project-files: " ido-list) tbl)))))
+
+(global-set-key (kbd "C-c C-f") 'my-ido-project-files)
+
+;; uniquify
+(require 'uniquify)
+
+;; gradle
+(require 'groovy-mode)
+(require 'gradle-mode)
+(gradle-mode 1)
+
+;; ember
+(require 'ember-mode)
+(ember-mode)
+
+;; coffeescript
+(require 'flymake-coffee)
+(add-hook 'coffee-mode-hook 'flymake-coffee-load)
+
+;; flycheck
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(defun my/use-eslint-from-node-modules ()
+  "Get local eslint."
+  (let* ((root (locate-dominating-file
+                (or (buffer-file-name) default-directory)
+                "node_modules"))
+         (eslint (and root
+                      (expand-file-name "node_modules/eslint/bin/eslint.js"
+                                        root))))
+    (when (and eslint (file-executable-p eslint))
+      (setq-local flycheck-javascript-eslint-executable eslint))))
+(add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
+
+(require 'editorconfig)
+(editorconfig-mode 1)
+
+;; ocaml stuff
+
+;; Add opam emacs directory to the load-path
+(setq opam-share (substring (shell-command-to-string "opam config var share 2> /dev/null") 0 -1))
+(add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
+;; Load merlin-mode
+(require 'merlin)
+;; Start merlin on ocaml files
+(add-hook 'tuareg-mode-hook 'merlin-mode t)
+(add-hook 'caml-mode-hook 'merlin-mode t)
+;; Enable auto-complete
+(setq merlin-use-auto-complete-mode 'easy)
+;; Use opam switch to lookup ocamlmerlin binary
+(setq merlin-command 'opam)
+
+(set-default-font "Mononoki")
+
 ;; custom file
 
-(setq custom-file "custom.el")
-(load custom-file)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(coffee-tab-width 2)
+ '(erc-modules
+   (quote
+    (autojoin button completion fill irccontrols list match menu move-to-prompt netsplit networks noncommands readonly ring services stamp track)))
+ '(erc-nick "bjcohen")
+ '(package-selected-packages
+   (quote
+    (helm-ag helm-smex helm-git helm-google ido-yes-or-no jenkins-watch jenkins dockerfile-mode docker flymake-json powerline web-mode typescript-mode tuareg string-inflection solarized-theme smex sass-mode salt-mode ponylang-mode pony-snippets perspective nvm matlab-mode markdown-mode less-css-mode json-mode js2-mode jinja2-mode iedit ido-sort-mtime helm-projectile haskell-mode handlebars-sgml-mode handlebars-mode groovy-mode gradle-mode google-this go-mode git-gutter gist flycheck flx-ido exec-path-from-shell evil-surround ess ember-mode elpy elixir-mode elein egg editorconfig ecb cython-mode csharp-mode coffee-mode clojure-snippets clojure-mode bm autopair auto-complete auctex ag)))
+ '(reb-re-syntax (quote string))
+ '(safe-local-variable-values
+   (quote
+    ((project-root . "/Users/ben.cohen/dev/iverson/iverson/app")
+     (project-root . "/Users/ben.cohen/dev/iverson/iverson"))))
+ '(show-trailing-whitespace t)
+ '(tab-width 2)
+ '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
