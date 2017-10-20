@@ -18,22 +18,52 @@
   (package-refresh-contents)
 )
 
-(defvar my-packages
-      '(auto-complete autopair clojure-mode egg evil go-mode haskell-mode
-        perspective popup ruby-mode smex solarized-theme undo-tree yasnippet
-        iedit google-this elein bm auto-complete evil-surround gist git-gutter
-        ecb elpy auctex ess powerline ido-sort-mtime ag
-        coffee-mode handlebars-mode
-        flx flx-ido
-        projectile
-        helm helm-projectile
-        json-reformat
-        flymake-coffee
-        flycheck
-        tuareg
-        editorconfig
-        jinja2-mode
-        ))
+(defvar my-packages '(
+                      ag
+                      auctex
+                      auto-complete
+                      auto-complete
+                      autopair
+                      bm
+                      clojure-mode
+                      coffee-mode
+                      ecb
+                      editorconfig
+                      egg
+                      elein
+                      elpy
+                      ember-mode
+                      ess
+                      evil
+                      evil-surround
+                      flx
+                      flx-ido
+                      flycheck
+                      flymake-coffee
+                      gist
+                      git-gutter
+                      go-mode
+                      google-this
+                      groovy-mode
+                      handlebars-mode
+                      haskell-mode
+                      helm
+                      helm-projectile
+                      ido-completing-read+
+                      ido-sort-mtime
+                      iedit
+                      jinja2-mode
+                      json-reformat
+                      perspective
+                      popup
+                      powerline
+                      projectile
+                      ruby-mode
+                      smex
+                      solarized-theme
+                      undo-tree
+                      yasnippet
+                      ))
 
 (mapc (lambda (p)
         (when (not (package-installed-p p)) (package-install p)))
@@ -382,11 +412,6 @@ otherwise raises an error."
 ;; uniquify
 (require 'uniquify)
 
-;; gradle
-(require 'groovy-mode)
-(require 'gradle-mode)
-(gradle-mode 1)
-
 ;; ember
 (require 'ember-mode)
 (ember-mode)
@@ -413,19 +438,6 @@ otherwise raises an error."
 (editorconfig-mode 1)
 
 ;; ocaml stuff
-
-;; Add opam emacs directory to the load-path
-(setq opam-share (substring (shell-command-to-string "opam config var share 2> /dev/null") 0 -1))
-(add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
-;; Load merlin-mode
-(require 'merlin)
-;; Start merlin on ocaml files
-(add-hook 'tuareg-mode-hook 'merlin-mode t)
-(add-hook 'caml-mode-hook 'merlin-mode t)
-;; Enable auto-complete
-(setq merlin-use-auto-complete-mode 'easy)
-;; Use opam switch to lookup ocamlmerlin binary
-(setq merlin-command 'opam)
 
 (set-default-font "Mononoki")
 

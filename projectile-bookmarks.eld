@@ -1,1 +1,0 @@
-("~/dev/dotfiles/" "~/dev/AMP/" "~/dev/docker-client/" "~/dev/infrastructure-scripts/")

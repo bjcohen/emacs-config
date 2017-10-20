@@ -8,3 +8,8 @@ var
 bookmarks
 custom.el
 projectile.cache
+projectile-bookmarks.eld
+abbrev_defs
+ido.last
+recentf
+smex-items
