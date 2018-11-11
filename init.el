@@ -59,6 +59,7 @@
                       popup
                       powerline
                       projectile
+                      projectile-ripgrep
                       ruby-mode
                       smex
                       solarized-theme
@@ -186,7 +187,7 @@ otherwise raises an error."
 (add-hook 'emacs-startup-hook
           '(lambda () (jds-set-tags-file-path)))
 
-;; hilight matching parens
+; hilight matching parens
 (defvar show-paren-overlay nil)
 (defvar show-paren-overlay-1 nil)
 (show-paren-mode)
