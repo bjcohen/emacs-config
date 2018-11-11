@@ -54,7 +54,6 @@
                       ido-sort-mtime
                       iedit
                       jinja2-mode
-                      json-reformat
                       perspective
                       popup
                       powerline
