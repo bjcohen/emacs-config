@@ -39,7 +39,6 @@
                       flx
                       flx-ido
                       flycheck
-                      flymake-coffee
                       gist
                       git-gutter
                       go-mode
@@ -48,7 +47,9 @@
                       handlebars-mode
                       haskell-mode
                       helm
+                      helm-ag
                       helm-projectile
+                      helm-rg
                       ido-completing-read+
                       ido-sort-mtime
                       iedit
@@ -69,7 +70,7 @@
         (when (not (package-installed-p p)) (package-install p)))
       my-packages)
 
-(add-to-list 'load-path "~/.emacs.d/")
+(add-to-list 'load-path "~/.emacs.d/lisp")
 (setq save-place-file "~/.emacs.d/saveplace")
 (setq-default save-place t)
 (require 'saveplace)
@@ -83,11 +84,9 @@
         (lambda ()
                 (define-key c-mode-map [(ctrl tab)] 'complete-tag)))
 
-(require 'gas-mode)
-(add-to-list 'auto-mode-alist '("\\.S\\'" . gas-mode))
+(add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode))
+(add-to-list 'auto-mode-alist '("jenkins/" . groovy-mode))
 (global-set-key [?\M-g] 'goto-line)  ; easier to jump to specific lines (M-g)
-
-(add-hook 'gas-mode-common-hook 'doxymacs-mode)
 
 ; egg
 (require 'egg)
@@ -152,15 +151,15 @@
 ;; etags-select
 
 ;;load the etags-select.el source code
-(load-file "~/.emacs.d/etags-select.el")
+(load-file "~/.emacs.d/lisp/etags-select.el")
 ;;binding the key
 (global-set-key "\M-?" 'etags-select-find-tag-at-point)
 (global-set-key "\M-." 'etags-select-find-tag)
 
 (defun jds-find-tags-file ()
-  "recursively searches each parent directory for a file named 'TAGS' and returns the
-path to that file or nil if a tags file is not found. Returns nil if the buffer is
-not visiting a file"
+  "Recursively search each parent directory for a file named 'TAGS'.
+Return the path to that file or nil if a tags file is not found.  Return
+nil if the buffer is not visiting a file"
   (progn
       (defun find-tags-file-r (path)
          "find the tags file from the parent directories"
@@ -168,16 +167,16 @@ not visiting a file"
                 (possible-tags-file (concat parent "TAGS")))
            (cond
              ((file-exists-p possible-tags-file) (throw 'found-it possible-tags-file))
-             ((string= "/TAGS" possible-tags-file) (error "no tags file found"))
+             ((string= "/TAGS" possible-tags-file) (error "No tags file found"))
              (t (find-tags-file-r (directory-file-name parent))))))
 
     (if (buffer-file-name)
         (catch 'found-it
           (find-tags-file-r (buffer-file-name)))
-        (error "buffer is not visiting a file"))))
+        (error "Buffer is not visiting a file"))))
 
 (defun jds-set-tags-file-path ()
-  "calls `jds-find-tags-file' to recursively search up the directory tree to find
+  "Call `jds-find-tags-file' to recursively search up the directory tree to find
 a file named 'TAGS'. If found, set 'tags-table-list' with that path as an argument
 otherwise raises an error."
   (interactive)
@@ -185,12 +184,7 @@ otherwise raises an error."
 
 ;; delay search the TAGS file after open the source file
 (add-hook 'emacs-startup-hook
-	'(lambda () (jds-set-tags-file-path)))
-
-;; sml-mode
-
-(add-to-list 'load-path "~/.emacs.d/sml-mode-4.1/")
-(load-file "~/.emacs.d/sml-mode-4.1/sml-mode-startup.el")
+          '(lambda () (jds-set-tags-file-path)))
 
 ;; hilight matching parens
 (defvar show-paren-overlay nil)
@@ -214,7 +208,10 @@ otherwise raises an error."
 (require 'idomenu)
 
 ;; projectile
-(projectile-global-mode)
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(require 'projectile-ripgrep)
 
 ;; solarized
 (require 'solarized)
@@ -266,6 +263,22 @@ otherwise raises an error."
 (require 'evil)
 (evil-mode 1)
 (setq evil-default-state 'emacs)
+
+;; Helm
+(require 'helm-config)
+(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
+
+(require 'helm-projectile)
+(define-key projectile-mode-map (kbd "C-c p s g") 'helm-projectile-grep)
+(define-key projectile-mode-map (kbd "C-c p s r") 'helm-projectile-rg)
+(define-key projectile-mode-map (kbd "C-c p s s") 'helm-projectile-ag)
+
+;; grep replacements
+(require 'ripgrep)
+(require 'helm-rg)
+
+(require 'ag)
 
 ;; smex
 (require 'smex)
@@ -339,6 +352,7 @@ otherwise raises an error."
 
 ;; auto-open
 (defun my-check-modified ()
+  "Interactive prompt to check file modification."
   (interactive)
   (if (not (verify-visited-file-modtime (current-buffer)))
       (if (yes-or-no-p "Buffer modified, reload? ")
@@ -351,7 +365,7 @@ otherwise raises an error."
             (save-buffer)))))
 
 (defadvice check-modified (after ido-switch-buffer activate)
-  "Run a revert check when we switch to a buffer"
+  "Run a revert check when we switch to a buffer."
   (my-check-modified))
 
 (ad-activate 'check-modified)
@@ -369,9 +383,6 @@ otherwise raises an error."
 (setq powerline-arrow-shape 'curve)
 (powerline-default-theme)
 
-;; silver searcher
-(require 'ag)
-
 ;; TODO: add this back in, but not if there have been no git changes to the file
 ;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
@@ -383,9 +394,9 @@ otherwise raises an error."
   (let (my-project-root tbl)
     (setq my-project-root project-root)
     ;; get project files
-    (setq project-files 
-          (split-string 
-           (shell-command-to-string 
+    (setq project-files
+          (split-string
+           (shell-command-to-string
             (concat "find "
                     my-project-root
                     " \\( -name \"*.svn\" -o -name \"*.git\" \\) -prune -o -type f -print | grep -E -v \"\.(pyc)$\""
@@ -416,12 +427,11 @@ otherwise raises an error."
 (require 'ember-mode)
 (ember-mode)
 
-;; coffeescript
-(require 'flymake-coffee)
-(add-hook 'coffee-mode-hook 'flymake-coffee-load)
-
 ;; flycheck
-(add-hook 'after-init-hook #'global-flycheck-mode)
+(require 'flycheck)
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
 (defun my/use-eslint-from-node-modules ()
   "Get local eslint."
   (let* ((root (locate-dominating-file
@@ -433,11 +443,30 @@ otherwise raises an error."
     (when (and eslint (file-executable-p eslint))
       (setq-local flycheck-javascript-eslint-executable eslint))))
 (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
+(with-eval-after-load 'flycheck
+  (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
+
+;; We can safely declare this function, since we'll only call it in Python Mode,
+;; that is, when python.el was already loaded.
+(declare-function python-shell-calculate-exec-path "python")
+
+(defun flycheck-virtualenv-executable-find (executable)
+  "Find an EXECUTABLE in the current virtualenv if any."
+  (if (bound-and-true-p python-shell-virtualenv-root)
+      (let ((exec-path (python-shell-calculate-exec-path)))
+        (executable-find executable))
+    (executable-find executable)))
+
+(defun flycheck-virtualenv-setup ()
+  "Setup Flycheck for the current virtualenv."
+  (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find))
+
+(add-hook 'python-mode-hook #'flycheck-virtualenv-setup)
+
+(require 'tox)
 
 (require 'editorconfig)
 (editorconfig-mode 1)
-
-;; ocaml stuff
 
 (set-default-font "Mononoki")
 
@@ -453,9 +482,10 @@ otherwise raises an error."
    (quote
     (autojoin button completion fill irccontrols list match menu move-to-prompt netsplit networks noncommands readonly ring services stamp track)))
  '(erc-nick "bjcohen")
+ '(flycheck-pycheckers-checkers (quote (flake8)))
  '(package-selected-packages
    (quote
-    (helm-ag helm-smex helm-git helm-google ido-yes-or-no jenkins-watch jenkins dockerfile-mode docker flymake-json powerline web-mode typescript-mode tuareg string-inflection solarized-theme smex sass-mode salt-mode ponylang-mode pony-snippets perspective nvm matlab-mode markdown-mode less-css-mode json-mode js2-mode jinja2-mode iedit ido-sort-mtime helm-projectile haskell-mode handlebars-sgml-mode handlebars-mode groovy-mode gradle-mode google-this go-mode git-gutter gist flycheck flx-ido exec-path-from-shell evil-surround ess ember-mode elpy elixir-mode elein egg editorconfig ecb cython-mode csharp-mode coffee-mode clojure-snippets clojure-mode bm autopair auto-complete auctex ag)))
+    (projectile-ripgrep flycheck-pycheckers use-package solarized-theme idomenu ido-completing-read+ projectile helm-rg ripgrep flycheck-pyflakes tox rust-mode markdown-mode+ csv-mode helm-ag helm-smex helm-git helm-google ido-yes-or-no jenkins-watch jenkins dockerfile-mode docker flymake-json powerline web-mode typescript-mode string-inflection smex sass-mode salt-mode ponylang-mode pony-snippets perspective nvm matlab-mode markdown-mode less-css-mode json-mode js2-mode jinja2-mode iedit ido-sort-mtime helm-projectile haskell-mode handlebars-sgml-mode handlebars-mode groovy-mode gradle-mode google-this go-mode git-gutter gist flycheck flx-ido exec-path-from-shell evil-surround ess ember-mode elpy elixir-mode elein egg editorconfig ecb cython-mode csharp-mode coffee-mode clojure-snippets clojure-mode bm autopair auto-complete auctex ag)))
  '(reb-re-syntax (quote string))
  '(safe-local-variable-values
    (quote
@@ -470,3 +500,6 @@ otherwise raises an error."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(provide 'init)
+;;; init.el ends here
