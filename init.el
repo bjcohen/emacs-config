@@ -320,7 +320,11 @@ otherwise raises an error."
 ;; pip install elpy rope jedi
 
 (elpy-enable)
-(elpy-use-ipython)
+(setq python-shell-interpreter "jupyter"
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+(add-to-list 'python-shell-completion-native-disabled-interpreters
+             "jupyter")
 ; (elpy-clean-modeline)
 (define-key elpy-mode-map (kbd "M-n") 'elpy-nav-next-iblock)
 (define-key elpy-mode-map (kbd "M-p") 'elpy-nav-previous-iblock)
