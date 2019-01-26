@@ -3,13 +3,13 @@
 ;;; Code:
 
 
-(defvar nvm-version (shell-command-to-string "source $HOME/.profile && nvm current"))
-(defvar nvm-dir (concat (file-truename "~/.nvm") "/versions/node/" nvm-version))
-(defvar nvm-bindir (concat nvm-dir "/bin"))
-(defvar path-additions `("/usr/local/bin" ,nvm-bindir))
+; (defvar nvm-version (shell-command-to-string "source $HOME/.profile && nvm current"))
+; (defvar nvm-dir (concat (file-truename "~/.nvm") "/versions/node/" nvm-version))
+; (defvar nvm-bindir (concat nvm-dir "/bin"))
+; (defvar path-additions `("/usr/local/bin" ,nvm-bindir))
 
-(setenv "PATH" (concat (getenv "PATH") (mapconcat (lambda (path) (concat ":" path)) path-additions nil)))
-(setq exec-path (append exec-path path-additions))
+; (setenv "PATH" (concat (getenv "PATH") (mapconcat (lambda (path) (concat ":" path)) path-additions nil)))
+; (setq exec-path (append exec-path path-additions))
 
 (when (>= emacs-major-version 24)
   (require 'package)
@@ -17,6 +17,9 @@
   (package-initialize)
   (package-refresh-contents)
 )
+
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
 (defvar my-packages '(
                       ag
@@ -36,6 +39,7 @@
                       ess
                       evil
                       evil-surround
+                      exec-path-from-shell
                       flx
                       flx-ido
                       flycheck
@@ -62,6 +66,7 @@
                       ruby-mode
                       smex
                       solarized-theme
+                      tox
                       undo-tree
                       yasnippet
                       ))
@@ -101,15 +106,6 @@
 (setq autopair-autowrap 'true)
 
 ; random stuff
-
-(add-hook 'makefile-mode-hook
-  (lambda()
-    (setq show-trailing-whitespace t)))
-
-(add-hook 'c-mode-hook
-  (lambda ()
-    (font-lock-add-keywords nil
-      '(("^[^\n]\\{80\\}\\(.*\\)$" 1 font-lock-warning-face t)))))
 
 (add-hook 'c-mode-common-hook
                (lambda ()
@@ -231,14 +227,27 @@ otherwise raises an error."
 
 ;; autocomplete-mode
 
-(require 'auto-complete)
+(require 'auto-complete-config)
 (add-to-list 'ac-sources 'ac-source-yasnippet)
-;; (ac-config-default)
+(ac-config-default)
 (load "auto-complete-haskell.el")
 
-;; don't use tabs
+;; tabs
 
-(setq-default indent-tabs-mode nil)
+;; (setq-default indent-tabs-mode nil)
+;; (standard-display-ascii ?\t "^I")
+(global-whitespace-mode)
+(setq whitespace-style '(face trailing lines-tail))
+
+(defface redbackground
+  '((t :background "dark red"))
+  "Red background."
+  :group 'custom-faces)
+
+(setq whitespace-trailing 'redbackground)
+(setq whitespace-line 'font-lock-warning-face)
+(setq whitespace-line-column 100)
+
 
 ;; Sometimes I use these...
 
@@ -297,6 +306,7 @@ otherwise raises an error."
 
 ;; golang
 ; (require 'go-mode-load)
+; (require 'go-autocomplete)
 
 (if (eq system-type 'darwin)
     (ns-toggle-toolbar))
@@ -387,11 +397,6 @@ otherwise raises an error."
 (setq powerline-arrow-shape 'curve)
 (powerline-default-theme)
 
-;; TODO: add this back in, but not if there have been no git changes to the file
-;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-(standard-display-ascii ?\t "^I")
-
 (defun my-ido-project-files ()
   "Use ido to select a file from the project."
   (interactive)
@@ -433,9 +438,8 @@ otherwise raises an error."
 
 ;; flycheck
 (require 'flycheck)
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode))
+(global-flycheck-mode)
+
 (defun my/use-eslint-from-node-modules ()
   "Get local eslint."
   (let* ((root (locate-dominating-file
@@ -447,8 +451,8 @@ otherwise raises an error."
     (when (and eslint (file-executable-p eslint))
       (setq-local flycheck-javascript-eslint-executable eslint))))
 (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
-(with-eval-after-load 'flycheck
-  (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
+;; (with-eval-after-load 'flycheck
+;;   (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
 
 ;; We can safely declare this function, since we'll only call it in Python Mode,
 ;; that is, when python.el was already loaded.
@@ -483,27 +487,20 @@ otherwise raises an error."
  ;; If there is more than one, they won't work right.
  '(coffee-tab-width 2)
  '(erc-modules
-   (quote
-    (autojoin button completion fill irccontrols list match menu move-to-prompt netsplit networks noncommands readonly ring services stamp track)))
+	 (quote
+		(autojoin button completion fill irccontrols list match menu move-to-prompt netsplit networks noncommands readonly ring services stamp track)))
  '(erc-nick "bjcohen")
  '(flycheck-pycheckers-checkers (quote (flake8)))
  '(package-selected-packages
-   (quote
-    (projectile-ripgrep flycheck-pycheckers use-package solarized-theme idomenu ido-completing-read+ projectile helm-rg ripgrep flycheck-pyflakes tox rust-mode markdown-mode+ csv-mode helm-ag helm-smex helm-git helm-google ido-yes-or-no jenkins-watch jenkins dockerfile-mode docker flymake-json powerline web-mode typescript-mode string-inflection smex sass-mode salt-mode ponylang-mode pony-snippets perspective nvm matlab-mode markdown-mode less-css-mode json-mode js2-mode jinja2-mode iedit ido-sort-mtime helm-projectile haskell-mode handlebars-sgml-mode handlebars-mode groovy-mode gradle-mode google-this go-mode git-gutter gist flycheck flx-ido exec-path-from-shell evil-surround ess ember-mode elpy elixir-mode elein egg editorconfig ecb cython-mode csharp-mode coffee-mode clojure-snippets clojure-mode bm autopair auto-complete auctex ag)))
+	 (quote
+		(projectile-ripgrep flycheck-pycheckers use-package solarized-theme idomenu ido-completing-read+ projectile helm-rg ripgrep flycheck-pyflakes tox rust-mode markdown-mode+ csv-mode helm-ag helm-smex helm-git helm-google ido-yes-or-no jenkins-watch jenkins dockerfile-mode docker flymake-json powerline web-mode typescript-mode string-inflection smex sass-mode salt-mode ponylang-mode pony-snippets perspective nvm matlab-mode markdown-mode less-css-mode json-mode js2-mode jinja2-mode iedit ido-sort-mtime helm-projectile haskell-mode handlebars-sgml-mode handlebars-mode groovy-mode gradle-mode google-this go-mode git-gutter gist flycheck flx-ido exec-path-from-shell evil-surround ess ember-mode elpy elixir-mode elein egg editorconfig ecb cython-mode csharp-mode coffee-mode clojure-snippets clojure-mode bm autopair auto-complete auctex ag)))
  '(reb-re-syntax (quote string))
  '(safe-local-variable-values
-   (quote
-    ((project-root . "/Users/ben.cohen/dev/iverson/iverson/app")
-     (project-root . "/Users/ben.cohen/dev/iverson/iverson"))))
- '(show-trailing-whitespace t)
+	 (quote
+		((project-root . "/Users/ben.cohen/dev/iverson/iverson/app")
+		 (project-root . "/Users/ben.cohen/dev/iverson/iverson"))))
  '(tab-width 2)
  '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 
 (provide 'init)
 ;;; init.el ends here
