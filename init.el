@@ -3,23 +3,12 @@
 ;;; Code:
 
 
-; (defvar nvm-version (shell-command-to-string "source $HOME/.profile && nvm current"))
-; (defvar nvm-dir (concat (file-truename "~/.nvm") "/versions/node/" nvm-version))
-; (defvar nvm-bindir (concat nvm-dir "/bin"))
-; (defvar path-additions `("/usr/local/bin" ,nvm-bindir))
-
-; (setenv "PATH" (concat (getenv "PATH") (mapconcat (lambda (path) (concat ":" path)) path-additions nil)))
-; (setq exec-path (append exec-path path-additions))
-
 (when (>= emacs-major-version 24)
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (package-initialize)
   (package-refresh-contents)
 )
-
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
 
 (defvar my-packages '(
                       ag
@@ -47,6 +36,7 @@
                       gist
                       git-gutter
                       go-mode
+                      go-autocomplete
                       google-this
                       groovy-mode
                       handlebars-mode
@@ -76,6 +66,9 @@
 (mapc (lambda (p)
         (when (not (package-installed-p p)) (package-install p)))
       my-packages)
+
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (setq save-place-file "~/.emacs.d/saveplace")
@@ -307,8 +300,8 @@ otherwise raises an error."
 (setq mac-right-option-modifier nil)
 
 ;; golang
-; (require 'go-mode-load)
-; (require 'go-autocomplete)
+(require 'go-mode)
+(require 'go-autocomplete)
 
 (if (eq system-type 'darwin)
     (ns-toggle-toolbar))
@@ -495,7 +488,7 @@ otherwise raises an error."
  '(flycheck-pycheckers-checkers (quote (flake8)))
  '(package-selected-packages
 	 (quote
-		(projectile-ripgrep flycheck-pycheckers use-package solarized-theme idomenu ido-completing-read+ projectile helm-rg ripgrep flycheck-pyflakes tox rust-mode markdown-mode+ csv-mode helm-ag helm-smex helm-git helm-google ido-yes-or-no jenkins-watch jenkins dockerfile-mode docker flymake-json powerline web-mode typescript-mode string-inflection smex sass-mode salt-mode ponylang-mode pony-snippets perspective nvm matlab-mode markdown-mode less-css-mode json-mode js2-mode jinja2-mode iedit ido-sort-mtime helm-projectile haskell-mode handlebars-sgml-mode handlebars-mode groovy-mode gradle-mode google-this go-mode git-gutter gist flycheck flx-ido exec-path-from-shell evil-surround ess ember-mode elpy elixir-mode elein egg editorconfig ecb cython-mode csharp-mode coffee-mode clojure-snippets clojure-mode bm autopair auto-complete auctex ag)))
+		(go-autocomplete projectile-ripgrep flycheck-pycheckers use-package solarized-theme idomenu ido-completing-read+ projectile helm-rg ripgrep flycheck-pyflakes tox rust-mode markdown-mode+ csv-mode helm-ag helm-smex helm-git helm-google ido-yes-or-no jenkins-watch jenkins dockerfile-mode docker flymake-json powerline web-mode typescript-mode string-inflection smex sass-mode salt-mode ponylang-mode pony-snippets perspective nvm matlab-mode markdown-mode less-css-mode json-mode js2-mode jinja2-mode iedit ido-sort-mtime helm-projectile haskell-mode handlebars-sgml-mode handlebars-mode groovy-mode gradle-mode google-this go-mode git-gutter gist flycheck flx-ido exec-path-from-shell evil-surround ess ember-mode elpy elixir-mode elein egg editorconfig ecb cython-mode csharp-mode coffee-mode clojure-snippets clojure-mode bm autopair auto-complete auctex ag)))
  '(reb-re-syntax (quote string))
  '(safe-local-variable-values
 	 (quote
@@ -506,3 +499,9 @@ otherwise raises an error."
 
 (provide 'init)
 ;;; init.el ends here
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
