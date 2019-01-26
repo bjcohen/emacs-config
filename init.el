@@ -43,6 +43,7 @@
                       flx
                       flx-ido
                       flycheck
+                      flycheck-pycheckers
                       gist
                       git-gutter
                       go-mode
@@ -68,6 +69,7 @@
                       solarized-theme
                       tox
                       undo-tree
+                      use-package
                       yasnippet
                       ))
 
