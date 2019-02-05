@@ -446,25 +446,26 @@ otherwise raises an error."
     (when (and eslint (file-executable-p eslint))
       (setq-local flycheck-javascript-eslint-executable eslint))))
 (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
-;; (with-eval-after-load 'flycheck
-;;   (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
-
-;; We can safely declare this function, since we'll only call it in Python Mode,
-;; that is, when python.el was already loaded.
+(defun my-get-venv-path (&optional path)
+  "Get the virtualenv path starting at PATH if it exists."
+  (cond ((or (string= path "/") (eq (buffer-file-name) nil)) nil)
+        ((eq path nil) (my-get-venv-path (buffer-file-name)))
+        ((file-directory-p (concat path "venv")) (concat path "venv"))
+        ((file-exists-p path) (my-get-venv-path (file-name-directory (directory-file-name path))))
+        (t "default")))
 (declare-function python-shell-calculate-exec-path "python")
-
 (defun flycheck-virtualenv-executable-find (executable)
   "Find an EXECUTABLE in the current virtualenv if any."
   (if (bound-and-true-p python-shell-virtualenv-root)
       (let ((exec-path (python-shell-calculate-exec-path)))
         (executable-find executable))
     (executable-find executable)))
-
 (defun flycheck-virtualenv-setup ()
   "Setup Flycheck for the current virtualenv."
-  (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find))
-
-(add-hook 'python-mode-hook #'flycheck-virtualenv-setup)
+  (progn
+    (setq-local python-shell-virtualenv-path (my-get-venv-path))
+    (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find)))
+(add-hook 'flycheck-mode-hook #'flycheck-virtualenv-setup)
 
 (require 'tox)
 
