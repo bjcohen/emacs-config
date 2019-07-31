@@ -2,18 +2,15 @@
 ;;; Commentary:
 ;;; Code:
 
-
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-  (package-initialize)
-  (package-refresh-contents)
-)
+(setq package-archives '(("gnu" . "http://mirrors.163.com/elpa/gnu/")
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("org" . "http://orgmode.org/elpa/")))
+(package-initialize)
+(package-refresh-contents)
 
 (defvar my-packages '(
                       ag
                       auctex
-                      auto-complete
                       auto-complete
                       autopair
                       bm
@@ -58,7 +55,6 @@
                       smex
                       solarized-theme
                       tox
-                      undo-tree
                       use-package
                       yasnippet
                       ))
