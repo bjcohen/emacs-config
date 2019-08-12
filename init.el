@@ -44,6 +44,7 @@
                       helm-rg
                       ido-completing-read+
                       ido-sort-mtime
+                      idomenu
                       iedit
                       jinja2-mode
                       perspective
@@ -67,7 +68,7 @@
   (exec-path-from-shell-initialize))
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
-(setq save-place-file "~/.emacs.d/saveplace")
+
 (setq-default save-place t)
 (require 'saveplace)
 
@@ -76,13 +77,12 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-(add-hook 'c-mode-common-hook
-        (lambda ()
-                (define-key c-mode-map [(ctrl tab)] 'complete-tag)))
-
 (add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode))
 (add-to-list 'auto-mode-alist '("jenkins/" . groovy-mode))
 (global-set-key [?\M-g] 'goto-line)  ; easier to jump to specific lines (M-g)
+
+;; ispell
+(add-hook 'text-mode-hook (lambda () (flyspell-mode 1)))
 
 ; egg
 (require 'egg)
@@ -114,64 +114,15 @@
 
 (require 'compile)
 
-;; this means hitting the compile button always saves the buffer
-;; having to separately hit C-x C-s is a waste of time
-(setq mode-compile-always-save-buffer-p t)
-;; make the compile window stick at 12 lines tall
-(setq compilation-window-height 12)
-
-;; from enberg on #emacs
-;; if the compilation has a zero exit code,
-;; the windows disappears after two seconds
-;; otherwise it stays
-(setq compilation-finish-function
-      (lambda (buf str)
-        (unless (string-match "exited abnormally" str)
-          ;;no errors, make the compilation window go away in a few seconds
+(defun close-on-successful-exit (buffer desc)
+	"Close the compilation BUFFER in two seconds if DESC indei it exited successfully."
+        (unless (string-match "exited abnormally" desc)
           (run-at-time
            "2 sec" nil 'delete-windows-on
            (get-buffer-create "*compilation*"))
-          (message "No Compilation Errors!"))))
+          (message "No Compilation Errors!")))
 
-
-
-;; etags-select
-
-;;load the etags-select.el source code
-(load-file "~/.emacs.d/lisp/etags-select.el")
-;;binding the key
-(global-set-key "\M-?" 'etags-select-find-tag-at-point)
-(global-set-key "\M-." 'etags-select-find-tag)
-
-(defun jds-find-tags-file ()
-  "Recursively search each parent directory for a file named 'TAGS'.
-Return the path to that file or nil if a tags file is not found.  Return
-nil if the buffer is not visiting a file"
-  (progn
-      (defun find-tags-file-r (path)
-         "find the tags file from the parent directories"
-         (let* ((parent (file-name-directory path))
-                (possible-tags-file (concat parent "TAGS")))
-           (cond
-             ((file-exists-p possible-tags-file) (throw 'found-it possible-tags-file))
-             ((string= "/TAGS" possible-tags-file) (error "No tags file found"))
-             (t (find-tags-file-r (directory-file-name parent))))))
-
-    (if (buffer-file-name)
-        (catch 'found-it
-          (find-tags-file-r (buffer-file-name)))
-        (error "Buffer is not visiting a file"))))
-
-(defun jds-set-tags-file-path ()
-  "Call `jds-find-tags-file' to recursively search up the directory tree to find
-a file named 'TAGS'. If found, set 'tags-table-list' with that path as an argument
-otherwise raises an error."
-  (interactive)
-  (setq tags-table-list (cons (jds-find-tags-file) tags-table-list)))
-
-;; delay search the TAGS file after open the source file
-(add-hook 'emacs-startup-hook
-          '(lambda () (jds-set-tags-file-path)))
+(add-hook 'compilation-finish-functions 'close-on-successful-exit)
 
 ; hilight matching parens
 (defvar show-paren-overlay nil)
@@ -468,7 +419,7 @@ otherwise raises an error."
 (require 'editorconfig)
 (editorconfig-mode 1)
 
-(set-default-font "Mononoki")
+(set-frame-font "Mononoki")
 
 ;; custom file
 
