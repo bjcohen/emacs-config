@@ -9,13 +9,13 @@
 (package-refresh-contents)
 
 (defvar my-packages '(
-                      ag
                       auctex
                       auto-complete
                       autopair
                       bm
                       clojure-mode
                       coffee-mode
+                      dap-mode
                       ecb
                       editorconfig
                       egg
@@ -28,6 +28,8 @@
                       exec-path-from-shell
                       flx
                       flx-ido
+                      flycheck-inline
+                      flycheck-rust
                       flycheck
                       flycheck-pycheckers
                       gist
@@ -39,7 +41,7 @@
                       handlebars-mode
                       haskell-mode
                       helm
-                      helm-ag
+                      helm-lsp
                       helm-projectile
                       helm-rg
                       ido-completing-read+
@@ -47,18 +49,25 @@
                       idomenu
                       iedit
                       jinja2-mode
+                      lsp-mode
+                      lsp-ui
+                      paradox
                       perspective
                       popup
                       powerline
                       projectile
                       projectile-ripgrep
                       ruby-mode
+                      rust-mode
                       smex
                       solarized-theme
                       tox
                       use-package
                       yasnippet
                       ))
+
+(require 'paradox)
+(paradox-enable)
 
 (mapc (lambda (p)
         (when (not (package-installed-p p)) (package-install p)))
@@ -115,7 +124,7 @@
 (require 'compile)
 
 (defun close-on-successful-exit (buffer desc)
-	"Close the compilation BUFFER in two seconds if DESC indei it exited successfully."
+  "Close the compilation BUFFER in two seconds if DESC indei it exited successfully."
         (unless (string-match "exited abnormally" desc)
           (run-at-time
            "2 sec" nil 'delete-windows-on
@@ -176,8 +185,8 @@
 
 ;; tabs
 
-;; (setq-default indent-tabs-mode nil)
-;; (standard-display-ascii ?\t "^I")
+(setq-default indent-tabs-mode nil)
+(standard-display-ascii ?\t "^I")
 (global-whitespace-mode)
 (setq whitespace-style '(face trailing lines-tail))
 
@@ -223,13 +232,10 @@
 (require 'helm-projectile)
 (define-key projectile-mode-map (kbd "C-c p s g") 'helm-projectile-grep)
 (define-key projectile-mode-map (kbd "C-c p s r") 'helm-projectile-rg)
-(define-key projectile-mode-map (kbd "C-c p s s") 'helm-projectile-ag)
 
 ;; grep replacements
 (require 'ripgrep)
 (require 'helm-rg)
-
-(require 'ag)
 
 ;; smex
 (require 'smex)
@@ -381,6 +387,8 @@
 ;; flycheck
 (require 'flycheck)
 (global-flycheck-mode)
+(with-eval-after-load 'flycheck
+  (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
 
 (defun my/use-eslint-from-node-modules ()
   "Get local eslint."
@@ -421,6 +429,23 @@
 
 (set-frame-font "Mononoki")
 
+(require 'rust-mode)
+(with-eval-after-load 'rust-mode
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+(require 'lsp-mode)
+(add-hook 'prog-mode-hook #'lsp)
+(use-package lsp-ui)
+(use-package helm-lsp)
+
+(require 'dap-lldb)
+(dap-mode 1)
+(dap-ui-mode 1)
+(dap-tooltip-mode 1)
+(tooltip-mode 1)
+(require 'dap-gdb-lldb)
+(dap-gdb-lldb-setup)
+
 ;; custom file
 
 (custom-set-variables
@@ -430,18 +455,19 @@
  ;; If there is more than one, they won't work right.
  '(coffee-tab-width 2)
  '(erc-modules
-	 (quote
-		(autojoin button completion fill irccontrols list match menu move-to-prompt netsplit networks noncommands readonly ring services stamp track)))
+   (quote
+    (autojoin button completion fill irccontrols list match menu move-to-prompt netsplit networks noncommands readonly ring services stamp track)))
  '(erc-nick "bjcohen")
  '(flycheck-pycheckers-checkers (quote (flake8)))
  '(package-selected-packages
-	 (quote
-		(go-autocomplete projectile-ripgrep flycheck-pycheckers use-package solarized-theme idomenu ido-completing-read+ projectile helm-rg ripgrep flycheck-pyflakes tox rust-mode markdown-mode+ csv-mode helm-ag helm-smex helm-git helm-google ido-yes-or-no jenkins-watch jenkins dockerfile-mode docker flymake-json powerline web-mode typescript-mode string-inflection smex sass-mode salt-mode ponylang-mode pony-snippets perspective nvm matlab-mode markdown-mode less-css-mode json-mode js2-mode jinja2-mode iedit ido-sort-mtime helm-projectile haskell-mode handlebars-sgml-mode handlebars-mode groovy-mode gradle-mode google-this go-mode git-gutter gist flycheck flx-ido exec-path-from-shell evil-surround ess ember-mode elpy elixir-mode elein egg editorconfig ecb cython-mode csharp-mode coffee-mode clojure-snippets clojure-mode bm autopair auto-complete auctex ag)))
+   (quote
+    (google-maps yaml-mode dap-mode paradox helm-lsp lsp-ui lsp-mode flycheck-inline flycheck-rust go-autocomplete projectile-ripgrep idomenu flycheck-pyflakes tox markdown-mode+ csv-mode helm-ag helm-smex helm-git helm-google ido-yes-or-no jenkins-watch jenkins dockerfile-mode docker flymake-json web-mode typescript-mode string-inflection smex sass-mode salt-mode ponylang-mode pony-snippets nvm matlab-mode markdown-mode less-css-mode json-mode js2-mode jinja2-mode ido-sort-mtime handlebars-sgml-mode handlebars-mode gradle-mode google-this git-gutter gist flycheck flx-ido elixir-mode elein egg ecb cython-mode csharp-mode coffee-mode clojure-snippets autopair auto-complete)))
+ '(paradox-github-token t)
  '(reb-re-syntax (quote string))
  '(safe-local-variable-values
-	 (quote
-		((project-root . "/Users/ben.cohen/dev/iverson/iverson/app")
-		 (project-root . "/Users/ben.cohen/dev/iverson/iverson"))))
+   (quote
+    ((project-root . "/Users/ben.cohen/dev/iverson/iverson/app")
+     (project-root . "/Users/ben.cohen/dev/iverson/iverson"))))
  '(tab-width 2)
  '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
 
