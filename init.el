@@ -437,6 +437,7 @@
 (add-hook 'prog-mode-hook #'lsp)
 (use-package lsp-ui)
 (use-package helm-lsp)
+(lsp-rust-switch-server 'rust-analyzer)
 
 (require 'dap-lldb)
 (dap-mode 1)
