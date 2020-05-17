@@ -14,7 +14,6 @@
                       autopair
                       bm
                       clojure-mode
-                      coffee-mode
                       dap-mode
                       ecb
                       editorconfig
@@ -37,7 +36,6 @@
                       go-mode
                       go-autocomplete
                       google-this
-                      groovy-mode
                       handlebars-mode
                       haskell-mode
                       helm
@@ -86,8 +84,6 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-(add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode))
-(add-to-list 'auto-mode-alist '("jenkins/" . groovy-mode))
 (global-set-key [?\M-g] 'goto-line)  ; easier to jump to specific lines (M-g)
 
 ;; ispell
@@ -454,7 +450,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(coffee-tab-width 2)
  '(erc-modules
    (quote
     (autojoin button completion fill irccontrols list match menu move-to-prompt netsplit networks noncommands readonly ring services stamp track)))
@@ -462,7 +457,7 @@
  '(flycheck-pycheckers-checkers (quote (flake8)))
  '(package-selected-packages
    (quote
-    (google-maps yaml-mode dap-mode paradox helm-lsp lsp-ui lsp-mode flycheck-inline flycheck-rust go-autocomplete projectile-ripgrep idomenu flycheck-pyflakes tox markdown-mode+ csv-mode helm-ag helm-smex helm-git helm-google ido-yes-or-no jenkins-watch jenkins dockerfile-mode docker flymake-json web-mode typescript-mode string-inflection smex sass-mode salt-mode ponylang-mode pony-snippets nvm matlab-mode markdown-mode less-css-mode json-mode js2-mode jinja2-mode ido-sort-mtime handlebars-sgml-mode handlebars-mode gradle-mode google-this git-gutter gist flycheck flx-ido elixir-mode elein egg ecb cython-mode csharp-mode coffee-mode clojure-snippets autopair auto-complete)))
+    (yaml-mode dap-mode paradox helm-lsp lsp-ui lsp-mode flycheck-inline flycheck-rust go-autocomplete projectile-ripgrep idomenu flycheck-pyflakes tox markdown-mode+ csv-mode helm-smex helm-git helm-google ido-yes-or-no jenkins-watch jenkins dockerfile-mode docker flymake-json web-mode typescript-mode string-inflection smex sass-mode salt-mode nvm markdown-mode less-css-mode json-mode js2-mode jinja2-mode ido-sort-mtime handlebars-sgml-mode handlebars-mode google-this git-gutter gist flycheck flx-ido elixir-mode elein egg ecb cython-mode csharp-mode clojure-snippets autopair auto-complete)))
  '(paradox-github-token t)
  '(reb-re-syntax (quote string))
  '(safe-local-variable-values
