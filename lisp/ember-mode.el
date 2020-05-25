@@ -1,1 +1,0 @@
-../ember-mode/ember-mode.el

@@ -80,8 +80,6 @@
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
-(add-to-list 'load-path "~/.emacs.d/lisp")
-
 (setq-default save-place t)
 (require 'saveplace)
 
@@ -183,7 +181,6 @@
 (require 'auto-complete-config)
 (add-to-list 'ac-sources 'ac-source-yasnippet)
 (ac-config-default)
-(load "auto-complete-haskell.el")
 
 ;; tabs
 
