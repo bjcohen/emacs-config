@@ -22,11 +22,9 @@
                       auctex
                       auto-complete
                       bm
-                      clojure-mode
                       dap-mode
                       ecb
                       editorconfig
-                      elein
                       elpy
                       ess
                       evil
@@ -196,11 +194,6 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
-;; clojure
-(require 'clojure-mode)
-; (require 'nrepl)
-; (require 'ac-nrepl)
-
 ;; disable scrollbars
 
 (set-scroll-bar-mode nil)
@@ -254,7 +247,6 @@
 
 (require 'iedit)
 (require 'google-this)
-(require 'elein)
 (require 'bm)
 
 (require 'recentf)
