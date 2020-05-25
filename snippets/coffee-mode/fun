@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: lambda
-# key: fun
-# group: functional
-# --
-(${1:x}) ->
-  $0

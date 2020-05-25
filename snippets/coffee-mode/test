@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: test
-# key: test
-# group: tests
-# --
-test "$1", ->
-  expect 0
-  $0

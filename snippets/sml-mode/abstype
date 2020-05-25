@@ -1,5 +1,0 @@
-abstype $1 =
-	$2
-with
-	$0
-end
