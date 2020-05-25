@@ -69,6 +69,9 @@
                       smex
                       solarized-theme
                       tox
+                      treemacs
+                      treemacs-evil
+                      treemacs-projectile
                       use-package
                       yasnippet
                       ))
