@@ -28,7 +28,6 @@
                       editorconfig
                       elein
                       elpy
-                      ember-mode
                       ess
                       evil
                       evil-surround
@@ -371,10 +370,6 @@
 
 ;; uniquify
 (require 'uniquify)
-
-;; ember
-(require 'ember-mode)
-(ember-mode)
 
 ;; flycheck
 (require 'flycheck)
