@@ -448,6 +448,8 @@
 (require 'dap-gdb-lldb)
 (dap-gdb-lldb-setup)
 
+(treemacs)
+
 ;;; Customize Section
 
 (custom-set-variables
