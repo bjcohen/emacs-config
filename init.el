@@ -2,11 +2,20 @@
 ;;; Commentary:
 ;;; Code:
 
-(setq package-archives '(("gnu" . "http://mirrors.163.com/elpa/gnu/")
-                         ("melpa" . "https://melpa.org/packages/")
-                         ("org" . "http://orgmode.org/elpa/")))
-(package-initialize)
-(package-refresh-contents)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+;;; Install Packages
 
 (defvar my-packages '(
                       auctex
@@ -64,17 +73,12 @@
                       yasnippet
                       ))
 
-(require 'paradox)
-(paradox-enable)
+(mapc (lambda (p) (straight-use-package p)) my-packages)
 
-(mapc (lambda (p)
-        (when (not (package-installed-p p)) (package-install p)))
-      my-packages)
+;;; OS X Config
 
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
-
-(add-to-list 'load-path "~/.emacs.d/lisp")
 
 (setq-default save-place t)
 (require 'saveplace)
@@ -177,7 +181,6 @@
 (require 'auto-complete-config)
 (add-to-list 'ac-sources 'ac-source-yasnippet)
 (ac-config-default)
-(load "auto-complete-haskell.el")
 
 ;; tabs
 
@@ -443,35 +446,20 @@
 (require 'dap-gdb-lldb)
 (dap-gdb-lldb-setup)
 
-;; custom file
+;;; Customize Section
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(erc-modules
-   (quote
-    (autojoin button completion fill irccontrols list match menu move-to-prompt netsplit networks noncommands readonly ring services stamp track)))
- '(erc-nick "bjcohen")
- '(flycheck-pycheckers-checkers (quote (flake8)))
- '(package-selected-packages
-   (quote
-    (yaml-mode dap-mode paradox helm-lsp lsp-ui lsp-mode flycheck-inline flycheck-rust go-autocomplete projectile-ripgrep idomenu flycheck-pyflakes tox markdown-mode+ csv-mode helm-smex helm-git helm-google ido-yes-or-no jenkins-watch jenkins dockerfile-mode docker flymake-json web-mode typescript-mode string-inflection smex sass-mode salt-mode nvm markdown-mode less-css-mode json-mode js2-mode jinja2-mode ido-sort-mtime handlebars-sgml-mode handlebars-mode google-this git-gutter gist flycheck flx-ido elixir-mode elein egg ecb cython-mode csharp-mode clojure-snippets autopair auto-complete)))
- '(paradox-github-token t)
- '(reb-re-syntax (quote string))
- '(safe-local-variable-values
-   (quote
-    ((project-root . "/Users/ben.cohen/dev/iverson/iverson/app")
-     (project-root . "/Users/ben.cohen/dev/iverson/iverson"))))
- '(tab-width 2)
- '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
-
-(provide 'init)
-;;; init.el ends here
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(provide 'init)
+;;; init.el ends here
