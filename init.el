@@ -14,19 +14,18 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+(setq straight-use-package-by-default t)
 
 ;;; Install Packages
 
 (defvar my-packages '(
                       auctex
                       auto-complete
-                      autopair
                       bm
                       clojure-mode
                       dap-mode
                       ecb
                       editorconfig
-                      egg
                       elein
                       elpy
                       ember-mode
@@ -34,8 +33,6 @@
                       evil
                       evil-surround
                       exec-path-from-shell
-                      flx
-                      flx-ido
                       flycheck-inline
                       flycheck-rust
                       flycheck
@@ -46,14 +43,10 @@
                       go-autocomplete
                       google-this
                       handlebars-mode
-                      haskell-mode
                       helm
                       helm-lsp
                       helm-projectile
                       helm-rg
-                      ido-completing-read+
-                      ido-sort-mtime
-                      idomenu
                       iedit
                       jinja2-mode
                       lsp-mode
@@ -62,12 +55,9 @@
                       perspective
                       popup
                       powerline
-                      projectile
-                      projectile-ripgrep
                       ruby-mode
                       rust-mode
                       smex
-                      solarized-theme
                       tox
                       treemacs
                       treemacs-evil
@@ -96,17 +86,15 @@
 ;; ispell
 (add-hook 'text-mode-hook (lambda () (flyspell-mode 1)))
 
-; egg
-(require 'egg)
+(use-package egg)
 
 ; git-gutter
 (global-git-gutter-mode t)
 
-; autopair
-
-(require 'autopair)
-(autopair-global-mode)
-(setq autopair-autowrap 'true)
+(use-package autopair
+  :config
+  (autopair-global-mode)
+  (setq autopair-autowrap t))
 
 ; random stuff
 
@@ -115,57 +103,60 @@
                 (font-lock-add-keywords nil
                  '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
 
-;; haskell mode
-(require 'haskell-mode)
-(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(use-package haskell-mode
+  :config
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+  (require 'inf-haskell))
 
-(require 'inf-haskell)
+(use-package compile
+  :config
+  (defun close-on-successful-exit (buffer desc)
+    "Close the compilation BUFFER in two seconds if DESC indei it exited successfully."
+    (unless (string-match "exited abnormally" desc)
+      (run-at-time
+       "2 sec" nil 'delete-windows-on
+       (get-buffer-create "*compilation*"))
+      (message "No Compilation Errors!")))
 
-;; Compile
-
-(require 'compile)
-
-(defun close-on-successful-exit (buffer desc)
-  "Close the compilation BUFFER in two seconds if DESC indei it exited successfully."
-        (unless (string-match "exited abnormally" desc)
-          (run-at-time
-           "2 sec" nil 'delete-windows-on
-           (get-buffer-create "*compilation*"))
-          (message "No Compilation Errors!")))
-
-(add-hook 'compilation-finish-functions 'close-on-successful-exit)
+  (add-hook 'compilation-finish-functions 'close-on-successful-exit))
 
 ; hilight matching parens
 (defvar show-paren-overlay nil)
 (defvar show-paren-overlay-1 nil)
 (show-paren-mode)
 
-;; ido and related
-(require 'ido)
-(require 'flx-ido)
-(ido-mode 1)
-(ido-everywhere 1)
-(flx-ido-mode 1)
+(use-package ido
+  :config
+  (use-package flx)
+  (use-package flx-ido)
 
-(setq ido-enable-flex-matching t)
-(setq ido-create-new-buffer 'always)
-(setq ido-use-faces nil)
+  (ido-mode 1)
+  (ido-everywhere 1)
+  (flx-ido-mode 1)
 
-(require 'ido-completing-read+)
-(ido-ubiquitous-mode 1)
-(require 'ido-sort-mtime)
-(require 'idomenu)
+  (setq ido-enable-flex-matching t)
+  (setq ido-create-new-buffer 'always)
+  (setq ido-use-faces nil)
+
+  (use-package ido-completing-read+)
+  (ido-ubiquitous-mode 1)
+  (use-package ido-sort-mtime)
+  (use-package idomenu))
 
 ;; projectile
-(projectile-mode +1)
-(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-(require 'projectile-ripgrep)
+
+(use-package projectile
+  :config
+  (projectile-mode +1)
+  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (use-package projectile-ripgrep))
 
 ;; solarized
-(require 'solarized)
-(load-theme 'solarized-dark t)
+(use-package solarized-theme
+  :config
+  (load-theme 'solarized-dark t))
 
 ;; ruby-mode
 (autoload 'ruby-mode "ruby-mode" "Major mode for ruby files" t)
