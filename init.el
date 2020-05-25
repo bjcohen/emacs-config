@@ -15,6 +15,66 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;;; Install Packages
+
+(defvar my-packages '(
+                      auctex
+                      auto-complete
+                      autopair
+                      bm
+                      clojure-mode
+                      dap-mode
+                      ecb
+                      editorconfig
+                      egg
+                      elein
+                      elpy
+                      ember-mode
+                      ess
+                      evil
+                      evil-surround
+                      exec-path-from-shell
+                      flx
+                      flx-ido
+                      flycheck-inline
+                      flycheck-rust
+                      flycheck
+                      flycheck-pycheckers
+                      gist
+                      git-gutter
+                      go-mode
+                      go-autocomplete
+                      google-this
+                      handlebars-mode
+                      haskell-mode
+                      helm
+                      helm-lsp
+                      helm-projectile
+                      helm-rg
+                      ido-completing-read+
+                      ido-sort-mtime
+                      idomenu
+                      iedit
+                      jinja2-mode
+                      lsp-mode
+                      lsp-ui
+                      paradox
+                      perspective
+                      popup
+                      powerline
+                      projectile
+                      projectile-ripgrep
+                      ruby-mode
+                      rust-mode
+                      smex
+                      solarized-theme
+                      tox
+                      use-package
+                      yasnippet
+                      ))
+
+(mapc (lambda (p) (straight-use-package p)) my-packages)
+
 ;;; Customize Section
 
 (custom-set-variables
