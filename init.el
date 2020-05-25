@@ -172,7 +172,6 @@
 ;; Yasnippet
 
 (require 'yasnippet)
-(yas-load-directory "~/.emacs.d/snippets")
 (yas-global-mode 1)
 (define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand)
 
