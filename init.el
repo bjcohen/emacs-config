@@ -109,10 +109,10 @@
   (use-package idomenu))
 
 (use-package projectile
+  :bind-keymap
+  ("C-c p" . 'projectile-command-map)
   :config
   (projectile-mode +1)
-  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (use-package projectile-ripgrep))
 
 (use-package solarized-theme
@@ -174,28 +174,29 @@
     (global-evil-surround-mode)))
 
 (use-package helm
+  :bind (("C-x r b" . 'helm-filtered-bookmarks)
+         ("C-x C-f" . 'helm-find-files)
+         ("C-x C-r" . 'helm-recentf))
   :config
-  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-  (global-set-key (kbd "C-x C-f") #'helm-find-files)
   (use-package helm-projectile
-    :config
-    (define-key projectile-mode-map (kbd "C-c p s g") 'helm-projectile-grep)
-    (define-key projectile-mode-map (kbd "C-c p s r") 'helm-projectile-rg))
+    :bind
+    (:map projectile-mode-map
+          ("C-c p s g" . 'helm-projectile-grep)
+          ("C-c p s r" . 'helm-projectile-rg)))
   (use-package helm-lsp)
   (recentf-mode t)
-  (setq recentf-max-menu-items 25)
-  (global-set-key "\C-x\ \C-r" 'helm-recentf))
+  (setq recentf-max-menu-items 25))
 
 (use-package ripgrep
   :config
   (use-package helm-rg))
 
 (use-package smex
+  :bind
+  (("M-x" . 'smex)
+   ("M-X" . 'smex-major-mode-commands))
   :config
   (smex-initialize))
-
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
 (use-package go-mode
   :config
@@ -210,6 +211,12 @@
 ;; python
 ;; pip install elpy rope jedi
 (use-package elpy
+  :bind
+  (:map elpy-mode-map
+        ("M-n" . 'elpy-nav-next-iblock)
+        ("M-p" . 'elpy-nav-previous-iblock)
+        ("S-n" . 'elpy-nav-forward-iblock)
+        ("S-p" . 'elpy-nav-backward-iblock))
   :config
   (elpy-enable)
   (setq python-shell-interpreter "jupyter"
@@ -217,11 +224,7 @@
         python-shell-prompt-detect-failure-warning nil)
   (add-to-list 'python-shell-completion-native-disabled-interpreters
                "jupyter")
-                                        ; (elpy-clean-modeline)
-  (define-key elpy-mode-map (kbd "M-n") 'elpy-nav-next-iblock)
-  (define-key elpy-mode-map (kbd "M-p") 'elpy-nav-previous-iblock)
-  (define-key elpy-mode-map (kbd "S-n") 'elpy-nav-forward-iblock)
-  (define-key elpy-mode-map (kbd "S-p") 'elpy-nav-backward-iblock)
+  ;;; (elpy-clean-modeline)
   (setq elpy-modules (remove 'elpy-module-flymake elpy-modules))
   (add-to-list 'auto-mode-alist '("BUCK\\'" . python-mode))
   (add-hook 'python-mode-hook
