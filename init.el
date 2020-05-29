@@ -28,6 +28,16 @@
   :config
   (exec-path-from-shell-initialize))
 
+(if (eq system-type 'darwin)
+    (ns-toggle-toolbar))
+
+(add-hook 'after-make-frame-functions 'ns-toggle-toolbar)
+
+(setq mac-command-modifier 'control)
+(setq mac-control-modifier 'super)
+(setq mac-option-modifier 'meta)
+(setq mac-right-option-modifier nil)
+
 ;;; General Config
 
 (setq-default save-place t)
@@ -50,12 +60,12 @@
   (autopair-global-mode)
   (setq autopair-autowrap t))
 
-; random stuff
+;;; random stuff
 
 (add-hook 'c-mode-common-hook
-               (lambda ()
-                (font-lock-add-keywords nil
-                 '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
+          (lambda ()
+            (font-lock-add-keywords nil
+                                    '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
 
 (use-package haskell-mode
   :config
@@ -75,7 +85,7 @@
 
   (add-hook 'compilation-finish-functions 'close-on-successful-exit))
 
-; hilight matching parens
+;;; hilight matching parens
 (defvar show-paren-overlay nil)
 (defvar show-paren-overlay-1 nil)
 (show-paren-mode)
@@ -180,30 +190,16 @@
   :config
   (use-package helm-rg))
 
-;; smex
 (use-package smex
   :config
   (smex-initialize))
 
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-; Old M-x
-; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
-;; unlearn muscle memory...
-(setq mac-command-modifier 'control)
-(setq mac-control-modifier 'super)
-(setq mac-option-modifier 'meta)
-(setq mac-right-option-modifier nil)
 
 (use-package go-mode
   :config
   (use-package go-autocomplete))
-
-(if (eq system-type 'darwin)
-    (ns-toggle-toolbar))
-
-(add-hook 'after-make-frame-functions 'ns-toggle-toolbar)
 
 (use-package iedit)
 (use-package google-this)
@@ -253,11 +249,11 @@
       (if (yes-or-no-p "Buffer modified, reload? ")
           (if (buffer-modified-p)
               (revert-buffer)
-              (revert-buffer t t))
+            (revert-buffer t t))
         (if (yes-or-no-p "Overwrite external modifications? ")
             (clear-visited-file-modtime)
-            (set-buffer-modified-p (current-buffer))
-            (save-buffer)))))
+          (set-buffer-modified-p (current-buffer))
+          (save-buffer)))))
 
 (defadvice check-modified (after ido-switch-buffer activate)
   "Run a revert check when we switch to a buffer."
