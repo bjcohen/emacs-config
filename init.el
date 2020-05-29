@@ -14,35 +14,21 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+
+;;; Configure use-package
+
+(straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
-
-;;; Install Packages
-
-(defvar my-packages '(
-                      auctex
-                      dap-mode
-                      ecb
-                      exec-path-from-shell
-                      gist
-                      git-gutter
-                      handlebars-mode
-                      jinja2-mode
-                      lsp-mode
-                      lsp-ui
-                      paradox
-                      popup
-                      treemacs
-                      treemacs-evil
-                      treemacs-projectile
-                      use-package
-                      ))
-
-(mapc (lambda (p) (straight-use-package p)) my-packages)
 
 ;;; OS X Config
 
-(when (memq window-system '(mac ns x))
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns))
+  :ensure t
+  :config
   (exec-path-from-shell-initialize))
+
+;;; General Config
 
 (setq-default save-place t)
 (require 'saveplace)
@@ -58,9 +44,6 @@
 (add-hook 'text-mode-hook (lambda () (flyspell-mode 1)))
 
 (use-package egg)
-
-; git-gutter
-(global-git-gutter-mode t)
 
 (use-package autopair
   :config
@@ -379,20 +362,40 @@
   :config
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
-(require 'lsp-mode)
-(add-hook 'prog-mode-hook #'lsp)
-(use-package lsp-ui)
-; (lsp-rust-switch-server 'rust-analyzer)
+(use-package lsp-mode
+  :config
+  (add-hook 'prog-mode-hook #'lsp)
+  (use-package lsp-ui))
 
-(require 'dap-lldb)
-(dap-mode 1)
-(dap-ui-mode 1)
-(dap-tooltip-mode 1)
-(tooltip-mode 1)
-(require 'dap-gdb-lldb)
-(dap-gdb-lldb-setup)
+(use-package dap-mode
+  :config
+  (require 'dap-lldb)
+  (dap-mode 1)
+  (dap-ui-mode 1)
+  (dap-tooltip-mode 1)
+  (tooltip-mode 1)
+  (require 'dap-gdb-lldb)
+  (dap-gdb-lldb-setup))
 
-(treemacs)
+(use-package treemacs
+  :config
+  (treemacs)
+  (use-package treemacs-evil)
+  (use-package treemacs-projectile)
+  (use-package treemacs-evil))
+
+(use-package auctex
+  :defer t
+  :ensure t)
+(use-package ecb)
+(use-package gist)
+(use-package git-gutter
+  :config
+  (global-git-gutter-mode t))
+(use-package handlebars-mode)
+(use-package jinja2-mode)
+(use-package paradox)
+(use-package popup)
 
 ;;; Customize Section
 
