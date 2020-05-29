@@ -20,15 +20,12 @@
 
 (defvar my-packages '(
                       auctex
-                      auto-complete
                       bm
                       dap-mode
                       ecb
                       editorconfig
                       elpy
                       ess
-                      evil
-                      evil-surround
                       exec-path-from-shell
                       flycheck-inline
                       flycheck-rust
@@ -49,10 +46,8 @@
                       lsp-mode
                       lsp-ui
                       paradox
-                      perspective
                       popup
                       powerline
-                      ruby-mode
                       rust-mode
                       smex
                       tox
@@ -60,7 +55,6 @@
                       treemacs-evil
                       treemacs-projectile
                       use-package
-                      yasnippet
                       ))
 
 (mapc (lambda (p) (straight-use-package p)) my-packages)
@@ -155,22 +149,21 @@
   :config
   (load-theme 'solarized-dark t))
 
-;; ruby-mode
-(autoload 'ruby-mode "ruby-mode" "Major mode for ruby files" t)
-(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
-(add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode))
+(use-package ruby-mode
+  :config
+  (autoload 'ruby-mode "ruby-mode" "Major mode for ruby files" t)
+  (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
+  (add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode)))
 
-;; Yasnippet
+(use-package yasnippet
+  :config
+  (yas-global-mode 1)
+  (define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand))
 
-(require 'yasnippet)
-(yas-global-mode 1)
-(define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand)
-
-;; autocomplete-mode
-
-(require 'auto-complete-config)
-(add-to-list 'ac-sources 'ac-source-yasnippet)
-(ac-config-default)
+(use-package auto-complete
+  :config
+  (add-to-list 'ac-sources 'ac-source-yasnippet)
+  (ac-config-default))
 
 ;; tabs
 
@@ -200,13 +193,18 @@
 
 ;; perspective
 
-(require 'perspective)
-(persp-mode)
+(use-package perspective
+  :config
+  (persp-mode))
 
 ;; Evil
-(require 'evil)
-(evil-mode 1)
-(setq evil-default-state 'emacs)
+(use-package evil
+  :config
+  (evil-mode 1)
+  (setq evil-default-state 'emacs)
+  (use-package evil-surround
+    :config
+    (global-evil-surround-mode)))
 
 ;; Helm
 (require 'helm-config)
@@ -277,11 +275,6 @@
             ;; ugh crazy addepar people
             (if (equal (file-name-nondirectory (buffer-file-name)) "BUCK")
                 (setq-local python-indent-offset 2))))
-
-;; surround
-
-(require 'evil-surround)
-(global-evil-surround-mode)
 
 ;; ESS
 (require 'ess-site)
