@@ -22,7 +22,6 @@
                       auctex
                       dap-mode
                       ecb
-                      editorconfig
                       exec-path-from-shell
                       gist
                       git-gutter
@@ -32,8 +31,6 @@
                       lsp-ui
                       paradox
                       popup
-                      rust-mode
-                      tox
                       treemacs
                       treemacs-evil
                       treemacs-projectile
@@ -370,15 +367,16 @@
       (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find)))
   (add-hook 'flycheck-mode-hook #'flycheck-virtualenv-setup))
 
-(require 'tox)
+(use-package tox)
 
-(require 'editorconfig)
-(editorconfig-mode 1)
+(use-package editorconfig
+  :config
+  (editorconfig-mode 1))
 
 (set-frame-font "Mononoki")
 
-(require 'rust-mode)
-(with-eval-after-load 'rust-mode
+(use-package rust-mode
+  :config
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 (require 'lsp-mode)
