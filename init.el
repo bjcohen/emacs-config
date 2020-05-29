@@ -24,10 +24,6 @@
                       ecb
                       editorconfig
                       exec-path-from-shell
-                      flycheck-inline
-                      flycheck-rust
-                      flycheck
-                      flycheck-pycheckers
                       gist
                       git-gutter
                       handlebars-mode
@@ -36,7 +32,6 @@
                       lsp-ui
                       paradox
                       popup
-                      powerline
                       rust-mode
                       tox
                       treemacs
@@ -295,13 +290,11 @@
 (setq echo-keystrokes 0.1)
 (subword-mode 1)
 
-;; erc IRC client
-(require 'erc)
-
 ;; powerline
-(require 'powerline)
-(setq powerline-arrow-shape 'curve)
-(powerline-default-theme)
+(use-package powerline
+  :config
+  (setq powerline-arrow-shape 'curve)
+  (powerline-default-theme))
 
 (defun my-ido-project-files ()
   "Use ido to select a file from the project."
@@ -335,46 +328,47 @@
 
 (global-set-key (kbd "C-c C-f") 'my-ido-project-files)
 
-;; uniquify
-(require 'uniquify)
-
 ;; flycheck
-(require 'flycheck)
-(global-flycheck-mode)
-(with-eval-after-load 'flycheck
-  (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
+(use-package flycheck
+  :config
+  (global-flycheck-mode)
+  (add-hook 'flycheck-mode-hook #'flycheck-inline-mode)
 
-(defun my/use-eslint-from-node-modules ()
-  "Get local eslint."
-  (let* ((root (locate-dominating-file
-                (or (buffer-file-name) default-directory)
-                "node_modules"))
-         (eslint (and root
-                      (expand-file-name "node_modules/eslint/bin/eslint.js"
-                                        root))))
-    (when (and eslint (file-executable-p eslint))
-      (setq-local flycheck-javascript-eslint-executable eslint))))
-(add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
-(defun my-get-venv-path (&optional path)
-  "Get the virtualenv path starting at PATH if it exists."
-  (cond ((or (string= path "/") (eq (buffer-file-name) nil)) nil)
-        ((eq path nil) (my-get-venv-path (buffer-file-name)))
-        ((file-directory-p (concat path "venv")) (concat path "venv"))
-        ((file-exists-p path) (my-get-venv-path (file-name-directory (directory-file-name path))))
-        (t "default")))
-(declare-function python-shell-calculate-exec-path "python")
-(defun flycheck-virtualenv-executable-find (executable)
-  "Find an EXECUTABLE in the current virtualenv if any."
-  (if (bound-and-true-p python-shell-virtualenv-root)
-      (let ((exec-path (python-shell-calculate-exec-path)))
-        (executable-find executable))
-    (executable-find executable)))
-(defun flycheck-virtualenv-setup ()
-  "Setup Flycheck for the current virtualenv."
-  (progn
-    (setq-local python-shell-virtualenv-path (my-get-venv-path))
-    (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find)))
-(add-hook 'flycheck-mode-hook #'flycheck-virtualenv-setup)
+  (use-package flycheck-inline)
+  (use-package flycheck-rust)
+  (use-package flycheck-pycheckers)
+
+  (defun my/use-eslint-from-node-modules ()
+    "Get local eslint."
+    (let* ((root (locate-dominating-file
+                  (or (buffer-file-name) default-directory)
+                  "node_modules"))
+           (eslint (and root
+                        (expand-file-name "node_modules/eslint/bin/eslint.js"
+                                          root))))
+      (when (and eslint (file-executable-p eslint))
+        (setq-local flycheck-javascript-eslint-executable eslint))))
+  (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
+  (defun my-get-venv-path (&optional path)
+    "Get the virtualenv path starting at PATH if it exists."
+    (cond ((or (string= path "/") (eq (buffer-file-name) nil)) nil)
+          ((eq path nil) (my-get-venv-path (buffer-file-name)))
+          ((file-directory-p (concat path "venv")) (concat path "venv"))
+          ((file-exists-p path) (my-get-venv-path (file-name-directory (directory-file-name path))))
+          (t "default")))
+  (declare-function python-shell-calculate-exec-path "python")
+  (defun flycheck-virtualenv-executable-find (executable)
+    "Find an EXECUTABLE in the current virtualenv if any."
+    (if (bound-and-true-p python-shell-virtualenv-root)
+        (let ((exec-path (python-shell-calculate-exec-path)))
+          (executable-find executable))
+      (executable-find executable)))
+  (defun flycheck-virtualenv-setup ()
+    "Setup Flycheck for the current virtualenv."
+    (progn
+      (setq-local python-shell-virtualenv-path (my-get-venv-path))
+      (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find)))
+  (add-hook 'flycheck-mode-hook #'flycheck-virtualenv-setup))
 
 (require 'tox)
 
