@@ -135,8 +135,6 @@
   (use-package ido-sort-mtime)
   (use-package idomenu))
 
-;; projectile
-
 (use-package projectile
   :config
   (projectile-mode +1)
@@ -144,7 +142,6 @@
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (use-package projectile-ripgrep))
 
-;; solarized
 (use-package solarized-theme
   :config
   (load-theme 'solarized-dark t))
@@ -191,13 +188,10 @@
 
 (set-scroll-bar-mode nil)
 
-;; perspective
-
 (use-package perspective
   :config
   (persp-mode))
 
-;; Evil
 (use-package evil
   :config
   (evil-mode 1)
