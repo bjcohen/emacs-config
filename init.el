@@ -20,12 +20,9 @@
 
 (defvar my-packages '(
                       auctex
-                      bm
                       dap-mode
                       ecb
                       editorconfig
-                      elpy
-                      ess
                       exec-path-from-shell
                       flycheck-inline
                       flycheck-rust
@@ -33,15 +30,7 @@
                       flycheck-pycheckers
                       gist
                       git-gutter
-                      go-mode
-                      go-autocomplete
-                      google-this
                       handlebars-mode
-                      helm
-                      helm-lsp
-                      helm-projectile
-                      helm-rg
-                      iedit
                       jinja2-mode
                       lsp-mode
                       lsp-ui
@@ -49,7 +38,6 @@
                       popup
                       powerline
                       rust-mode
-                      smex
                       tox
                       treemacs
                       treemacs-evil
@@ -200,22 +188,27 @@
     :config
     (global-evil-surround-mode)))
 
-;; Helm
-(require 'helm-config)
-(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
+(use-package helm
+  :config
+  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+  (global-set-key (kbd "C-x C-f") #'helm-find-files)
+  (use-package helm-projectile
+    :config
+    (define-key projectile-mode-map (kbd "C-c p s g") 'helm-projectile-grep)
+    (define-key projectile-mode-map (kbd "C-c p s r") 'helm-projectile-rg))
+  (use-package helm-lsp)
+  (recentf-mode t)
+  (setq recentf-max-menu-items 25)
+  (global-set-key "\C-x\ \C-r" 'helm-recentf))
 
-(require 'helm-projectile)
-(define-key projectile-mode-map (kbd "C-c p s g") 'helm-projectile-grep)
-(define-key projectile-mode-map (kbd "C-c p s r") 'helm-projectile-rg)
-
-;; grep replacements
-(require 'ripgrep)
-(require 'helm-rg)
+(use-package ripgrep
+  :config
+  (use-package helm-rg))
 
 ;; smex
-(require 'smex)
-(smex-initialize)
+(use-package smex
+  :config
+  (smex-initialize))
 
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
@@ -228,50 +221,45 @@
 (setq mac-option-modifier 'meta)
 (setq mac-right-option-modifier nil)
 
-;; golang
-(require 'go-mode)
-(require 'go-autocomplete)
+(use-package go-mode
+  :config
+  (use-package go-autocomplete))
 
 (if (eq system-type 'darwin)
     (ns-toggle-toolbar))
 
 (add-hook 'after-make-frame-functions 'ns-toggle-toolbar)
 
-(require 'iedit)
-(require 'google-this)
-(require 'bm)
-
-(require 'recentf)
-(recentf-mode 1)
-(setq recentf-max-menu-items 25)
-(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+(use-package iedit)
+(use-package google-this)
+(use-package bm)
 
 (global-set-key (kbd "C-`") 'other-frame)
 
 ;; python
 ;; pip install elpy rope jedi
+(use-package elpy
+  :config
+  (elpy-enable)
+  (setq python-shell-interpreter "jupyter"
+        python-shell-interpreter-args "console --simple-prompt"
+        python-shell-prompt-detect-failure-warning nil)
+  (add-to-list 'python-shell-completion-native-disabled-interpreters
+               "jupyter")
+                                        ; (elpy-clean-modeline)
+  (define-key elpy-mode-map (kbd "M-n") 'elpy-nav-next-iblock)
+  (define-key elpy-mode-map (kbd "M-p") 'elpy-nav-previous-iblock)
+  (define-key elpy-mode-map (kbd "S-n") 'elpy-nav-forward-iblock)
+  (define-key elpy-mode-map (kbd "S-p") 'elpy-nav-backward-iblock)
+  (setq elpy-modules (remove 'elpy-module-flymake elpy-modules))
+  (add-to-list 'auto-mode-alist '("BUCK\\'" . python-mode))
+  (add-hook 'python-mode-hook
+            (lambda()
+              ;; ugh crazy addepar people
+              (if (equal (file-name-nondirectory (buffer-file-name)) "BUCK")
+                  (setq-local python-indent-offset 2)))))
 
-(elpy-enable)
-(setq python-shell-interpreter "jupyter"
-      python-shell-interpreter-args "console --simple-prompt"
-      python-shell-prompt-detect-failure-warning nil)
-(add-to-list 'python-shell-completion-native-disabled-interpreters
-             "jupyter")
-; (elpy-clean-modeline)
-(define-key elpy-mode-map (kbd "M-n") 'elpy-nav-next-iblock)
-(define-key elpy-mode-map (kbd "M-p") 'elpy-nav-previous-iblock)
-(define-key elpy-mode-map (kbd "S-n") 'elpy-nav-forward-iblock)
-(define-key elpy-mode-map (kbd "S-p") 'elpy-nav-backward-iblock)
-(setq elpy-modules (remove 'elpy-module-flymake elpy-modules))
-(add-to-list 'auto-mode-alist '("BUCK\\'" . python-mode))
-(add-hook 'python-mode-hook
-          (lambda()
-            ;; ugh crazy addepar people
-            (if (equal (file-name-nondirectory (buffer-file-name)) "BUCK")
-                (setq-local python-indent-offset 2))))
-
-;; ESS
-(require 'ess-site)
+(use-package ess)
 
 ;; html/js stuff
 (add-hook 'html-mode-hook
@@ -402,7 +390,6 @@
 (require 'lsp-mode)
 (add-hook 'prog-mode-hook #'lsp)
 (use-package lsp-ui)
-(use-package helm-lsp)
 ; (lsp-rust-switch-server 'rust-analyzer)
 
 (require 'dap-lldb)
