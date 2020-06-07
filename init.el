@@ -433,7 +433,7 @@
 (add-to-list 'mu4e-marks
              '(tag
                :char       "l"
-               :prompt     "?#?#"
+               :prompt     "reading list"
                :show-target (lambda (target) "Add to reading list")
                :action      (lambda (docid msg target)
                               (mu4e-action-retag-message msg "+reading-list"))))
@@ -454,7 +454,7 @@
 (defun autotag-reading-list-from (email)
   "Auto-tag messages from EMAIL."
   (let* ((temp-file (make-temp-file "mu4e"))
-         (mu-output (shell-command-to-string (concat "mu find date:14d..now not tag:reading-list from:" email " --format=sexp")))
+         (mu-output (shell-command-to-string (concat "mu find not tag:reading-list from:" email " --format=sexp")))
          (messages (if (string-prefix-p "error: no matches for search expression" mu-output)
                        '()
                      (read-all-from-string mu-output)))
@@ -473,7 +473,7 @@
                             "oren@softwareleadweekly.com" "dan@axios.com" "suraj@pointer.io"
                             "danco@substack.com" "nongaap@substack.com"
                             "jamie@investoramnesia.com" "newsletter@farnamstreetblog.com"
-                            "azeem.azhar@exponentialview.co"))
+                            "azeem.azhar@exponentialview.co" "nathanbenaich@getrevue.co"))
 (defun autotag-reading-list ()
   "Hook to auto-tag messages from certain senders."
   (progn
