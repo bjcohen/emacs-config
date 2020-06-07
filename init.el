@@ -396,6 +396,89 @@
 (use-package paradox)
 (use-package popup)
 
+(if (version< "27.0" emacs-version)
+    (set-fontset-font
+     "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
+  (set-fontset-font
+   t 'symbol (font-spec :family "Apple Color Emoji") nil 'prepend))
+
+;;; mu4e
+
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
+(require 'mu4e)
+(setq
+ mu4e-get-mail-command "offlineimap"
+ mu4e-update-interval 600
+ mu4e-trash-folder "/Trash")
+(setq
+ user-mail-address "ben@cohen-family.org"
+ user-full-name  "Ben Cohen")
+(add-to-list 'mu4e-view-actions
+             '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+(setq mu4e-completing-read-function 'completing-read)
+(setq mu4e-bookmarks '())
+(add-to-list 'mu4e-bookmarks
+             '(:name "Reading list"
+                     :query "tag:reading-list and flag:unread"
+                     :key ?l))
+(add-to-list 'mu4e-bookmarks
+             '(:name "Today's messages"
+                     :query "date:today..now and not maildir:/Trash"
+                     :key ?t))
+(add-to-list 'mu4e-bookmarks
+             '(:name "Last 7 days"
+                     :query "date:7d..now and not maildir:/Trash"
+                     :key ?w))
+(setq mu4e-bookmarks (reverse mu4e-bookmarks))
+(add-to-list 'mu4e-marks
+             '(tag
+               :char       "l"
+               :prompt     "?#?#"
+               :show-target (lambda (target) "Add to reading list")
+               :action      (lambda (docid msg target)
+                              (mu4e-action-retag-message msg "+reading-list"))))
+(mu4e~headers-defun-mark-for tag)
+(define-key mu4e-headers-mode-map (kbd "l") 'mu4e-headers-mark-for-tag)
+(setq mu4e-headers-fields '((:human-date . 12) (:flags . 6) (:tags . 12) (:mailing-list . 12) (:from . 22) (:subject)))
+
+(defun read-all-from-string (string)
+  "Call `read-from-string` iteratively on the STRING until the end."
+  (let ((offset 0) (result '()))
+    (condition-case nil
+        (while t
+          (let ((readresult (read-from-string string offset)))
+            (progn
+              (add-to-list 'result (car readresult))
+              (setq offset (cdr readresult)))))
+      (end-of-file (reverse result)))))
+(defun autotag-reading-list-from (email)
+  "Auto-tag messages from EMAIL."
+  (let* ((temp-file (make-temp-file "mu4e"))
+         (mu-output (shell-command-to-string (concat "mu find date:14d..now not tag:reading-list from:" email " --format=sexp")))
+         (messages (if (string-prefix-p "error: no matches for search expression" mu-output)
+                       '()
+                     (read-all-from-string mu-output)))
+         (paths (mapcar (lambda (x) (plist-get x :path)) messages))
+         )
+    (mapcar (lambda (path)
+              (progn
+                (call-process-shell-command (concat "formail -A \"X-Keywords: reading-list\" > " temp-file) path)
+                (rename-file temp-file path t)
+                (mu4e-refresh-message path)
+                path))
+            paths)))
+(setq reading-list-emails '("membership@stratechery.com" "diff@substack.com"
+                            "netinterest@substack.com" "Matt Levine"
+                            "mattstoller@substack.com" "marypatcampbell@substack.com"
+                            "oren@softwareleadweekly.com" "dan@axios.com" "suraj@pointer.io"
+                            "danco@substack.com"))
+(defun autotag-reading-list ()
+  "Hook to auto-tag messages from certain senders."
+  (progn
+    (mapcar (lambda (e) (autotag-reading-list-from e)) reading-list-emails)
+    (mu4e-update-index)))
+(add-hook 'mu4e-index-updated-hook #'autotag-reading-list)
+
 ;;; Customize Section
 
 (custom-set-variables
