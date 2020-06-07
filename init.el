@@ -471,7 +471,9 @@
                             "netinterest@substack.com" "Matt Levine"
                             "mattstoller@substack.com" "marypatcampbell@substack.com"
                             "oren@softwareleadweekly.com" "dan@axios.com" "suraj@pointer.io"
-                            "danco@substack.com"))
+                            "danco@substack.com" "nongaap@substack.com"
+                            "jamie@investoramnesia.com" "newsletter@farnamstreetblog.com"
+                            "azeem.azhar@exponentialview.co"))
 (defun autotag-reading-list ()
   "Hook to auto-tag messages from certain senders."
   (progn
