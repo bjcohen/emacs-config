@@ -40,7 +40,6 @@
 
 ;;; General Config
 
-(setq-default save-place t)
 (require 'saveplace)
 
 (setq backup-directory-alist
@@ -138,7 +137,7 @@
 ;; tabs
 
 (setq-default indent-tabs-mode nil)
-(standard-display-ascii ?\t "^I")
+;; (standard-display-ascii ?\t "^I")
 (global-whitespace-mode)
 (setq whitespace-style '(face trailing lines-tail))
 
@@ -378,8 +377,6 @@
 
 (use-package treemacs
   :config
-  (treemacs)
-  (use-package treemacs-evil)
   (use-package treemacs-projectile)
   (use-package treemacs-evil))
 
@@ -410,16 +407,13 @@
  mu4e-get-mail-command "offlineimap"
  mu4e-update-interval 600
  mu4e-trash-folder "/Trash")
-(setq
- user-mail-address "ben@cohen-family.org"
- user-full-name  "Ben Cohen")
 (add-to-list 'mu4e-view-actions
              '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 (setq mu4e-completing-read-function 'completing-read)
 (setq mu4e-bookmarks '())
 (add-to-list 'mu4e-bookmarks
              '(:name "Reading list"
-                     :query "tag:reading-list and flag:unread"
+                     :query "tag:reading-list and (flag:unread or date:today)"
                      :key ?l))
 (add-to-list 'mu4e-bookmarks
              '(:name "Today's messages"
@@ -467,19 +461,74 @@
                 (mu4e-refresh-message path)
                 path))
             paths)))
-(setq reading-list-emails '("membership@stratechery.com" "diff@substack.com"
-                            "netinterest@substack.com" "Matt Levine"
-                            "mattstoller@substack.com" "marypatcampbell@substack.com"
-                            "oren@softwareleadweekly.com" "dan@axios.com" "suraj@pointer.io"
-                            "danco@substack.com" "nongaap@substack.com"
-                            "jamie@investoramnesia.com" "newsletter@farnamstreetblog.com"
-                            "azeem.azhar@exponentialview.co" "nathanbenaich@getrevue.co"))
+(defvar reading-list-emails '() "Email addresses to filter to reading-list in mu4e.")
 (defun autotag-reading-list ()
   "Hook to auto-tag messages from certain senders."
   (progn
     (mapcar (lambda (e) (autotag-reading-list-from e)) reading-list-emails)
     (mu4e-update-index)))
 (add-hook 'mu4e-index-updated-hook #'autotag-reading-list)
+
+(use-package pocket-reader
+  :config
+  (setq pocket-reader-open-url-default-function
+        (lambda (url)
+          (funcall #'org-web-tools-read-url-as-org url)
+          (visual-line-mode))))
+
+(defun org-web-tools--read-org-bracket-link (&optional link)
+  "Return (TARGET . DESCRIPTION) for Org bracket LINK or next link on current line."
+  ;; Searching to the end of the line seems the simplest way
+  (save-excursion
+    (let (target desc)
+      (if link
+          ;; Link passed as arg
+          (when (string-match org-bracket-link-regexp link)
+            (setq target (match-string-no-properties 1 link)
+                  desc (match-string-no-properties 3 link)))
+        ;; No arg; get link from buffer
+        (when (re-search-forward org-bracket-link-regexp (point-at-eol) t)
+          (setq target (match-string-no-properties 1)
+                desc (match-string-no-properties 2))))
+      (when (and target desc)
+        ;; Link found; return parts
+        (cons target desc)))))
+
+(cl-defun org-web-tools-read-url-as-org (url &key (show-buffer-fn #'switch-to-buffer))
+  "Read URL's readable content in an Org buffer.
+Buffer is displayed using SHOW-BUFFER-FN."
+  (interactive (list (org-web-tools--get-first-url)))
+  (let ((entry (org-web-tools--url-as-readable-org url)))
+    (when entry
+      (funcall show-buffer-fn url)
+      (insert entry)
+      ;; Set buffer title
+      (goto-char (point-min))
+      (rename-buffer (cdr (org-web-tools--read-org-bracket-link)))
+      (org-mode)
+      (outline-show-all)
+      (whitespace-mode 0))))
+
+(use-package org-roam
+  :hook
+  (after-init . org-roam-mode)
+  :config
+  (setq org-roam-completion-system 'helm)
+  :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-show-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
+
+
+(let ((init-local (concat user-emacs-directory "init-local.el")))
+  (when (file-exists-p init-local)
+    (load-file init-local)))
 
 ;;; Customize Section
 

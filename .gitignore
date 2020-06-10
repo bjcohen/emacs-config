@@ -19,3 +19,5 @@ eshell
 .extension
 .dap-breakpoints
 .cache
+init-local.el
+url/
