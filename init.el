@@ -224,13 +224,7 @@
   (add-to-list 'python-shell-completion-native-disabled-interpreters
                "jupyter")
   ;;; (elpy-clean-modeline)
-  (setq elpy-modules (remove 'elpy-module-flymake elpy-modules))
-  (add-to-list 'auto-mode-alist '("BUCK\\'" . python-mode))
-  (add-hook 'python-mode-hook
-            (lambda()
-              ;; ugh crazy addepar people
-              (if (equal (file-name-nondirectory (buffer-file-name)) "BUCK")
-                  (setq-local python-indent-offset 2)))))
+  (setq elpy-modules (remove 'elpy-module-flymake elpy-modules)))
 
 (use-package ess)
 
@@ -241,7 +235,7 @@
             (setq indent-tabs-mode nil)))
 
 ;; quick register access to this file
-(set-register ?e '(file "~/.emacs.d/init.el"))
+(set-register ?e '(file . "~/.emacs.d/init.el"))
 
 ;; auto-open
 (defun my-check-modified ()
