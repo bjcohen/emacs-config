@@ -470,6 +470,8 @@
           (funcall #'org-web-tools-read-url-as-org url)
           (visual-line-mode))))
 
+;; Fix broken org-web-tools functions used by pocket-reader
+
 (defun org-web-tools--read-org-bracket-link (&optional link)
   "Return (TARGET . DESCRIPTION) for Org bracket LINK or next link on current line."
   ;; Searching to the end of the line seems the simplest way
