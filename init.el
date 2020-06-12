@@ -399,7 +399,7 @@
  mu4e-update-interval 600
  mu4e-trash-folder "/Trash")
 (add-to-list 'mu4e-view-actions
-             '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+             '("View in browser" . mu4e-action-view-in-browser) t)
 (setq mu4e-completing-read-function 'completing-read)
 (setq mu4e-bookmarks '())
 (add-to-list 'mu4e-bookmarks
