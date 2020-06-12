@@ -52,7 +52,6 @@
  ("idomenu" . "4b0152d606360c70204fb4c27f68de79ca885386")
  ("iedit" . "0fb3d380866664c3ab543acede606d343c257406")
  ("jinja2-mode" . "4540f99a3e363403a633587e05a9707605c16473")
- ("julia-emacs" . "839726af374991223ffe56f7e7d10bef81033d09")
  ("let-alist" . "ef3c02fa292b6e32769945bbbfb7f2e5ac574b64")
  ("logito" . "824acb89d2cc18cb47281a4fbddd81ad244a2052")
  ("lsp-mode" . "5ff64d33d4d785b1ba8d07f391c48bddb41f73dd")
