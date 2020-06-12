@@ -3,7 +3,6 @@
  ("ace-window" . "c7cb315c14e36fded5ac4096e158497ae974bec9")
  ("auctex" . "6abf890a485b2ff734d8f87f38393f9b8f6bbbf6")
  ("auto-complete" . "c0836fa0662095071e3c40237db611063e3c3ceb")
- ("autopair" . "2b6d72bccb0ebba6e7e711528872b898b0c65b0a")
  ("avy" . "2dde8b71a0feb366c8ee5e2a1400a0d3a0f06424")
  ("bm" . "8129428182e1b8a647d16fceb2d08cc0a2a5f3c7")
  ("bui.el" . "28a9b0a36cb69b931cf32db7546ad5c6589752cf")

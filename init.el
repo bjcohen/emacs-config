@@ -54,10 +54,7 @@
 
 (use-package egg)
 
-(use-package autopair
-  :config
-  (autopair-global-mode)
-  (setq autopair-autowrap t))
+(electric-pair-mode)
 
 ;;; random stuff
 
