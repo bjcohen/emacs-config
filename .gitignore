@@ -21,3 +21,4 @@ eshell
 .cache
 init-local.el
 url/
+straight/modified
