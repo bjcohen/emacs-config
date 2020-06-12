@@ -61,7 +61,7 @@
  ("marshal.el" . "f038689cbd5b3680b80b44edd0c7a63ca3038e26")
  ("melpa" . "fd34d2accd92d1473b743e2eee1309d329209cd0")
  ("org" . "aa32f65f8383a3cea1e9dabc0df5b2b959afe3f1")
- ("org-roam" . "1168c9b6da7c17168149ebaceb64e073a9eed2d9")
+ ("org-roam" . "eca07277cee2204a9327f9ab8bf766dd0614cb56")
  ("org-web-tools" . "ebc7888f4f4cad26ec1298edd7bf606a5ea2d564")
  ("ov" . "c5b9aa4e1b00d702eb2caedd61c69a22a5fa1fab")
  ("paradox" . "339fe3518d1d102b2295670340e75caf4f01a29a")
