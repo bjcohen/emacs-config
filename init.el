@@ -514,6 +514,8 @@ Buffer is displayed using SHOW-BUFFER-FN."
               :map org-mode-map
               (("C-c n i" . org-roam-insert))))
 
+(add-hook 'org-mode-hook (lambda () (electric-pair-mode 0)))
+
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((python . t)))
