@@ -487,20 +487,20 @@
         ;; Link found; return parts
         (cons target desc)))))
 
-(cl-defun org-web-tools-read-url-as-org (url &key (show-buffer-fn #'switch-to-buffer))
-  "Read URL's readable content in an Org buffer.
-Buffer is displayed using SHOW-BUFFER-FN."
-  (interactive (list (org-web-tools--get-first-url)))
-  (let ((entry (org-web-tools--url-as-readable-org url)))
-    (when entry
-      (funcall show-buffer-fn url)
-      (insert entry)
-      ;; Set buffer title
-      (goto-char (point-min))
-      (rename-buffer (cdr (org-web-tools--read-org-bracket-link)))
-      (org-mode)
-      (outline-show-all)
-      (whitespace-mode 0))))
+(defun after-org-web-tools-read-url-as-org (&rest r)
+  "Extra setup after org-web-tools-read-url-as-org for use in pocket-reader.  Ignore R."
+  (outline-show-all)
+  (whitespace-mode 0)
+  (view-mode)
+  (setq-local line-spacing .1)
+  (variable-pitch-mode)
+  (let* ((ww (window-width))
+         (mw (/ ww 10)))
+    (set-window-margins
+     (car (get-buffer-window-list (current-buffer) nil t))
+     mw mw)))
+
+(advice-add 'org-web-tools-read-url-as-org :after #'after-org-web-tools-read-url-as-org)
 
 (use-package org-roam
   :hook
