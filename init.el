@@ -491,6 +491,11 @@
   "Extra setup after org-web-tools-read-url-as-org for use in pocket-reader.  Ignore R."
   (let ((title (cdr (org-web-tools--read-org-bracket-link))))
     (insert "#+title: " title "\n#+roam_tags: website pocket\n\n"))
+  (reading-mode))
+
+(defun reading-mode ()
+  "Pseudo-'mode' to set up some nice display settings for reading things."
+  (interactive)
   (outline-show-all)
   (whitespace-mode 0)
   (view-mode)
