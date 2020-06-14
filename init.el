@@ -53,6 +53,7 @@
 
 ;; ispell
 (add-hook 'text-mode-hook (lambda () (flyspell-mode 1)))
+(diminish 'flyspell-mode)
 
 (use-package egg
   :diminish egg-minor-mode)
