@@ -22,6 +22,8 @@
 
 ;;; OS X Config
 
+(use-package diminish)
+
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
   :ensure t
@@ -52,7 +54,8 @@
 ;; ispell
 (add-hook 'text-mode-hook (lambda () (flyspell-mode 1)))
 
-(use-package egg)
+(use-package egg
+  :diminish egg-minor-mode)
 
 (electric-pair-mode)
 
@@ -105,6 +108,7 @@
   (use-package idomenu))
 
 (use-package projectile
+  :diminish projectile-mode
   :bind-keymap
   ("C-c p" . 'projectile-command-map)
   :config
@@ -127,6 +131,7 @@
   (define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand))
 
 (use-package auto-complete
+  :diminish auto-complete-mode
   :config
   (add-to-list 'ac-sources 'ac-source-yasnippet)
   (ac-config-default))
@@ -137,6 +142,7 @@
 ;; (standard-display-ascii ?\t "^I")
 (global-whitespace-mode)
 (setq whitespace-style '(face trailing lines-tail))
+(diminish 'global-whitespace-mode)
 
 (defface redbackground
   '((t :background "dark red"))
@@ -162,6 +168,7 @@
   (persp-mode))
 
 (use-package evil
+  :diminish undo-tree-mode
   :config
   (evil-mode 1)
   (setq evil-default-state 'emacs)
@@ -299,6 +306,7 @@
 
 ;; flycheck
 (use-package flycheck
+  :diminish flycheck-mode
   :config
   (global-flycheck-mode)
   (add-hook 'flycheck-mode-hook #'flycheck-inline-mode)
@@ -342,6 +350,7 @@
 (use-package tox)
 
 (use-package editorconfig
+  :diminish editorconfig-mode
   :config
   (editorconfig-mode 1))
 
@@ -377,6 +386,7 @@
 (use-package ecb)
 (use-package gist)
 (use-package git-gutter
+  :diminish git-gutter-mode
   :config
   (global-git-gutter-mode t))
 (use-package handlebars-mode)
@@ -516,6 +526,7 @@
 (advice-add 'org-web-tools-read-url-as-org :after #'after-org-web-tools-read-url-as-org)
 
 (use-package org-roam
+  :diminish org-roam-mode
   :hook
   (after-init . org-roam-mode)
   :config
