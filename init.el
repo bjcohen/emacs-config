@@ -507,6 +507,8 @@
      (car (get-buffer-window-list (current-buffer) nil t))
      mw mw)))
 
+(add-hook 'org-mode-hook #'visual-line-mode)
+
 (advice-add 'org-web-tools-read-url-as-org :after #'after-org-web-tools-read-url-as-org)
 
 (use-package org-roam
