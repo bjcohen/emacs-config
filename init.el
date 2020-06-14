@@ -519,10 +519,18 @@
   (after-init . org-roam-mode)
   :config
   (setq org-roam-completion-system 'helm)
+  (setq org-roam-dailies-capture-templates
+        '(("d" "daily" plain (function org-roam-capture--get-point)
+           ""
+           :immediate-finish t
+           :file-name "%<%Y-%m-%d>"
+           :head "#+title: %<%Y-%m-%d>\n#+roam_tags: daily")))
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-show-graph))
+               ("C-c n g" . org-roam-show-graph)
+               ("C-c n t" . org-roam-dailies-today)
+               ("C-c n y" . org-roam-dailies-yesterday))
               :map org-mode-map
               (("C-c n i" . org-roam-insert))))
 
