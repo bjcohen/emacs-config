@@ -69,9 +69,10 @@
 
 (use-package haskell-mode
   :config
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-  (require 'inf-haskell))
+  (require 'inf-haskell)
+  :hook
+  ((haskell-mode . turn-on-haskell-doc-mode)
+   (haskell-mode . turn-on-haskell-indentation)))
 
 (use-package compile
   :config
@@ -266,7 +267,6 @@
   :diminish flycheck-mode
   :config
   (global-flycheck-mode)
-  (add-hook 'flycheck-mode-hook #'flycheck-inline-mode)
 
   (use-package flycheck-inline)
   (use-package flycheck-rust)
@@ -282,7 +282,7 @@
                                           root))))
       (when (and eslint (file-executable-p eslint))
         (setq-local flycheck-javascript-eslint-executable eslint))))
-  (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
+
   (defun my-get-venv-path (&optional path)
     "Get the virtualenv path starting at PATH if it exists."
     (cond ((or (string= path "/") (eq (buffer-file-name) nil)) nil)
@@ -302,7 +302,11 @@
     (progn
       (setq-local python-shell-virtualenv-path (my-get-venv-path))
       (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find)))
-  (add-hook 'flycheck-mode-hook #'flycheck-virtualenv-setup))
+
+  :hook
+  ((flycheck-mode . flycheck-inline-mode)
+   (flycheck-mode . my/use-eslint-from-node-modules)
+   (flycheck-mode . flycheck-virtualenv-setup)))
 
 (use-package tox)
 
@@ -314,8 +318,8 @@
 (set-frame-font "Mononoki")
 
 (use-package rust-mode
-  :config
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+  :hook
+  ((flycheck-mode . flycheck-rust-setup)))
 
 (use-package lsp-mode
   :config
