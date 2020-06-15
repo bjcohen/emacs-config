@@ -460,7 +460,7 @@
         (cons target desc)))))
 
 (defun after-org-web-tools-read-url-as-org (&rest r)
-  "Extra setup after org-web-tools-read-url-as-org for use in pocket-reader.  Ignore R."
+  "Extra setup after `org-web-tools-read-url-as-org' for use in `pocket-reader'.  Ignore R."
   (let* ((link (org-web-tools--read-org-bracket-link))
          (title (cdr link))
          (url (car link)))
