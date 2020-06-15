@@ -448,11 +448,11 @@
     (let (target desc)
       (if link
           ;; Link passed as arg
-          (when (string-match org-link-bracked-re link)
+          (when (string-match org-link-bracket-re link)
             (setq target (match-string-no-properties 1 link)
                   desc (match-string-no-properties 3 link)))
         ;; No arg; get link from buffer
-        (when (re-search-forward org-link-braket-re (point-at-eol) t)
+        (when (re-search-forward org-link-bracket-re (point-at-eol) t)
           (setq target (match-string-no-properties 1)
                 desc (match-string-no-properties 2))))
       (when (and target desc)
