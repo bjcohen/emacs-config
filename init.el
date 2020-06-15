@@ -191,6 +191,11 @@
   (recentf-mode t)
   (setq recentf-max-menu-items 25))
 
+(use-package helm-flx
+  :requires helm
+  :config
+  (helm-flx-mode +1))
+
 (use-package ripgrep
   :config
   (use-package helm-rg))
