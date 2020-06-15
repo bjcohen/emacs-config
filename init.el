@@ -176,8 +176,10 @@
   (setq recentf-max-menu-items 25)
   (helm-mode t))
 
+(use-package flx)
+
 (use-package helm-flx
-  :requires helm
+  :requires (helm flx)
   :config
   (helm-flx-mode +1))
 
