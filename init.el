@@ -508,6 +508,7 @@
               (("C-c n i" . org-roam-insert))))
 
 (add-hook 'org-mode-hook (lambda () (electric-pair-mode 0)))
+(setq org-pretty-entities t)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -516,6 +517,9 @@
 (let ((init-local (concat user-emacs-directory "init-local.el")))
   (when (file-exists-p init-local)
     (load-file init-local)))
+
+(define-key visual-line-mode-map (kbd "M-n") #'next-logical-line)
+(define-key visual-line-mode-map (kbd "M-p") #'previous-logical-line)
 
 ;;; Customize Section
 
