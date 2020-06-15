@@ -18,8 +18,7 @@
 ;;; Configure use-package
 
 (straight-use-package 'use-package)
-(setq straight-use-package-by-default t
-      use-package-always-ensure t)
+(setq straight-use-package-by-default t)
 
 ;;; OS X Config
 
@@ -27,6 +26,7 @@
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
+  :ensure t
   :config
   (exec-path-from-shell-initialize))
 
@@ -342,7 +342,8 @@
   (use-package treemacs-evil))
 
 (use-package auctex
-  :defer t)
+  :defer t
+  :ensure t)
 (use-package ecb)
 (use-package gist)
 (use-package git-gutter
