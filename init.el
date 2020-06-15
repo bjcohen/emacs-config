@@ -90,24 +90,6 @@
 (defvar show-paren-overlay-1 nil)
 (show-paren-mode)
 
-(use-package ido
-  :config
-  (use-package flx)
-  (use-package flx-ido)
-
-  (ido-mode 1)
-  (ido-everywhere 1)
-  (flx-ido-mode 1)
-
-  (setq ido-enable-flex-matching t)
-  (setq ido-create-new-buffer 'always)
-  (setq ido-use-faces nil)
-
-  (use-package ido-completing-read+)
-  (ido-ubiquitous-mode 1)
-  (use-package ido-sort-mtime)
-  (use-package idomenu))
-
 (use-package projectile
   :diminish projectile-mode
   :bind-keymap
@@ -178,9 +160,11 @@
     (global-evil-surround-mode)))
 
 (use-package helm
+  :diminish helm-mode
   :bind (("C-x r b" . 'helm-filtered-bookmarks)
          ("C-x C-f" . 'helm-find-files)
-         ("C-x C-r" . 'helm-recentf))
+         ("C-x C-r" . 'helm-recentf)
+         ("C-x b" . 'helm-mini))
   :config
   (use-package helm-projectile
     :bind
@@ -189,7 +173,8 @@
           ("C-c p s r" . 'helm-projectile-rg)))
   (use-package helm-lsp)
   (recentf-mode t)
-  (setq recentf-max-menu-items 25))
+  (setq recentf-max-menu-items 25)
+  (helm-mode t))
 
 (use-package helm-flx
   :requires helm
@@ -261,11 +246,7 @@
           (set-buffer-modified-p (current-buffer))
           (save-buffer)))))
 
-(defadvice check-modified (after ido-switch-buffer activate)
-  "Run a revert check when we switch to a buffer."
-  (my-check-modified))
-
-(ad-activate 'check-modified)
+(advice-add 'helm-mini :after #'my-check-modified)
 
 ;; miscellaneous stuff
 
@@ -277,38 +258,6 @@
   :config
   (setq powerline-arrow-shape 'curve)
   (powerline-default-theme))
-
-(defun my-ido-project-files ()
-  "Use ido to select a file from the project."
-  (interactive)
-  (let (my-project-root tbl)
-    (setq my-project-root project-root)
-    ;; get project files
-    (setq project-files
-          (split-string
-           (shell-command-to-string
-            (concat "find "
-                    my-project-root
-                    " \\( -name \"*.svn\" -o -name \"*.git\" \\) -prune -o -type f -print | grep -E -v \"\.(pyc)$\""
-                    )) "\n"))
-    ;; populate hash table (display repr => path)
-    (setq tbl (make-hash-table :test 'equal))
-    (let (ido-list)
-      (mapc (lambda (path)
-              ;; format path for display in ido list
-              (setq key (replace-regexp-in-string "\\(.*?\\)\\([^/]+?\\)$" "\\2|\\1" path))
-              ;; strip project root
-              (setq key (replace-regexp-in-string my-project-root "" key))
-              ;; remove trailing | or /
-              (setq key (replace-regexp-in-string "\\(|\\|/\\)$" "" key))
-              (puthash key path tbl)
-              (push key ido-list)
-              )
-            project-files
-            )
-      (find-file (gethash (ido-completing-read "project-files: " ido-list) tbl)))))
-
-(global-set-key (kbd "C-c C-f") 'my-ido-project-files)
 
 ;; flycheck
 (use-package flycheck
@@ -557,7 +506,6 @@
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((python . t)))
-
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))
   (when (file-exists-p init-local)
