@@ -2,22 +2,22 @@
 ;;; Commentary:
 ;;; Code:
 
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+(eval-when-compile
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
 
-;;; Configure use-package
+  (straight-use-package 'use-package))
 
-(straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
 ;;; OS X Config
@@ -428,7 +428,7 @@
   (defun autotag-reading-list ()
     "Hook to auto-tag messages from certain senders."
     (progn
-      (mapcar (lambda (e) (autotag-reading-list-from e)) reading-list-emails)
+      (mapc (lambda (e) (autotag-reading-list-from e)) reading-list-emails)
       (mu4e-update-index)))
   (add-hook 'mu4e-index-updated-hook #'autotag-reading-list))
 
@@ -448,11 +448,11 @@
     (let (target desc)
       (if link
           ;; Link passed as arg
-          (when (string-match org-bracket-link-regexp link)
+          (when (string-match org-link-bracked-re link)
             (setq target (match-string-no-properties 1 link)
                   desc (match-string-no-properties 3 link)))
         ;; No arg; get link from buffer
-        (when (re-search-forward org-bracket-link-regexp (point-at-eol) t)
+        (when (re-search-forward org-link-braket-re (point-at-eol) t)
           (setq target (match-string-no-properties 1)
                 desc (match-string-no-properties 2))))
       (when (and target desc)
@@ -534,3 +534,7 @@
 
 (provide 'init)
 ;;; init.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars noruntime unresolved)
+;; End:
