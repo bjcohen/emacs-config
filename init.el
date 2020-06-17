@@ -396,7 +396,7 @@
                                 (mu4e-action-retag-message msg "+reading-list"))))
   (mu4e~headers-defun-mark-for tag)
   (define-key mu4e-headers-mode-map (kbd "l") 'mu4e-headers-mark-for-tag)
-  (setq mu4e-headers-fields '((:human-date . 12) (:flags . 6) (:tags . 12) (:mailing-list . 12) (:from . 22) (:subject)))
+  (setq mu4e-headers-fields '((:human-date . 8) (:flags . 6) (:tags . 12) (:from . 22) (:subject)))
 
   (defun read-all-from-string (string)
     "Call `read-from-string` iteratively on the STRING until the end."
@@ -430,7 +430,8 @@
     (progn
       (mapc (lambda (e) (autotag-reading-list-from e)) reading-list-emails)
       (mu4e-update-index)))
-  (add-hook 'mu4e-index-updated-hook #'autotag-reading-list))
+  (add-hook 'mu4e-index-updated-hook #'autotag-reading-list)
+  (setq shr-use-colors nil))
 
 (use-package pocket-reader
   :config
