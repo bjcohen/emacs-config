@@ -97,11 +97,13 @@
   ("C-c p" . 'projectile-command-map)
   :config
   (projectile-mode +1)
-  (use-package projectile-ripgrep)
   (projectile-register-project-type 'automake '("Makefile.am")
                                     :project-file "Makefile.am"
                                     :compile "autogen.sh && make"
                                     :test "make test"))
+
+(use-package projectile-ripgrep
+  :requires (projectile ripgrep))
 
 (use-package solarized-theme
   :config
@@ -159,10 +161,12 @@
   :diminish undo-tree-mode
   :config
   (evil-mode 1)
-  (setq evil-default-state 'emacs)
-  (use-package evil-surround
-    :config
-    (global-evil-surround-mode)))
+  (setq evil-default-state 'emacs))
+
+(use-package evil-surround
+  :requires evil
+  :config
+  (global-evil-surround-mode))
 
 (use-package helm
   :diminish helm-mode
@@ -171,15 +175,21 @@
          ("C-x C-r" . 'helm-recentf)
          ("C-x b" . 'helm-mini))
   :config
-  (use-package helm-projectile
-    :bind
-    (:map projectile-mode-map
-          ("C-c p s g" . 'helm-projectile-grep)
-          ("C-c p s r" . 'helm-projectile-rg)))
-  (use-package helm-lsp)
   (recentf-mode t)
   (setq recentf-max-menu-items 25)
   (helm-mode t))
+
+(use-package helm-projectile
+  :requires (helm projectile)
+  :bind
+  (:map projectile-mode-map
+        ("C-c p s g" . 'helm-projectile-grep)
+        ("C-c p s r" . 'helm-projectile-rg)))
+
+(use-package helm-lsp
+  :requires (help lsp-mode)
+  :config
+  (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
 
 (use-package flx)
 
@@ -188,9 +198,10 @@
   :config
   (helm-flx-mode +1))
 
-(use-package ripgrep
-  :config
-  (use-package helm-rg))
+(use-package ripgrep)
+
+(use-package helm-rg
+  :requires (helm ripgrep))
 
 (use-package smex
   :bind
@@ -199,9 +210,10 @@
   :config
   (smex-initialize))
 
-(use-package go-mode
-  :config
-  (use-package go-autocomplete))
+(use-package go-mode)
+
+(use-package go-autocomplete
+  :requires (go-mode auto-complete))
 
 (use-package iedit)
 (use-package google-this)
@@ -272,10 +284,6 @@
   :config
   (global-flycheck-mode)
 
-  (use-package flycheck-inline)
-  (use-package flycheck-rust)
-  (use-package flycheck-pycheckers)
-
   (defun my/use-eslint-from-node-modules ()
     "Get local eslint."
     (let* ((root (locate-dominating-file
@@ -308,9 +316,20 @@
       (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find)))
 
   :hook
-  ((flycheck-mode . flycheck-inline-mode)
-   (flycheck-mode . my/use-eslint-from-node-modules)
+  ((flycheck-mode . my/use-eslint-from-node-modules)
    (flycheck-mode . flycheck-virtualenv-setup)))
+
+(use-package flycheck-inline
+  :requires flycheck
+  :hook ((flycheck-mode . flycheck-inline-mode)))
+
+(use-package flycheck-rust
+  :requires (flycheck rust-mode))
+
+(use-package flycheck-pycheckers
+  :requires (flycheck elpy)
+  :hook
+  ((flycheck-mode . flycheck-pycheckers-setup)))
 
 (use-package tox)
 
@@ -327,8 +346,10 @@
 
 (use-package lsp-mode
   :config
-  (add-hook 'prog-mode-hook #'lsp)
-  (use-package lsp-ui))
+  (add-hook 'prog-mode-hook #'lsp))
+
+(use-package lsp-ui
+  :requires lsp-mode)
 
 (use-package dap-mode
   :config
@@ -340,10 +361,13 @@
   (require 'dap-gdb-lldb)
   (dap-gdb-lldb-setup))
 
-(use-package treemacs
-  :config
-  (use-package treemacs-projectile)
-  (use-package treemacs-evil))
+(use-package treemacs)
+
+(use-package treemacs-projectile
+  :requires (treemacs projectile))
+
+(use-package treemacs-evil
+  :requires (treemacs evil))
 
 (use-package auctex
   :defer t
