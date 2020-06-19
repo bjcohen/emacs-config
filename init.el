@@ -97,7 +97,11 @@
   ("C-c p" . 'projectile-command-map)
   :config
   (projectile-mode +1)
-  (use-package projectile-ripgrep))
+  (use-package projectile-ripgrep)
+  (projectile-register-project-type 'automake '("Makefile.am")
+                                    :project-file "Makefile.am"
+                                    :compile "autogen.sh && make"
+                                    :test "make test"))
 
 (use-package solarized-theme
   :config

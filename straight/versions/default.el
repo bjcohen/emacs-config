@@ -72,7 +72,7 @@
  ("pocket-reader.el" . "86c51c65d97819e11b3df403beea424f30125d30")
  ("popup-el" . "9d104d4bbbcb37bbc9d9ce762e74d41174683f86")
  ("powerline" . "edbb464eef680efc9d408730288c716cd4cac404")
- ("projectile" . "d7baa74eaa32cbed5d003a39a2687fa168cc4126")
+ ("projectile" . "95bcc7d805cbe7116f54e46480563452537b20ef")
  ("pyvenv" . "861998b6d157ae73b829f02a5a6c8a9118310831")
  ("rainbow-identifiers" . "19fbfded1baa98d12335f26f6d7b20e5ae44ce2e")
  ("ripgrep.el" . "40e871dcc4519a70981e9f28acea304692a60978")
