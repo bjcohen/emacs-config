@@ -157,7 +157,8 @@
   :config
   (persp-mode)
   (add-hook 'kill-emacs-hook #'persp-state-save)
-  (add-hook 'after-init-hook (lambda () (persp-state-load (concat user-emacs-directory "persp-save"))))
+  (add-hook 'after-init-hook
+            (lambda () (persp-state-load (concat user-emacs-directory "persp-save"))))
   :custom
   (persp-state-default-file (concat user-emacs-directory "persp-save")))
 
@@ -443,7 +444,8 @@
   (defun autotag-reading-list-from (email)
     "Auto-tag messages from EMAIL."
     (let* ((temp-file (make-temp-file "mu4e"))
-           (mu-output (shell-command-to-string (concat "mu find not tag:reading-list from:" email " --format=sexp")))
+           (mu-output (shell-command-to-string
+                       (concat "mu find not tag:reading-list from:" email " --format=sexp")))
            (messages (if (string-prefix-p "error: no matches for search expression" mu-output)
                          '()
                        (read-all-from-string mu-output)))
@@ -451,7 +453,8 @@
            )
       (mapcar (lambda (path)
                 (progn
-                  (call-process-shell-command (concat "formail -A \"X-Keywords: reading-list\" > " temp-file) path)
+                  (call-process-shell-command
+                   (concat "formail -A \"X-Keywords: reading-list\" > " temp-file) path)
                   (rename-file temp-file path t)
                   (mu4e-refresh-message path)
                   path))
