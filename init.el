@@ -155,7 +155,11 @@
 
 (use-package perspective
   :config
-  (persp-mode))
+  (persp-mode)
+  (add-hook 'kill-emacs-hook #'persp-state-save)
+  (add-hook 'after-init-hook (lambda () (persp-state-load (concat user-emacs-directory "persp-save"))))
+  :custom
+  (persp-state-default-file (concat user-emacs-directory "persp-save")))
 
 (use-package evil
   :diminish undo-tree-mode
