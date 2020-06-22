@@ -23,6 +23,7 @@
 ;;; OS X Config
 
 (use-package diminish)
+(use-package bind-key)
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
