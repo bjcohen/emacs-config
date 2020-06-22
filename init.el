@@ -540,14 +540,15 @@
            :immediate-finish t
            :file-name "%<%Y-%m-%d>"
            :head "#+title: %<%Y-%m-%d>\n#+roam_tags: daily")))
-  :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-show-graph)
-               ("C-c n t" . org-roam-dailies-today)
-               ("C-c n y" . org-roam-dailies-yesterday))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))))
+  :bind (("C-c l" . org-store-link)
+         :map org-roam-mode-map
+         ("C-c n l" . org-roam)
+         ("C-c n f" . org-roam-find-file)
+         ("C-c n g" . org-roam-show-graph)
+         ("C-c n t" . org-roam-dailies-today)
+         ("C-c n y" . org-roam-dailies-yesterday)
+         :map org-mode-map
+         ("C-c n i" . org-roam-insert)))
 
 (add-hook 'org-mode-hook (lambda () (electric-pair-mode 0)))
 (setq org-pretty-entities t)
