@@ -31,10 +31,9 @@
   :config
   (exec-path-from-shell-initialize))
 
-(if (eq system-type 'darwin)
-    (ns-toggle-toolbar))
-
-(add-hook 'after-make-frame-functions 'ns-toggle-toolbar)
+(tool-bar-mode -1)
+(toggle-frame-maximized)
+(setq frame-resize-pixelwise t)
 
 (setq mac-command-modifier 'control)
 (setq mac-control-modifier 'super)
