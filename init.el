@@ -32,6 +32,9 @@
   (exec-path-from-shell-initialize))
 
 (tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+
 (toggle-frame-maximized)
 (setq frame-resize-pixelwise t)
 
@@ -154,10 +157,6 @@
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
-
-;; disable scrollbars
-
-(set-scroll-bar-mode nil)
 
 (use-package perspective
   :config
