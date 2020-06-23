@@ -35,6 +35,10 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 
+(use-package yascroll
+  :config
+  (global-yascroll-bar-mode 1))
+
 (toggle-frame-maximized)
 (setq frame-resize-pixelwise t)
 
@@ -108,9 +112,9 @@
 (use-package projectile-ripgrep
   :requires (projectile ripgrep))
 
-(use-package solarized-theme
+(use-package dracula-theme
   :config
-  (load-theme 'solarized-dark t))
+  (load-theme 'dracula t))
 
 (use-package ruby-mode
   :config
