@@ -25,3 +25,4 @@ straight/modified
 .org-id-locations
 custom.el
 persp-save
+flycheck_init.el
