@@ -560,6 +560,9 @@
  'org-babel-load-languages
  '((python . t)))
 
+(use-package helm-org-rifle
+  :requires helm)
+
 (define-key visual-line-mode-map (kbd "M-n") #'next-logical-line)
 (define-key visual-line-mode-map (kbd "M-p") #'previous-logical-line)
 
