@@ -505,7 +505,6 @@
   "Pseudo-'mode' to set up some nice display settings for reading things."
   (interactive)
   (outline-show-all)
-  (whitespace-mode 0)
   (view-mode)
   (setq-local line-spacing .1)
   (variable-pitch-mode)
