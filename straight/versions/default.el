@@ -3,7 +3,6 @@
  ("ace-window" . "c7cb315c14e36fded5ac4096e158497ae974bec9")
  ("auctex" . "424fb4669a8f70053181b531dcc1c7127e11d7f5")
  ("auto-complete" . "c0836fa0662095071e3c40237db611063e3c3ceb")
- ("auto-complete-pcmp" . "2595d3dab1ef3549271ca922f212928e9d830eec")
  ("avy" . "bbf1e7339eba06784dfe86643bb0fbddf5bb0342")
  ("bm" . "8129428182e1b8a647d16fceb2d08cc0a2a5f3c7")
  ("bui.el" . "28a9b0a36cb69b931cf32db7546ad5c6589752cf")
@@ -53,7 +52,6 @@
  ("iedit" . "0fb3d380866664c3ab543acede606d343c257406")
  ("jinja2-mode" . "4540f99a3e363403a633587e05a9707605c16473")
  ("let-alist" . "ef3c02fa292b6e32769945bbbfb7f2e5ac574b64")
- ("log4e" . "7df0c1ff4656f8f993b87064b1567618eadb5546")
  ("logito" . "824acb89d2cc18cb47281a4fbddd81ad244a2052")
  ("lsp-mode" . "a92159954bf4baef17ee10352ecf36cc70de0717")
  ("lsp-treemacs" . "d65cca65718f3d4452a3db6cf993334905c631e5")
@@ -90,6 +88,5 @@
  ("undo-tree" . "5b6df03781495d8a25695d846b0cce496d3d3058")
  ("use-package" . "bfc5ecd69cdf71fae0af722d90336c66a6415f03")
  ("yascroll" . "b298a34ae872a45c3e83d29d33888abde59c185b")
- ("yasnippet" . "d3d6d70b1cd4818d271752468e0fdb0788db750d")
- ("yaxception" . "4e94cf3e0b9b5631b0e90eb4b7de597ee7185875"))
+ ("yasnippet" . "d3d6d70b1cd4818d271752468e0fdb0788db750d"))
 :alpha
