@@ -142,20 +142,14 @@
 ;; tabs
 
 (setq-default indent-tabs-mode nil)
-;; (standard-display-ascii ?\t "^I")
-(global-whitespace-mode)
-(setq whitespace-style '(face trailing lines-tail))
+(add-hook 'prog-mode-hook #'whitespace-mode)
+(setq whitespace-style '(face trailing lines-tail tabs empty))
 (diminish 'global-whitespace-mode)
 
-(defface redbackground
-  '((t :background "dark red"))
-  "Red background."
-  :group 'custom-faces)
-
-(setq whitespace-trailing 'redbackground)
+(setq whitespace-trailing 'font-lock-warning-face)
 (setq whitespace-line 'font-lock-warning-face)
 (setq whitespace-line-column 100)
-
+(setq whitespace-empty 'font-lock-warning-face)
 
 ;; Sometimes I use these...
 
