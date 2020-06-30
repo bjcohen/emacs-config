@@ -133,12 +133,6 @@
   (add-to-list 'ac-sources 'ac-source-yasnippet)
   (ac-config-default))
 
-(use-package org-ac
-  :requires auto-complete
-  :config
-  (add-to-list 'ac-modes 'org-mode)
-  (org-ac/config-default))
-
 ;; tabs
 
 (setq-default indent-tabs-mode nil)

@@ -63,7 +63,6 @@
  ("melpa" . "12b434e4c78b3428ee144559cb57ea41df8fb4c5")
  ("mu4e" . "556b898e4dee22fa294a054ae2cced0a53c27a5c")
  ("org" . "73e367fca4fb4dd61f6d4215c473448da1b072b3")
- ("org-ac" . "41e3ef8e4039619d0370c23c66730b3b2e9e32ed")
  ("org-rifle" . "263f56d70112f5d0496684c89a2aa07959e0a95f")
  ("org-roam" . "e33c3bcb3fae6927b023212a061c2273f0b9dea7")
  ("org-web-tools" . "ebc7888f4f4cad26ec1298edd7bf606a5ea2d564")
