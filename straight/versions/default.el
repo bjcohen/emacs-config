@@ -83,6 +83,7 @@
  ("s.el" . "43ba8b563bee3426cead0e6d4ddc09398e1a349d")
  ("smex" . "55aaebe3d793c2c990b39a302eb26c184281c42c")
  ("spinner" . "2daa167bec1c7566d662d48613a94453536b524a")
+ ("spotify.el" . "7704d40da8b2e26190872e8a54e47468d5fe5267")
  ("straight.el" . "a7f94876b2bf96d2595706270be6630ecc94f0d3")
  ("tox.el" . "7655eb254038d5e34433e8a9d66b3ffc9c72e40c")
  ("treemacs" . "1ce0bd487f0b9178744e19bbc48b6692c55c590c")
