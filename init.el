@@ -609,6 +609,14 @@
 (use-package vterm
   :ensure t)
 
+(use-package spotify
+  :straight (spotify :type git :host github :repo "danielfm/spotify.el"
+                     :files (:defaults "spotify_oauth2_callback_server.py"))
+  :config
+  (setq spotify-transport 'connect)
+  (global-spotify-remote-mode 1)
+  :bind-keymap ("C-c ." . spotify-command-map))
+
 (let ((init-local (concat user-emacs-directory "init-local.el")))
   (when (file-exists-p init-local)
     (load-file init-local)))
