@@ -513,7 +513,10 @@
                                         (list "Title" title-width t)
                                         (list "Site" domain-width t)
                                         (list "Tags" 10 t)
-                                        (list "WC" 5 t)))))
+                                        (list "WC" 5 (lambda (a b)
+                                                       (let ((a-wc (string-to-number (ht-get* pocket-reader-items (car a) 'word_count)))
+                                                             (b-wc (string-to-number (ht-get* pocket-reader-items (car b) 'word_count))))
+                                                         (< a-wc b-wc))))))))
 
 (defun pocket-reader--items-to-tabulated-list-entries (items)
   "Convert ITEMS to a list of vectors of lists, suitable for `tabulated-list-entries'."
