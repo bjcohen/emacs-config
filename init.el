@@ -611,9 +611,11 @@
 
 (use-package spotify
   :straight (spotify :type git :host github :repo "danielfm/spotify.el"
+                     :fork "bjcohen/spotify.el"
                      :files (:defaults "spotify_oauth2_callback_server.py"))
   :config
-  (setq spotify-transport 'connect)
+  (setq spotify-transport 'connect
+        spotify-player-status-refresh-interval 15)
   (global-spotify-remote-mode 1)
   :bind-keymap ("C-c ." . spotify-command-map))
 
