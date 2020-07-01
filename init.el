@@ -606,6 +606,9 @@
 (define-key visual-line-mode-map (kbd "M-n") #'next-logical-line)
 (define-key visual-line-mode-map (kbd "M-p") #'previous-logical-line)
 
+(use-package vterm
+  :ensure t)
+
 (let ((init-local (concat user-emacs-directory "init-local.el")))
   (when (file-exists-p init-local)
     (load-file init-local)))
