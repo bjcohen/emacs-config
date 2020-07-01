@@ -26,3 +26,4 @@ straight/modified
 custom.el
 persp-save
 flycheck_init.el
+elpy/
