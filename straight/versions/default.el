@@ -18,6 +18,7 @@
  ("emacs-async" . "86aef2c38e7d35e8509b7feeee3e989d825eba91")
  ("emacs-google-this" . "8a2e3ca5da6a8c89bfe99a21486c6c7db125dc84")
  ("emacs-kv" . "721148475bce38a70e0b678ba8aa923652e8900e")
+ ("emacs-libvterm" . "fbd0f097198ee110a895dcff30c0d1be39e8284e")
  ("emacs-request" . "912525c772984c6af0fd84acd6699ee43d91037a")
  ("emacsmirror-mirror" . "5d8df117215e4d7e816bd63672cd467e532c662d")
  ("emacsql" . "a118b6c95af1306f0288a383d274b5dd93efbbda")
