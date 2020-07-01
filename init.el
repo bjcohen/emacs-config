@@ -101,7 +101,7 @@
 (use-package projectile
   :diminish projectile-mode
   :bind-keymap
-  ("C-c p" . 'projectile-command-map)
+  ("C-c p" . projectile-command-map)
   :config
   (projectile-mode +1)
   (projectile-register-project-type 'automake '("Makefile.am")
