@@ -54,7 +54,7 @@
  ("jinja2-mode" . "4540f99a3e363403a633587e05a9707605c16473")
  ("let-alist" . "ef3c02fa292b6e32769945bbbfb7f2e5ac574b64")
  ("logito" . "824acb89d2cc18cb47281a4fbddd81ad244a2052")
- ("lsp-mode" . "a92159954bf4baef17ee10352ecf36cc70de0717")
+ ("lsp-mode" . "728134a2320c06d128bc5e379ee436a322086d13")
  ("lsp-treemacs" . "d65cca65718f3d4452a3db6cf993334905c631e5")
  ("lsp-ui" . "51c85a237f3dd32d97f0d952caa7fa303ec7ef19")
  ("markdown-mode" . "399df42755ccf31cecb61c9f5d8ad72bc30d7e4b")
