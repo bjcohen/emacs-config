@@ -477,9 +477,21 @@
   (add-hook 'mu4e-index-updated-hook #'autotag-reading-list)
   (setq shr-use-colors nil))
 
+(cl-defun my/pocket-reader-open-url-function (url &key (show-buffer-fn #'switch-to-buffer))
+  "Open a URL with org-web-tools and then do post-conversion setup.  Pass SHOW-BUFFER-FN on."
+  (org-web-tools-read-url-as-org url :show-buffer-fn show-buffer-fn)
+  (let* ((link (org-web-tools--read-org-bracket-link))
+         (title (cdr link))
+         (url (car link)))
+    (insert "#+title: " title "\n#+roam_tags: website pocket\n#+roam_key: " url "\n\n"))
+  (add-hook 'after-save-hook #'org-roam-db--update-file nil t)
+  (reading-mode))
+
 (use-package pocket-reader
   :straight (pocket-reader :type git :host github :repo "alphapapa/pocket-reader.el"
-                           :fork "bjcohen/pocket-reader.el"))
+                           :fork "bjcohen/pocket-reader.el")
+  :custom
+  (pocket-reader-open-url-default-function #'my/pocket-reader-open-url-function))
 
 (use-package org-web-tools
   :defer
@@ -501,17 +513,6 @@
         (when (and target desc)
           ;; Link found; return parts
           (cons target desc))))))
-
-(defun after-org-web-tools-read-url-as-org (&rest r)
-  "Extra setup after `org-web-tools-read-url-as-org' for use in `pocket-reader'.  Ignore R."
-  (let* ((link (org-web-tools--read-org-bracket-link))
-         (title (cdr link))
-         (url (car link)))
-    (insert "#+title: " title "\n#+roam_tags: website pocket\n#+roam_key: " url "\n\n"))
-  (add-hook 'after-save-hook #'org-roam-db--update-file nil t)
-  (reading-mode))
-
-(advice-add 'org-web-tools-read-url-as-org :after #'after-org-web-tools-read-url-as-org)
 
 (defun reading-mode ()
   "Pseudo-'mode' to set up some nice display settings for reading things."
