@@ -613,6 +613,7 @@
   :ensure t)
 
 (use-package spotify
+  :demand
   :straight (spotify :type git :host github :repo "danielfm/spotify.el"
                      :fork "bjcohen/spotify.el"
                      :files (:defaults "spotify_oauth2_callback_server.py"))
