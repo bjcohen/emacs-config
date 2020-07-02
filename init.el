@@ -24,6 +24,7 @@
 
 (use-package diminish)
 (use-package bind-key)
+(use-package el-patch)
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
@@ -170,6 +171,19 @@
   :config
   (global-evil-surround-mode))
 
+(defun my-check-modified ()
+  "Interactive prompt to check file modification."
+  (interactive)
+  (if (not (verify-visited-file-modtime (current-buffer)))
+      (if (yes-or-no-p "Buffer modified, reload? ")
+          (if (buffer-modified-p)
+              (revert-buffer)
+            (revert-buffer t t))
+        (if (yes-or-no-p "Overwrite external modifications? ")
+            (clear-visited-file-modtime)
+          (set-buffer-modified-p (current-buffer))
+          (save-buffer)))))
+
 (use-package helm
   :diminish helm-mode
   :bind (("C-x r b" . 'helm-filtered-bookmarks)
@@ -179,7 +193,21 @@
   :config
   (recentf-mode t)
   (setq recentf-max-menu-items 25)
-  (helm-mode t))
+  (helm-mode t)
+  :config/el-patch
+  (defun helm-mini ()
+    "Preconfigured `helm' displaying `helm-mini-default-sources'."
+    (interactive)
+    (require 'helm-x-files)
+    (unless helm-source-buffers-list
+      (setq helm-source-buffers-list
+            (helm-make-source "Buffers" 'helm-source-buffers)))
+    (helm :sources helm-mini-default-sources
+          :buffer "*helm mini*"
+          :ff-transformer-show-only-basename nil
+          :truncate-lines helm-buffers-truncate-lines
+          :left-margin-width helm-buffers-left-margin-width)
+    (el-patch-add (my-check-modified))))
 
 (use-package helm-projectile
   :requires (helm projectile)
@@ -252,22 +280,6 @@
 
 ;; quick register access to this file
 (set-register ?e '(file . "~/.emacs.d/init.el"))
-
-;; auto-open
-(defun my-check-modified ()
-  "Interactive prompt to check file modification."
-  (interactive)
-  (if (not (verify-visited-file-modtime (current-buffer)))
-      (if (yes-or-no-p "Buffer modified, reload? ")
-          (if (buffer-modified-p)
-              (revert-buffer)
-            (revert-buffer t t))
-        (if (yes-or-no-p "Overwrite external modifications? ")
-            (clear-visited-file-modtime)
-          (set-buffer-modified-p (current-buffer))
-          (save-buffer)))))
-
-(advice-add 'helm-mini :after #'my-check-modified)
 
 ;; miscellaneous stuff
 
@@ -467,27 +479,28 @@
 
 (use-package pocket-reader
   :straight (pocket-reader :type git :host github :repo "alphapapa/pocket-reader.el"
-                     :fork "bjcohen/pocket-reader.el"))
+                           :fork "bjcohen/pocket-reader.el"))
 
-;; Fix broken org-web-tools functions used by pocket-reader
-
-(defun org-web-tools--read-org-bracket-link (&optional link)
-  "Return (TARGET . DESCRIPTION) for Org bracket LINK or next link on current line."
-  ;; Searching to the end of the line seems the simplest way
-  (save-excursion
-    (let (target desc)
-      (if link
-          ;; Link passed as arg
-          (when (string-match org-link-bracket-re link)
-            (setq target (match-string-no-properties 1 link)
-                  desc (match-string-no-properties 3 link)))
-        ;; No arg; get link from buffer
-        (when (re-search-forward org-link-bracket-re (point-at-eol) t)
-          (setq target (match-string-no-properties 1)
-                desc (match-string-no-properties 2))))
-      (when (and target desc)
-        ;; Link found; return parts
-        (cons target desc)))))
+(use-package org-web-tools
+  :defer
+  :config/el-patch
+  (defun org-web-tools--read-org-bracket-link (&optional link)
+    "Return (TARGET . DESCRIPTION) for Org bracket LINK or next link on current line."
+    ;; Searching to the end of the line seems the simplest way
+    (save-excursion
+      (let (target desc)
+        (if link
+            ;; Link passed as arg
+            (when (string-match (el-patch-swap org-bracket-link-regexp org-link-bracket-re) link)
+              (setq target (match-string-no-properties 1 link)
+                    desc (match-string-no-properties (el-patch-swap 3 2) link)))
+          ;; No arg; get link from buffer
+          (when (re-search-forward (el-patch-swap org-bracket-link-regexp org-link-bracket-re) (point-at-eol) t)
+            (setq target (match-string-no-properties 1)
+                  desc (match-string-no-properties (el-patch-swap 3 2)))))
+        (when (and target desc)
+          ;; Link found; return parts
+          (cons target desc))))))
 
 (defun after-org-web-tools-read-url-as-org (&rest r)
   "Extra setup after `org-web-tools-read-url-as-org' for use in `pocket-reader'.  Ignore R."
@@ -497,6 +510,8 @@
     (insert "#+title: " title "\n#+roam_tags: website pocket\n#+roam_key: " url "\n\n"))
   (add-hook 'after-save-hook #'org-roam-db--update-file nil t)
   (reading-mode))
+
+(advice-add 'org-web-tools-read-url-as-org :after #'after-org-web-tools-read-url-as-org)
 
 (defun reading-mode ()
   "Pseudo-'mode' to set up some nice display settings for reading things."
@@ -513,8 +528,6 @@
      mw mw)))
 
 (add-hook 'org-mode-hook #'visual-line-mode)
-
-(advice-add 'org-web-tools-read-url-as-org :after #'after-org-web-tools-read-url-as-org)
 
 (use-package org-roam
   :diminish org-roam-mode
@@ -564,6 +577,8 @@
         spotify-player-status-refresh-interval 15)
   (global-spotify-remote-mode 1)
   :bind-keymap ("C-c ." . spotify-command-map))
+
+(el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))
   (when (file-exists-p init-local)
