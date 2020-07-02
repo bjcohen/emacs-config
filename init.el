@@ -466,11 +466,8 @@
   (setq shr-use-colors nil))
 
 (use-package pocket-reader
-  :config
-  (setq pocket-reader-open-url-default-function
-        (lambda (url)
-          (funcall #'org-web-tools-read-url-as-org url)
-          (visual-line-mode))))
+  :straight (pocket-reader :type git :host github :repo "alphapapa/pocket-reader.el"
+                     :fork "bjcohen/pocket-reader.el"))
 
 ;; Fix broken org-web-tools functions used by pocket-reader
 
@@ -501,65 +498,10 @@
   (add-hook 'after-save-hook #'org-roam-db--update-file nil t)
   (reading-mode))
 
-(defun pocket-reader--set-tabulated-list-format ()
-  "Set `tabulated-list-format' according to the maximum width of items about to be displayed."
-  (when-let ((domain-width (cl-loop for item being the hash-values of pocket-reader-items
-                                    maximizing (length (ht-get item 'domain))))
-             (title-width (- (window-text-width) 11 2 domain-width 10 1)))
-    (when (> domain-width pocket-reader-site-column-max-width)
-      (setq domain-width pocket-reader-site-column-max-width))
-    (setq tabulated-list-format (vector (list "Added" 10 pocket-reader-added-column-sort-function)
-                                        (list "*" 1 t)
-                                        (list "Title" title-width t)
-                                        (list "Site" domain-width t)
-                                        (list "Tags" 10 t)
-                                        (list "WC" 5 (lambda (a b)
-                                                       (let ((a-wc (string-to-number (ht-get* pocket-reader-items (car a) 'word_count)))
-                                                             (b-wc (string-to-number (ht-get* pocket-reader-items (car b) 'word_count))))
-                                                         (< a-wc b-wc))))))))
-
-(defun pocket-reader--items-to-tabulated-list-entries (items)
-  "Convert ITEMS to a list of vectors of lists, suitable for `tabulated-list-entries'."
-  ;; NOTE: From Emacs docs:
-
-  ;; This buffer-local variable specifies the entries displayed in the
-  ;; Tabulated List buffer.  Its value should be either a list, or a
-  ;; function.
-  ;;
-  ;; If the value is a list, each list element corresponds to one entry,
-  ;; and should have the form ‘(ID CONTENTS)’, where
-  ;;
-  ;; • ID is either ‘nil’, or a Lisp object that identifies the
-  ;; entry.  If the latter, the cursor stays on the same entry when
-  ;; re-sorting entries.  Comparison is done with ‘equal’.
-  ;;
-  ;; • CONTENTS is a vector with the same number of elements as
-  ;; ‘tabulated-list-format’.  Each vector element is either a
-  ;;  string, which is inserted into the buffer as-is, or a list
-  ;;  ‘(LABEL . PROPERTIES)’, which means to insert a text button by
-  ;;   calling ‘insert-text-button’ with LABEL and PROPERTIES as
-  ;;   arguments (*note Making Buttons::).
-  ;;
-  ;;   There should be no newlines in any of these strings.
-  (cl-loop for it being the hash-values of items
-           collect (let ((id (string-to-number (ht-get it 'item_id)))
-                         (added (pocket-reader--format-timestamp (string-to-number (ht-get it 'time_added))))
-                         (favorite (pocket-reader--favorite-string (ht-get it 'favorite)))
-                         (title (pocket-reader--not-empty-string (pocket-reader--or-string-not-blank
-                                                                  (ht-get it 'resolved_title)
-                                                                  (ht-get it 'given_title)
-                                                                  "[untitled]")))
-                         (domain (pocket-reader--url-domain
-                                  ;; Don't use --get-url here, because, e.g. we don't want an "amp." to be shown in the list
-                                  (pocket-reader--or-string-not-blank (ht-get it 'resolved_url)
-                                                                      (ht-get it 'given_url))))
-                         (tags (pocket-reader--not-empty-string (s-join "," (ht-get it 'tags))))
-                         (wc (ht-get it 'word_count)))
-                     (list id (vector added favorite title domain tags wc)))))
-
 (defun reading-mode ()
   "Pseudo-'mode' to set up some nice display settings for reading things."
   (interactive)
+  (visual-line-mode t)
   (outline-show-all)
   (view-mode)
   (setq-local line-spacing .1)
