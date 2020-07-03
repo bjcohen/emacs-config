@@ -579,6 +579,8 @@
   (global-spotify-remote-mode 1)
   :bind-keymap ("C-c ." . spotify-command-map))
 
+(use-package unfill)
+
 (el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))

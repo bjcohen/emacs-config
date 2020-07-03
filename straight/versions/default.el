@@ -89,6 +89,7 @@
  ("tox.el" . "7655eb254038d5e34433e8a9d66b3ffc9c72e40c")
  ("treemacs" . "1ce0bd487f0b9178744e19bbc48b6692c55c590c")
  ("undo-tree" . "5b6df03781495d8a25695d846b0cce496d3d3058")
+ ("unfill" . "02c36a04364bcb586477ab79d2b5e0d4e6ae6d47")
  ("use-package" . "bfc5ecd69cdf71fae0af722d90336c66a6415f03")
  ("yascroll" . "b298a34ae872a45c3e83d29d33888abde59c185b")
  ("yasnippet" . "d3d6d70b1cd4818d271752468e0fdb0788db750d"))
