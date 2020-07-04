@@ -530,6 +530,9 @@
      (car (get-buffer-window-list (current-buffer) nil t))
      mw mw)))
 
+(bind-key "j" #'forward-line view-mode-map)
+(bind-key "k" #'previous-line view-mode-map)
+
 (add-hook 'org-mode-hook #'visual-line-mode)
 
 (use-package org-roam
