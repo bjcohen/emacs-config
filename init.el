@@ -72,7 +72,7 @@
 
 ;;; random stuff
 
-(add-hook 'c-mode-common-hook
+(add-hook 'prog-mode-hook
           (lambda ()
             (font-lock-add-keywords nil
                                     '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
@@ -554,12 +554,15 @@
          :map org-mode-map
          ("C-c n i" . org-roam-insert)))
 
-(add-hook 'org-mode-hook (lambda () (electric-pair-mode 0)))
-(setq org-pretty-entities t)
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)))
+(use-package org
+  :hook
+  (org-mode . (lambda () (electric-pair-local-mode 0)))
+  :config
+  (setq org-pretty-entities t
+        org-use-speed-commands t)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t))))
 
 (use-package helm-org-rifle
   :requires helm)
