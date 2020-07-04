@@ -27,3 +27,4 @@ custom.el
 persp-save
 flycheck_init.el
 elpy/
+/forge-database.sqlite

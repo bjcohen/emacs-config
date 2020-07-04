@@ -63,8 +63,10 @@
 (add-hook 'text-mode-hook (lambda () (flyspell-mode 1)))
 (diminish 'flyspell-mode)
 
-(use-package egg
-  :diminish egg-minor-mode)
+(use-package magit)
+
+(use-package forge
+  :after magit)
 
 (electric-pair-mode)
 
