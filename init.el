@@ -310,7 +310,7 @@
                                           root))))
       (when (and eslint (file-executable-p eslint))
         (setq-local flycheck-javascript-eslint-executable eslint))))
-
+  (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
   (defun my-get-venv-path (&optional path)
     "Get the virtualenv path starting at PATH if it exists."
     (cond ((or (string= path "/") (eq (buffer-file-name) nil)) nil)
@@ -330,10 +330,7 @@
     (progn
       (setq-local python-shell-virtualenv-path (my-get-venv-path))
       (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find)))
-
-  :hook
-  ((flycheck-mode . my/use-eslint-from-node-modules)
-   (flycheck-mode . flycheck-virtualenv-setup)))
+  (add-hook 'flycheck-mode-hook #'flycheck-virtualenv-setup))
 
 (use-package flycheck-inline
   :requires flycheck
