@@ -584,6 +584,8 @@
 
 (use-package unfill)
 
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
 (use-package company
   :config
   (add-hook 'after-init-hook 'global-company-mode))
