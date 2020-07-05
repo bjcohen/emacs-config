@@ -130,12 +130,6 @@
   (yas-global-mode 1)
   (define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand))
 
-(use-package auto-complete
-  :diminish auto-complete-mode
-  :config
-  (add-to-list 'ac-sources 'ac-source-yasnippet)
-  (ac-config-default))
-
 ;; tabs
 
 (setq-default indent-tabs-mode nil)
@@ -243,9 +237,6 @@
   (smex-initialize))
 
 (use-package go-mode)
-
-(use-package go-autocomplete
-  :requires (go-mode auto-complete))
 
 (use-package iedit)
 (use-package google-this)
@@ -592,6 +583,14 @@
   :bind-keymap ("C-c ." . spotify-command-map))
 
 (use-package unfill)
+
+(use-package company
+  :config
+  (add-hook 'after-init-hook 'global-company-mode))
+
+(use-package company-lsp
+  :config
+  (push 'company-lsp company-backends))
 
 (el-patch-validate-all)
 
