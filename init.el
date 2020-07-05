@@ -358,13 +358,18 @@
 
 (use-package rust-mode
   :hook
-  ((flycheck-mode . flycheck-rust-setup)))
+  ((flycheck-mode . flycheck-rust-setup))
+  :config
+  (lsp-rust-switch-server 'rust-analyzer))
 
 (use-package lsp-mode
-  :config
-  (add-hook 'prog-mode-hook #'lsp))
+  :hook
+  (prog-mode . lsp))
 
 (use-package lsp-ui
+  :requires lsp-mode)
+
+(use-package lsp-treemacs
   :requires lsp-mode)
 
 (use-package dap-mode
