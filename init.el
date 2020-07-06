@@ -594,6 +594,10 @@
   :config
   (push 'company-lsp company-backends))
 
+(use-package company-org-roam
+  :config
+  (push 'company-org-roam company-backends))
+
 (el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))

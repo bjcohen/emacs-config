@@ -8,6 +8,7 @@
  ("closql" . "9371635bc3e259b73a075985ebbfc58b45fa5e9d")
  ("company-lsp" . "f921ffa0cdc542c21dc3dd85f2c93df4288e83bd")
  ("company-mode" . "1f56bec0ba7ce336eb8661b4d34e4b024d7dd04c")
+ ("company-org-roam" . "674c2bd493f571c5323d69279557a6c18ccbd14e")
  ("dap-mode" . "f52fa4327147bccb7c93300d5f522e2fdcff1a70")
  ("dash.el" . "732d92eac56023a4fb4a5dc3d9d4e274ebf44bf9")
  ("diminish.el" . "6ec6ebc391371418efc6c98d70b013f34af5a2ee")
