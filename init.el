@@ -600,6 +600,13 @@
   :config
   (push 'company-org-roam company-backends))
 
+(use-package ace-jump-mode
+  :bind
+  (("C-c SPC" . ace-jump-mode)
+   ("C-c C-c SPC" . ace-jump-line-mode)))
+
+(use-package elfeed)
+
 (el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))
