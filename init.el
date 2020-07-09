@@ -527,7 +527,9 @@
   :bind
   (:map view-mode-map
         ("j" . forward-line)
-        ("k" . previous-line)))
+        ("k" . previous-line)
+        ("h" . backward-char)
+        ("l" . forward-char)))
 
 (add-hook 'org-mode-hook #'visual-line-mode)
 
