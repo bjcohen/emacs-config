@@ -609,7 +609,35 @@
 
 (use-package company-org-roam
   :config
-  (push 'company-org-roam company-backends))
+  (push 'company-org-roam company-backends)
+  :config/el-patch
+  (defun company-org-roam--filter-candidates (prefix candidates)
+    "Filter CANDIDATES that start with PREFIX.
+The string match is case-insensitive."
+    (-filter (lambda (candidate)
+               (el-patch-swap
+                 (string-prefix-p prefix candidate t)
+                 (string-match-p (concat "\\(^\\|[^[:word:]]\\)" prefix) candidate))) candidates))
+  (defun company-org-roam (command &optional arg &rest _)
+    "Define a company backend for Org-roam.
+COMMAND and ARG are as per the documentation of `company-backends'."
+    (interactive (list 'interactive))
+    (cl-case command
+      (interactive (company-begin-backend #'company-org-roam))
+      (prefix
+       (and
+        (bound-and-true-p org-roam-mode)
+        (org-roam--org-roam-file-p (buffer-file-name (buffer-base-buffer)))
+        (or (el-patch-add (company-grab-line org-heading-regexp 2)) (company-grab-symbol) 'stop)))
+      (candidates
+       (company-org-roam--get-candidates arg))
+      (post-completion (company-org-roam--post-completion arg))
+      (el-patch-add (location
+                     (let* ((cache (gethash (file-truename org-roam-directory) company-org-roam-cache))
+                            (path (gethash arg cache)))
+                       (cons path 0))))
+      ))
+  )
 
 (use-package ace-jump-mode
   :bind
