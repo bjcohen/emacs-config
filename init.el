@@ -2,6 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
+(setq straight-profiles
+      '((nil . "default.el")
+        ;; Packages which are pinned to a specific commit.
+        (pinned . "pinned.el")))
+
 (eval-when-compile
   (defvar bootstrap-version)
   (let ((bootstrap-file
@@ -19,6 +24,8 @@
   (straight-use-package 'use-package))
 
 (setq straight-use-package-by-default t)
+(autoload #'straight-x-pull-all "straight-x")
+(autoload #'straight-x-freeze-versions "straight-x")
 
 ;;; OS X Config
 
@@ -398,6 +405,20 @@
   (set-fontset-font
    t 'symbol (font-spec :family "Apple Color Emoji") nil 'prepend))
 
+(use-package org
+  :hook
+  (org-mode . (lambda () (electric-pair-local-mode 0)))
+  :config
+  (setq org-pretty-entities t
+        org-use-speed-commands t)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t))))
+
+(let ((straight-current-profile 'pinned))
+  (add-to-list 'straight-x-pinned-packages
+               '("org" . "4a9f8c3c8d6da8bedd88e07d1c22e8cb8abc46e2")))
+
 (use-package mu4e
   :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
   :config
@@ -554,16 +575,6 @@
          ("C-c n y" . org-roam-dailies-yesterday)
          :map org-mode-map
          ("C-c n i" . org-roam-insert)))
-
-(use-package org
-  :hook
-  (org-mode . (lambda () (electric-pair-local-mode 0)))
-  :config
-  (setq org-pretty-entities t
-        org-use-speed-commands t)
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((python . t))))
 
 (use-package helm-org-rifle
   :requires helm)
