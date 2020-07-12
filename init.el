@@ -573,8 +573,20 @@
          ("C-c n g" . org-roam-show-graph)
          ("C-c n t" . org-roam-dailies-today)
          ("C-c n y" . org-roam-dailies-yesterday)
+         ("C-c n m" . org-roam-dailies-tomorrow)
          :map org-mode-map
-         ("C-c n i" . org-roam-insert)))
+         ("C-c n i" . org-roam-insert))
+  :config/el-patch
+  (defun org-roam-store-link (arg &optional interactive?)
+    "Store a link to the current location.
+This commands is a wrapper for `org-store-link' which forces the
+automatic creation of :ID: properties.
+See `org-roam-store-link' for details on ARG and INTERACTIVE?."
+    (interactive "P\np")
+    (el-patch-splice 3 0
+      (if (org-roam--org-roam-file-p)
+          (org-roam--store-link arg interactive?)
+        (org-store-link arg interactive?)))))
 
 (use-package helm-org-rifle
   :requires helm)
