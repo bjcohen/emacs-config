@@ -80,6 +80,7 @@
  ("pocket-lib.el" . "f794e3e619e1f6cad25bbfd5fe019a7e62820bf4")
  ("pocket-reader.el" . "0faa0450e08eb1e34e023085be108f7915c4a759")
  ("popup-el" . "9d104d4bbbcb37bbc9d9ce762e74d41174683f86")
+ ("posframe" . "922e4d239f7a083213d856de67a9686a091b1e27")
  ("powerline" . "edbb464eef680efc9d408730288c716cd4cac404")
  ("projectile" . "bbcf781d3fddb8e00d0dc10eb68bc2528fb409b3")
  ("pyvenv" . "861998b6d157ae73b829f02a5a6c8a9118310831")
