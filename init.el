@@ -611,6 +611,22 @@ See `org-roam-store-link' for details on ARG and INTERACTIVE?."
 
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
+(use-package org-noter)
+
+(use-package pdf-tools
+  :config
+  (pdf-tools-install))
+
+(use-package org-pdftools
+  :requires pdf-tools
+  :hook (org-load . org-pdftools-setup-link))
+
+(use-package org-noter-pdftools
+  :requires (org-noter pdf-tools)
+  :config
+  (with-eval-after-load 'pdf-annot
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+
 (use-package company
   :config
   (add-hook 'after-init-hook 'global-company-mode))
