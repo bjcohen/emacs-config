@@ -427,7 +427,8 @@
   (setq
    mu4e-get-mail-command "offlineimap"
    mu4e-update-interval 600
-   mu4e-trash-folder "/Trash")
+   mu4e-trash-folder "/Trash"
+   mu4e-split-view 'single-window)
   (add-to-list 'mu4e-view-actions
                '("View in browser" . mu4e-action-view-in-browser) t)
   (setq mu4e-completing-read-function 'completing-read)
