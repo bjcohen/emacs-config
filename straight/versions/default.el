@@ -81,7 +81,7 @@
  ("pfuture" . "d7926de3ba0105a36cfd00811fd6278aea903eef")
  ("pkg-info" . "76ba7415480687d05a4353b27fea2ae02b8d9d61")
  ("pocket-lib.el" . "f794e3e619e1f6cad25bbfd5fe019a7e62820bf4")
- ("pocket-reader.el" . "0faa0450e08eb1e34e023085be108f7915c4a759")
+ ("pocket-reader.el" . "15d6df57fb604e53994d1bab10df00338ab8f08e")
  ("popup-el" . "9d104d4bbbcb37bbc9d9ce762e74d41174683f86")
  ("posframe" . "922e4d239f7a083213d856de67a9686a091b1e27")
  ("powerline" . "edbb464eef680efc9d408730288c716cd4cac404")
