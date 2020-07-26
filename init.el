@@ -435,7 +435,7 @@
   (setq mu4e-bookmarks '())
   (add-to-list 'mu4e-bookmarks
                '(:name "Reading list"
-                       :query "tag:reading-list and (flag:unread or date:today)"
+                       :query "tag:reading-list and (flag:unread or date:today) and not maildir:/Trash"
                        :key ?l))
   (add-to-list 'mu4e-bookmarks
                '(:name "Today's messages"
