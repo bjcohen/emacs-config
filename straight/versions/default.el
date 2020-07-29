@@ -108,4 +108,4 @@
  ("with-editor" . "efafd482c21b90decbb0b682ed3159c86014d4f3")
  ("yascroll" . "9e828920d1931da66a473a66019922b9c3b729f5")
  ("yasnippet" . "5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6"))
-:alpha
+:beta
