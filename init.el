@@ -106,11 +106,6 @@
 
   (add-hook 'compilation-finish-functions 'close-on-successful-exit))
 
-;;; hilight matching parens
-(defvar show-paren-overlay nil)
-(defvar show-paren-overlay-1 nil)
-(show-paren-mode)
-
 (use-package projectile
   :diminish projectile-mode
   :bind-keymap
@@ -740,6 +735,14 @@ COMMAND and ARG are as per the documentation of `company-backends'."
    ("C-c C-c SPC" . ace-jump-line-mode)))
 
 (use-package elfeed)
+
+(use-package rainbow-delimiters
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
+
+(use-package paredit
+  :hook
+  (prog-mode . paredit-mode))
 
 (el-patch-validate-all)
 
