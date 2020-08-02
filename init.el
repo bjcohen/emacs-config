@@ -383,6 +383,15 @@
 (use-package treemacs-evil
   :requires (treemacs evil))
 
+(use-package all-the-icons
+  :config
+  (all-the-icons-install-fonts t))
+
+(use-package treemacs-all-the-icons
+  :requires (treemacs all-the-icons)
+  :config
+  (treemacs-load-theme "all-the-icons"))
+
 (use-package auctex
   :defer t
   :ensure t)
