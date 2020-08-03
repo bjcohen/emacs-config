@@ -603,6 +603,7 @@ See `org-roam-store-link' for details on ARG and INTERACTIVE?."
 (define-key visual-line-mode-map (kbd "M-p") #'previous-logical-line)
 
 (use-package vterm
+  :if module-file-suffix
   :ensure t)
 
 (use-package spotify
