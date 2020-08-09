@@ -209,6 +209,21 @@
           :left-margin-width helm-buffers-left-margin-width)
     (el-patch-add (my-check-modified))))
 
+(use-package helm-icons
+  :config
+  (helm-icons-enable))
+
+(use-package helm-posframe
+  :custom
+  (helm-display-header-line nil)
+  (helm-echo-input-in-header-line nil)
+  (helm-posframe-border-width 1)
+  (helm-posframe-parameters '((left-fringe . 1)
+                              (right-fringe . 1)))
+  (helm-posframe-poshandler #'posframe-poshandler-point-top-left-corner)
+  :config
+  (helm-posframe-enable))
+
 (use-package helm-projectile
   :requires (helm projectile)
   :bind
