@@ -1,4 +1,4 @@
-;;; package --- Summary
+;;; init.el --- bjcohen's Emacs configuration -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -632,7 +632,67 @@
 
 (use-package company-lsp
   :config
-  (push 'company-lsp company-backends))
+  (push 'company-lsp company-backends)
+  :config/el-patch
+  (defun company-lsp--on-completion (response prefix)
+    "Handle completion RESPONSE.
+
+PREFIX is a string of the prefix when the completion is requested.
+
+Return a list of strings as the completion candidates."
+    (let* ((incomplete (and (hash-table-p response) (gethash "isIncomplete" response)))
+           (items (cond ((hash-table-p response) (gethash "items" response))
+                        ((sequencep response) response)))
+           (candidates (mapcar (lambda (item)
+                                 (company-lsp--make-candidate item prefix))
+                               ((el-patch-swap lsp--sort-completions lsp-completion--sort-completions) items)))
+           (server-id (lsp--client-server-id (lsp--workspace-client lsp--cur-workspace)))
+           (should-filter (or (eq company-lsp-cache-candidates t)
+                              (and (null company-lsp-cache-candidates)
+                                   (company-lsp--get-config company-lsp-filter-candidates server-id)))))
+      (when (null company-lsp--completion-cache)
+        (add-hook 'company-completion-cancelled-hook #'company-lsp--cleanup-cache nil t)
+        (add-hook 'company-completion-finished-hook #'company-lsp--cleanup-cache nil t))
+      (when (eq company-lsp-cache-candidates 'auto)
+        ;; Only cache candidates on auto mode. If it's t company caches the
+        ;; candidates for us.
+        (company-lsp--cache-put prefix (company-lsp--cache-item-new candidates incomplete)))
+      (if should-filter
+          (company-lsp--filter-candidates candidates prefix)
+        candidates)))
+  (defun company-lsp (command &optional arg &rest _)
+    "Define a company backend for lsp-mode.
+
+See the documentation of `company-backends' for COMMAND and ARG."
+    (interactive (list 'interactive))
+    (cl-case command
+      (interactive (company-begin-backend #'company-lsp))
+      (prefix
+       (and
+        (bound-and-true-p lsp-mode)
+        (lsp--capability "completionProvider")
+        (or (--some (lsp--client-completion-in-comments? (lsp--workspace-client it))
+                    (lsp-workspaces))
+            (not (company-in-string-or-comment)))
+        (or (company-lsp--completion-prefix) 'stop)))
+      (candidates
+       ;; If the completion items in the response have textEdit action populated,
+       ;; we'll apply them in `company-lsp--post-completion'. However, textEdit
+       ;; actions only apply to the pre-completion content. We backup the current
+       ;; prefix and restore it after company completion is done, so the content
+       ;; is restored and textEdit actions can be applied.
+       (or (company-lsp--cache-item-candidates (company-lsp--cache-get arg))
+           (and company-lsp-async
+                (cons :async (lambda (callback)
+                               (company-lsp--candidates-async arg callback))))
+           (company-lsp--candidates-sync arg)))
+      (sorted t)
+      (no-cache (not (eq company-lsp-cache-candidates t)))
+      (annotation ((el-patch-swap lsp--annotate lsp-completion--annotate) arg))
+      (quickhelp-string (company-lsp--documentation arg))
+      (doc-buffer (company-doc-buffer (company-lsp--documentation arg)))
+      (match (cdr (company-lsp--compute-flex-match arg)))
+      (post-completion (company-lsp--post-completion arg)))))
 
 (use-package company-org-roam
   :config
