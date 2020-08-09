@@ -692,7 +692,33 @@ See the documentation of `company-backends' for COMMAND and ARG."
       (quickhelp-string (company-lsp--documentation arg))
       (doc-buffer (company-doc-buffer (company-lsp--documentation arg)))
       (match (cdr (company-lsp--compute-flex-match arg)))
-      (post-completion (company-lsp--post-completion arg)))))
+      (post-completion (company-lsp--post-completion arg))))
+  (defun company-lsp--resolve-candidate (candidate &rest props)
+    "Resolve a completion candidate to fill some properties.
+
+CANDIDATE is a string returned by `company-lsp--make-candidate'.
+PROPS are strings of property names of CompletionItem hashtable
+to be resolved.
+
+The completionItem/resolve request will only be sent to the
+server if the candidate has not been resolved before, and at lest
+one of the PROPS of the CompletionItem is missing.
+
+Returns CANDIDATE with the resolved CompletionItem."
+    (unless (plist-get (text-properties-at 0 candidate) 'company-lsp-resolved)
+      (let ((item (company-lsp--candidate-item candidate)))
+        (when (seq-some (lambda (prop)
+                          (null (gethash prop item)))
+                        props)
+          (let ((resolved-item ((el-patch-swap lsp--resolve-completion lsp-completion--resolve) item))
+                (len (length candidate)))
+            (put-text-property 0 len
+                               'lsp-completion-item resolved-item
+                               candidate)
+            (put-text-property 0 len
+                               'company-lsp-resolved t
+                               candidate)))))
+    candidate))
 
 (use-package company-org-roam
   :config
