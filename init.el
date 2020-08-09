@@ -573,6 +573,7 @@
            :immediate-finish t
            :file-name "%<%Y-%m-%d>"
            :head "#+title: %<%Y-%m-%d>\n#+roam_tags: daily")))
+  (org-link-set-parameters "file" :store nil)
   :bind (("C-c l" . org-store-link)
          :map org-roam-mode-map
          ("C-c n l" . org-roam)
@@ -582,8 +583,7 @@
          ("C-c n y" . org-roam-dailies-yesterday)
          ("C-c n m" . org-roam-dailies-tomorrow)
          :map org-mode-map
-         ("C-c n i" . org-roam-insert))
-  (org-link-set-parameters "file" :store nil))
+         ("C-c n i" . org-roam-insert)))
 
 (use-package helm-org-rifle
   :requires helm)
