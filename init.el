@@ -629,6 +629,13 @@
   :config
   (add-hook 'after-init-hook 'global-company-mode))
 
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+
+(use-package company-statistics
+  :config
+  (company-statistics-mode))
+
 (use-package company-lsp
   :config
   (push 'company-lsp company-backends)

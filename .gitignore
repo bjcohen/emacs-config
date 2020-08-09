@@ -29,3 +29,4 @@ flycheck_init.el
 elpy/
 /forge-database.sqlite
 /transient/
+/company-statistics-cache.el
