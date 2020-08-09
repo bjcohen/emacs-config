@@ -840,6 +840,10 @@ COMMAND and ARG are as per the documentation of `company-backends'."
   :bind
   ("C-o" . ace-window))
 
+(use-package avy
+  :bind
+  ("C-:" . avy-goto-char-timer))
+
 (el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))
