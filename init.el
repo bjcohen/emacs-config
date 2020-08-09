@@ -43,7 +43,6 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 
-(global-set-key (kbd "C-o") #'other-window)
 (global-set-key (kbd "C-w") #'backward-kill-word)
 
 (use-package yascroll
@@ -829,6 +828,10 @@ COMMAND and ARG are as per the documentation of `company-backends'."
 (use-package paredit
   :hook
   (prog-mode . paredit-mode))
+
+(use-package ace-window
+  :bind
+  ("C-o" . ace-window))
 
 (el-patch-validate-all)
 
