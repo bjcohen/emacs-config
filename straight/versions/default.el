@@ -8,7 +8,7 @@
  ("bm" . "8129428182e1b8a647d16fceb2d08cc0a2a5f3c7")
  ("bui.el" . "28a9b0a36cb69b931cf32db7546ad5c6589752cf")
  ("closql" . "c864c1fadfea4a05fff29cb60891b7a32ac88c78")
- ("company-box" . "981aa41c97090a51aa54f79c562ad502ae21b98e")
+ ("company-box" . "6eb8820787b7a0363ead906d8a23139ca8fd5eee")
  ("company-lsp" . "f921ffa0cdc542c21dc3dd85f2c93df4288e83bd")
  ("company-mode" . "5eb7d868c2a13bbfb14060b79d69f0d59f6a5f60")
  ("company-org-roam" . "1132663bd68022aa7ea005ff53c7c7571890769d")
