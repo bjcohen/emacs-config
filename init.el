@@ -138,7 +138,7 @@
 (setq-default indent-tabs-mode nil)
 (add-hook 'prog-mode-hook #'whitespace-mode)
 (setq whitespace-style '(face trailing lines-tail tabs empty))
-(diminish 'global-whitespace-mode)
+(diminish 'whitespace-mode)
 
 (setq whitespace-trailing 'font-lock-warning-face)
 (setq whitespace-line 'font-lock-warning-face)
@@ -181,6 +181,8 @@
             (clear-visited-file-modtime)
           (set-buffer-modified-p (current-buffer))
           (save-buffer)))))
+
+(diminish 'auto-revert-mode)
 
 (use-package helm
   :diminish helm-mode
@@ -568,6 +570,7 @@
         ("l" . forward-char)))
 
 (add-hook 'org-mode-hook #'visual-line-mode)
+(diminish 'visual-line-mode)
 
 (use-package org-roam
   :diminish org-roam-mode
@@ -635,6 +638,7 @@
   (add-hook 'after-init-hook 'global-company-mode))
 
 (use-package company-box
+  :diminish
   :hook (company-mode . company-box-mode))
 
 (use-package company-statistics
@@ -838,6 +842,7 @@ COMMAND and ARG are as per the documentation of `company-backends'."
   (prog-mode . rainbow-delimiters-mode))
 
 (use-package paredit
+  :diminish
   :hook
   (prog-mode . paredit-mode))
 
