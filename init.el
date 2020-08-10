@@ -116,8 +116,7 @@
                                     :compile "autogen.sh && make"
                                     :test "make test"))
 
-(use-package projectile-ripgrep
-  :requires (projectile ripgrep))
+(use-package projectile-ripgrep)
 
 (use-package dracula-theme
   :config
@@ -167,7 +166,6 @@
   (setq evil-default-state 'emacs))
 
 (use-package evil-surround
-  :requires evil
   :config
   (global-evil-surround-mode))
 
@@ -225,28 +223,24 @@
   (helm-posframe-enable))
 
 (use-package helm-projectile
-  :requires (helm projectile)
   :bind
   (:map projectile-mode-map
         ("C-c p s g" . 'helm-projectile-grep)
         ("C-c p s r" . 'helm-projectile-rg)))
 
 (use-package helm-lsp
-  :requires (help lsp-mode)
   :config
   (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
 
 (use-package flx)
 
 (use-package helm-flx
-  :requires (helm flx)
   :config
   (helm-flx-mode +1))
 
 (use-package ripgrep)
 
-(use-package helm-rg
-  :requires (helm ripgrep))
+(use-package helm-rg)
 
 (use-package smex
   :bind
@@ -343,14 +337,11 @@
   (add-hook 'flycheck-mode-hook #'flycheck-virtualenv-setup))
 
 (use-package flycheck-inline
-  :requires flycheck
   :hook ((flycheck-mode . flycheck-inline-mode)))
 
-(use-package flycheck-rust
-  :requires (flycheck rust-mode))
+(use-package flycheck-rust)
 
 (use-package flycheck-pycheckers
-  :requires (flycheck elpy)
   :hook
   ((flycheck-mode . flycheck-pycheckers-setup)))
 
@@ -373,11 +364,9 @@
   :hook
   (prog-mode . lsp))
 
-(use-package lsp-ui
-  :requires lsp-mode)
+(use-package lsp-ui)
 
-(use-package lsp-treemacs
-  :requires lsp-mode)
+(use-package lsp-treemacs)
 
 (use-package dap-mode
   :config
@@ -391,18 +380,15 @@
 
 (use-package treemacs)
 
-(use-package treemacs-projectile
-  :requires (treemacs projectile))
+(use-package treemacs-projectile)
 
-(use-package treemacs-evil
-  :requires (treemacs evil))
+(use-package treemacs-evil)
 
 (use-package all-the-icons
   :config
   (all-the-icons-install-fonts t))
 
 (use-package treemacs-all-the-icons
-  :requires (treemacs all-the-icons)
   :config
   (treemacs-load-theme "all-the-icons"))
 
@@ -600,8 +586,7 @@
          :map org-mode-map
          ("C-c n i" . org-roam-insert)))
 
-(use-package helm-org-rifle
-  :requires helm)
+(use-package helm-org-rifle)
 
 (define-key visual-line-mode-map (kbd "M-n") #'next-logical-line)
 (define-key visual-line-mode-map (kbd "M-p") #'previous-logical-line)
@@ -631,11 +616,9 @@
   (pdf-tools-install))
 
 (use-package org-pdftools
-  :requires pdf-tools
   :hook (org-load . org-pdftools-setup-link))
 
 (use-package org-noter-pdftools
-  :requires (org-noter pdf-tools)
   :config
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
