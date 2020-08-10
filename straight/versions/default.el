@@ -78,6 +78,7 @@
  ("org-pdftools" . "8cc15bb8014ed1f047eecc0abd8bf447f86c0505")
  ("org-rifle" . "263f56d70112f5d0496684c89a2aa07959e0a95f")
  ("org-roam" . "a26c262048d07d777c7c35757879656b5040ac8c")
+ ("org-superstar-mode" . "17481852c1bd09afea877635a3185261fc19fd64")
  ("org-web-tools" . "ebc7888f4f4cad26ec1298edd7bf606a5ea2d564")
  ("ov" . "c5b9aa4e1b00d702eb2caedd61c69a22a5fa1fab")
  ("paradox" . "339fe3518d1d102b2295670340e75caf4f01a29a")

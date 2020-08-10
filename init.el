@@ -538,6 +538,13 @@
           ;; Link found; return parts
           (cons target desc))))))
 
+(use-package org-superstar
+  :hook
+  (org-mode . (lambda () (org-superstar-mode 1)))
+  :custom
+  (org-superstar-special-todo-items t)
+  (org-hide-leading-stars t))
+
 (defun reading-mode ()
   "Pseudo-'mode' to set up some nice display settings for reading things."
   (interactive)
