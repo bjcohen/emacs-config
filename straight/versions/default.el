@@ -77,7 +77,7 @@
  ("org-noter" . "9ead81d42dd4dd5074782d239b2efddf9b8b7b3d")
  ("org-pdftools" . "8cc15bb8014ed1f047eecc0abd8bf447f86c0505")
  ("org-rifle" . "263f56d70112f5d0496684c89a2aa07959e0a95f")
- ("org-roam" . "a26c262048d07d777c7c35757879656b5040ac8c")
+ ("org-roam" . "2081e1268ad57dfb94171d1a99e8f13126fbdaa5")
  ("org-superstar-mode" . "17481852c1bd09afea877635a3185261fc19fd64")
  ("org-web-tools" . "ebc7888f4f4cad26ec1298edd7bf606a5ea2d564")
  ("ov" . "c5b9aa4e1b00d702eb2caedd61c69a22a5fa1fab")

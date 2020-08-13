@@ -576,15 +576,15 @@
   :diminish org-roam-mode
   :hook
   (after-init . org-roam-mode)
-  :config
-  (setq org-roam-completion-system 'helm)
-  (setq org-roam-dailies-capture-templates
-        '(("d" "daily" plain (function org-roam-capture--get-point)
-           ""
-           :immediate-finish t
-           :file-name "%<%Y-%m-%d>"
-           :head "#+title: %<%Y-%m-%d>\n#+roam_tags: daily")))
-  (org-link-set-parameters "file" :store nil)
+  :custom
+  (org-roam-enable-headline-linking nil)
+  (org-roam-completion-system 'helm)
+  (org-roam-dailies-capture-templates
+   '(("d" "daily" plain (function org-roam-capture--get-point)
+      ""
+      :immediate-finish t
+      :file-name "%<%Y-%m-%d>"
+      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: daily")))
   :bind (("C-c l" . org-store-link)
          :map org-roam-mode-map
          ("C-c n l" . org-roam)
