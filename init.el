@@ -584,7 +584,7 @@
       ""
       :immediate-finish t
       :file-name "%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: daily")))
+      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: daily\n\n* Reading")))
   :bind (("C-c l" . org-store-link)
          :map org-roam-mode-map
          ("C-c n l" . org-roam)
