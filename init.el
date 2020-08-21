@@ -27,7 +27,7 @@
 (autoload #'straight-x-pull-all "straight-x")
 (autoload #'straight-x-freeze-versions "straight-x")
 
-;;; OS X Config
+;;; General Config
 
 (use-package diminish)
 (use-package bind-key)
@@ -57,9 +57,7 @@
 (setq mac-option-modifier 'meta)
 (setq mac-right-option-modifier nil)
 
-;;; General Config
-
-(require 'saveplace)
+(save-place-mode 1)
 
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
@@ -95,7 +93,7 @@
 
 (use-package compile
   :config
-  (defun close-on-successful-exit (buffer desc)
+  (defun close-on-successful-exit (_ desc)
     "Close the compilation BUFFER in two seconds if DESC indei it exited successfully."
     (unless (string-match "exited abnormally" desc)
       (run-at-time
@@ -133,8 +131,6 @@
   (yas-global-mode 1)
   (define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand))
 
-;; tabs
-
 (setq-default indent-tabs-mode nil)
 (add-hook 'prog-mode-hook #'whitespace-mode)
 (setq whitespace-style '(face trailing lines-tail tabs empty))
@@ -144,8 +140,6 @@
 (setq whitespace-line 'font-lock-warning-face)
 (setq whitespace-line-column 100)
 (setq whitespace-empty 'font-lock-warning-face)
-
-;; Sometimes I use these...
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
