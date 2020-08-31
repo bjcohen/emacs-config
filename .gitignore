@@ -30,3 +30,4 @@ elpy/
 /forge-database.sqlite
 /transient/
 /company-statistics-cache.el
+/places
