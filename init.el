@@ -349,6 +349,7 @@
   (editorconfig-mode 1))
 
 (set-frame-font "Mononoki")
+(global-prettify-symbols-mode)
 
 (use-package rust-mode
   :hook
@@ -407,6 +408,10 @@
      "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
   (set-fontset-font
    t 'symbol (font-spec :family "Apple Color Emoji") nil 'prepend))
+
+(use-package unicode-fonts
+  :config
+  (unicode-fonts-setup))
 
 (use-package org
   :hook
