@@ -915,7 +915,9 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (setq centaur-tabs-cycle-scope 'tabs)
   :bind
   ("S-s-<tab>" . centaur-tabs-backward)
-  ("s-<tab>" . centaur-tabs-forward))
+  ("s-<tab>" . centaur-tabs-forward)
+  :hook
+  (treemacs-mode . centaur-tabs-local-mode))
 
 (el-patch-validate-all)
 
