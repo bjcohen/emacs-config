@@ -852,6 +852,11 @@ COMMAND and ARG are as per the documentation of `company-backends'."
   :bind
   (:map paredit-mode-map ("M-DEL" . my/paredit-backward-kill-word-and-reindent)))
 
+;; (use-package lispy
+;;   :diminish
+;;   :hook
+;;   (prog-mode . lispy-mode))
+
 (use-package ace-window
   :bind
   ("C-o" . ace-window))
@@ -861,6 +866,7 @@ COMMAND and ARG are as per the documentation of `company-backends'."
   ("C-:" . avy-goto-char-timer))
 
 (use-package centaur-tabs
+  :demand
   :config
   (centaur-tabs-mode t)
   (centaur-tabs-enable-buffer-reordering)
