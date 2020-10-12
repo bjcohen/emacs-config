@@ -31,3 +31,4 @@ elpy/
 /transient/
 /company-statistics-cache.el
 /places
+/org-roam.db
