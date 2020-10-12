@@ -7,6 +7,7 @@
  ("avy" . "bbf1e7339eba06784dfe86643bb0fbddf5bb0342")
  ("bm" . "8129428182e1b8a647d16fceb2d08cc0a2a5f3c7")
  ("bui.el" . "28a9b0a36cb69b931cf32db7546ad5c6589752cf")
+ ("centaur-tabs" . "5453317b6b9f68bfbd934eee3b883207bfa331e0")
  ("closql" . "c864c1fadfea4a05fff29cb60891b7a32ac88c78")
  ("company-box" . "8181afae6f0add20b34373ae6bf398c85183a3ce")
  ("company-lsp" . "f921ffa0cdc542c21dc3dd85f2c93df4288e83bd")

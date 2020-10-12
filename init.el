@@ -860,6 +860,57 @@ COMMAND and ARG are as per the documentation of `company-backends'."
   :bind
   ("C-:" . avy-goto-char-timer))
 
+(use-package centaur-tabs
+  :config
+  (centaur-tabs-mode t)
+  (centaur-tabs-enable-buffer-reordering)
+  (setq centaur-tabs-adjust-buffer-order 'left)
+  (defun centaur-tabs-hide-tab (x)
+    "Do no to show buffer X in tabs."
+    (let ((name (format "%s" x)))
+      (or
+       ;; Current window is not dedicated window.
+       ;; Buffer name not match below blacklist.
+       (string-prefix-p "*org-roam" name))))
+  (defun centaur-tabs-buffer-groups ()
+    "`centaur-tabs-buffer-groups' control buffers' group rules.
+
+Group centaur-tabs with mode if buffer is derived from `eshell-mode'
+`emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
+All buffer name start with * will group to \"Emacs\".
+Other buffer group by `centaur-tabs-get-group-name' with project name."
+    (list
+     (cond
+      ((or (string-prefix-p "*mu4e" (buffer-name))
+           (string-equal "*pocket-reader*" (buffer-name))
+           (memq major-mode '(org-mode org-agenda-mode diary-mode)))
+       "Reading")
+      ((string-equal "*" (substring (buffer-name) 0 1))
+       "Emacs")
+      ((memq major-mode '(magit-process-mode
+                          magit-status-mode
+                          magit-diff-mode
+                          magit-log-mode
+                          magit-file-mode
+                          magit-blob-mode
+                          magit-blame-mode
+                          ))
+       "Magit")
+      ((derived-mode-p 'eshell-mode)
+       "EShell")
+      ((derived-mode-p 'emacs-lisp-mode)
+       "Elisp")
+      ((derived-mode-p 'dired-mode)
+       "Dired")
+      ((derived-mode-p 'vterm-mode)
+       "Vterm")
+      (t
+       (centaur-tabs-get-group-name (current-buffer))))))
+  (setq centaur-tabs-cycle-scope 'tabs)
+  :bind
+  ("S-s-<tab>" . centaur-tabs-backward)
+  ("s-<tab>" . centaur-tabs-forward))
+
 (el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))
