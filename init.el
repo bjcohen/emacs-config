@@ -877,7 +877,9 @@ COMMAND and ARG are as per the documentation of `company-backends'."
       (or
        ;; Current window is not dedicated window.
        ;; Buffer name not match below blacklist.
-       (string-prefix-p "*org-roam" name))))
+       (string-prefix-p "*org-roam" name)
+       (string-prefix-p "*company" name)
+       (string-equal "*mu4e-loading*" name))))
   (defun centaur-tabs-buffer-groups ()
     "`centaur-tabs-buffer-groups' control buffers' group rules.
 
@@ -913,11 +915,24 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
       (t
        (centaur-tabs-get-group-name (current-buffer))))))
   (setq centaur-tabs-cycle-scope 'tabs)
+  :config/el-patch
+  (defun company-box--get-buffer (&optional suffix)
+    "Construct the buffer name, it should be unique for each frame."
+    (el-patch-let ((mkbuf (get-buffer-create
+                           (concat " *company-box-" (company-box--get-id) suffix "*"))))
+      (el-patch-swap
+        mkbuf
+        (let ((buf mkbuf))
+          (with-current-buffer buf
+            (centaur-tabs-local-mode))
+          buf))))
   :bind
   ("S-s-<tab>" . centaur-tabs-backward)
   ("s-<tab>" . centaur-tabs-forward)
   :hook
-  (treemacs-mode . centaur-tabs-local-mode))
+  (treemacs-mode . centaur-tabs-local-mode)
+  (mu4e~update-mail-mode . centaur-tabs-local-mode)
+  (ediff-mode . centaur-tabs-local-mode))
 
 (el-patch-validate-all)
 
