@@ -10,7 +10,6 @@
  ("centaur-tabs" . "5453317b6b9f68bfbd934eee3b883207bfa331e0")
  ("closql" . "c864c1fadfea4a05fff29cb60891b7a32ac88c78")
  ("company-box" . "be37a9a30dc112ab172af21af694e2cb04a74f85")
- ("company-lsp" . "f921ffa0cdc542c21dc3dd85f2c93df4288e83bd")
  ("company-mode" . "5f5949b6ae8ea9df94c6cb3e01d9cae43623b794")
  ("company-org-roam" . "1132663bd68022aa7ea005ff53c7c7571890769d")
  ("company-statistics" . "e62157d43b2c874d2edbd547c3bdfb05d0a7ae5c")
