@@ -521,7 +521,8 @@
   (let* ((link (org-web-tools--read-org-bracket-link))
          (title (cdr link))
          (url (car link)))
-    (insert "#+title: " title "\n#+roam_tags: website pocket\n#+roam_key: " url "\n\n"))
+    (insert "#+title: " title "\n#+roam_tags: website pocket\n#+roam_key: " url "\n\n")
+    (set-visited-file-name (concat (funcall org-roam-title-to-slug-function title) ".org")))
   (add-hook 'after-save-hook #'org-roam-db--update-file nil t)
   (reading-mode))
 
