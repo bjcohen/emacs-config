@@ -855,7 +855,10 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   :hook
   (treemacs-mode . centaur-tabs-local-mode)
   (mu4e~update-mail-mode . centaur-tabs-local-mode)
-  (ediff-mode . centaur-tabs-local-mode))
+  (ediff-mode . centaur-tabs-local-mode)
+  (lsp-ui-doc-frame-mode . centaur-tabs-local-mode)
+  (lsp-ui-imenu-mode . centaur-tabs-local-mode)
+  )
 
 (el-patch-validate-all)
 
