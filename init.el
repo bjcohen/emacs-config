@@ -835,8 +835,6 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
        "Elisp")
       ((derived-mode-p 'dired-mode)
        "Dired")
-      ((derived-mode-p 'vterm-mode)
-       "Vterm")
       (t
        (centaur-tabs-get-group-name (current-buffer))))))
   (setq centaur-tabs-cycle-scope 'tabs)
