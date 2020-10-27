@@ -815,6 +815,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
      (cond
       ((or (string-prefix-p "*mu4e" (buffer-name))
            (string-equal "*pocket-reader*" (buffer-name))
+           (string-equal "*elfeed-search*" (buffer-name))
            (memq major-mode '(org-mode org-agenda-mode diary-mode)))
        "Reading")
       ((string-equal "*" (substring (buffer-name) 0 1))
