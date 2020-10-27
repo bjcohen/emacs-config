@@ -772,7 +772,7 @@ COMMAND and ARG are as per the documentation of `company-backends'."
 (use-package paredit
   :diminish
   :hook
-  (prog-mode . paredit-mode)
+  (lisp-data-mode . paredit-mode)
   :bind
   (:map paredit-mode-map ("M-DEL" . my/paredit-backward-kill-word-and-reindent)))
 
