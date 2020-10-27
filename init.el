@@ -227,7 +227,10 @@
 
 (use-package helm-lsp
   :config
-  (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
+  (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
+  :bind
+  (:map lsp-mode-map
+        ("C-<return>" . 'helm-lsp-code-actions)))
 
 (use-package flx)
 
@@ -354,7 +357,8 @@
 
 (use-package rust-mode
   :hook
-  ((flycheck-mode . flycheck-rust-setup))
+  (flycheck-mode . flycheck-rust-setup)
+  (rust-mode . lsp-ui-imenu)
   :config
   (lsp-rust-switch-server 'rust-analyzer))
 
@@ -362,9 +366,17 @@
   :hook
   (prog-mode . lsp))
 
-(use-package lsp-ui)
+(use-package lsp-ui
+  :config
+  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+  (lsp-ui-peek-enable t)
+  (setq lsp-ui-doc-position 'at-point
+        lsp-ui-sideline-show-hover t))
 
-(use-package lsp-treemacs)
+(use-package lsp-treemacs
+  :config
+  (lsp-treemacs-sync-mode 1))
 
 (use-package dap-mode
   :config
