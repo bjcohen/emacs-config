@@ -13,6 +13,7 @@
  ("company-mode" . "5f5949b6ae8ea9df94c6cb3e01d9cae43623b794")
  ("company-org-roam" . "1132663bd68022aa7ea005ff53c7c7571890769d")
  ("company-statistics" . "e62157d43b2c874d2edbd547c3bdfb05d0a7ae5c")
+ ("ctrlf" . "5acefdc9a6f8e35febf6f71b6a34a0d4fc499269")
  ("dap-mode" . "b43c4575a1c1646df6ec3355207415b9490bfdc5")
  ("dash.el" . "b92ab5a39b987e4fe69317b9d9fda452300baf20")
  ("diminish.el" . "6ec6ebc391371418efc6c98d70b013f34af5a2ee")

@@ -866,6 +866,10 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (rustic-compilation-mode . centaur-tabs-local-mode)
   )
 
+(use-package ctrlf
+  :config
+  (ctrlf-mode +1))
+
 (el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))
