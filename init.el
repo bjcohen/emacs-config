@@ -862,6 +862,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (ediff-mode . centaur-tabs-local-mode)
   (lsp-ui-doc-frame-mode . centaur-tabs-local-mode)
   (lsp-ui-imenu-mode . centaur-tabs-local-mode)
+  (rustic-compilation-mode . centaur-tabs-local-mode)
   )
 
 (el-patch-validate-all)
