@@ -362,6 +362,10 @@
   :config
   (lsp-rust-switch-server 'rust-analyzer))
 
+(use-package rustic
+  :config
+  (setq rustic-lsp-server 'rust-analyzer))
+
 (use-package lsp-mode
   :hook
   (prog-mode . lsp))

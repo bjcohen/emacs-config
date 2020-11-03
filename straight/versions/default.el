@@ -103,6 +103,7 @@
  ("rainbow-identifiers" . "19fbfded1baa98d12335f26f6d7b20e5ae44ce2e")
  ("ripgrep.el" . "40e871dcc4519a70981e9f28acea304692a60978")
  ("rust-mode" . "ca7d99c6fd90fc1e636aa9d4020a2f077786a0c3")
+ ("rustic" . "7c9d55bdd47e98d2ac12e13dcb12703e6ffe377f")
  ("s.el" . "43ba8b563bee3426cead0e6d4ddc09398e1a349d")
  ("smex" . "55aaebe3d793c2c990b39a302eb26c184281c42c")
  ("spinner" . "2daa167bec1c7566d662d48613a94453536b524a")
