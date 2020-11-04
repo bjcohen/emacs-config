@@ -868,7 +868,8 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
 
 (use-package ctrlf
   :config
-  (ctrlf-mode +1))
+  (ctrlf-mode +1)
+  (add-hook 'ido-minibuffer-setup-hook (lambda () (ctrlf-local-mode -1))))
 
 (el-patch-validate-all)
 
