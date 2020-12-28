@@ -71,7 +71,8 @@
 (add-hook 'text-mode-hook (lambda () (flyspell-mode 1)))
 (diminish 'flyspell-mode)
 
-(use-package magit)
+(use-package magit
+  :demand t)
 
 (use-package forge
   :after magit)
@@ -773,7 +774,7 @@ COMMAND and ARG are as per the documentation of `company-backends'."
   ("C-:" . avy-goto-char-timer))
 
 (use-package centaur-tabs
-  :demand
+  :demand t
   :config
   (centaur-tabs-mode t)
   (centaur-tabs-enable-buffer-reordering)
