@@ -358,7 +358,6 @@
 (use-package rust-mode
   :hook
   (flycheck-mode . flycheck-rust-setup)
-  (rust-mode . lsp-ui-imenu)
   :config
   (lsp-rust-switch-server 'rust-analyzer))
 
@@ -367,6 +366,7 @@
   (setq rustic-lsp-server 'rust-analyzer))
 
 (use-package lsp-mode
+  :diminish lsp-mode
   :hook
   (prog-mode . lsp))
 
@@ -451,7 +451,7 @@
 
   (setq
    mu4e-get-mail-command "offlineimap"
-   mu4e-update-interval 600
+   mu4e-update-interval nil
    mu4e-trash-folder "/Trash"
    mu4e-split-view 'single-window)
   (add-to-list 'mu4e-view-actions
