@@ -442,7 +442,7 @@
 
 (let ((straight-current-profile 'pinned))
   (add-to-list 'straight-x-pinned-packages
-               '("org" . "fbccf09c740a298e39daa9170bceaa92684f2fe0")))
+               '("org" . "03b0009faf3962f20139098523db5653de02ad71")))
 
 (use-package mu4e
   :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
