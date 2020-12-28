@@ -823,6 +823,14 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
       (t
        (centaur-tabs-get-group-name (current-buffer))))))
   (setq centaur-tabs-cycle-scope 'tabs)
+  (defun centaur-tabs-nth-tab (n)
+    (let* ((tabset (centaur-tabs-current-tabset t))
+           (tabs (centaur-tabs-tabs tabset))
+           (tab (if (>= n 0)
+                    (nth n tabs)
+                  (nth (- (+ 1 n)) (reverse tabs)))))
+      (when tab
+        (centaur-tabs-buffer-select-tab tab))))
   :config/el-patch
   (defun company-box--get-buffer (&optional suffix)
     "Construct the buffer name, it should be unique for each frame."
@@ -837,6 +845,15 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   :bind
   ("S-s-<tab>" . centaur-tabs-backward)
   ("s-<tab>" . centaur-tabs-forward)
+  ("C-1" . (lambda () (interactive) (centaur-tabs-nth-tab 0)))
+  ("C-2" . (lambda () (interactive) (centaur-tabs-nth-tab 1)))
+  ("C-3" . (lambda () (interactive) (centaur-tabs-nth-tab 2)))
+  ("C-4" . (lambda () (interactive) (centaur-tabs-nth-tab 3)))
+  ("C-5" . (lambda () (interactive) (centaur-tabs-nth-tab 4)))
+  ("C-6" . (lambda () (interactive) (centaur-tabs-nth-tab 5)))
+  ("C-7" . (lambda () (interactive) (centaur-tabs-nth-tab 6)))
+  ("C-8" . (lambda () (interactive) (centaur-tabs-nth-tab -2)))
+  ("C-9" . (lambda () (interactive) (centaur-tabs-nth-tab -1)))
   :hook
   (treemacs-mode . centaur-tabs-local-mode)
   (mu4e~update-mail-mode . centaur-tabs-local-mode)
