@@ -536,27 +536,6 @@
   :custom
   (pocket-reader-open-url-default-function #'my/pocket-reader-open-url-function))
 
-(use-package org-web-tools
-  :defer
-  :config/el-patch
-  (defun org-web-tools--read-org-bracket-link (&optional link)
-    "Return (TARGET . DESCRIPTION) for Org bracket LINK or next link on current line."
-    ;; Searching to the end of the line seems the simplest way
-    (save-excursion
-      (let (target desc)
-        (if link
-            ;; Link passed as arg
-            (when (string-match (el-patch-swap org-bracket-link-regexp org-link-bracket-re) link)
-              (setq target (match-string-no-properties 1 link)
-                    desc (match-string-no-properties (el-patch-swap 3 2) link)))
-          ;; No arg; get link from buffer
-          (when (re-search-forward (el-patch-swap org-bracket-link-regexp org-link-bracket-re) (point-at-eol) t)
-            (setq target (match-string-no-properties 1)
-                  desc (match-string-no-properties (el-patch-swap 3 2)))))
-        (when (and target desc)
-          ;; Link found; return parts
-          (cons target desc))))))
-
 (use-package org-superstar
   :hook
   (org-mode . (lambda () (org-superstar-mode 1)))
@@ -607,9 +586,9 @@
          ("C-c n l" . org-roam)
          ("C-c n f" . org-roam-find-file)
          ("C-c n g" . org-roam-show-graph)
-         ("C-c n t" . org-roam-dailies-today)
-         ("C-c n y" . org-roam-dailies-yesterday)
-         ("C-c n m" . org-roam-dailies-tomorrow)
+         ("C-c n t" . org-roam-dailies-find-today)
+         ("C-c n y" . org-roam-dailies-find-yesterday)
+         ("C-c n m" . org-roam-dailies-find-tomorrow)
          :map org-mode-map
          ("C-c n i" . org-roam-insert)))
 
