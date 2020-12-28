@@ -745,10 +745,11 @@ COMMAND and ARG are as per the documentation of `company-backends'."
 
 (use-package centaur-tabs
   :demand t
+  :after company-box
   :config
   (centaur-tabs-mode t)
   (centaur-tabs-enable-buffer-reordering)
-  (setq centaur-tabs-adjust-buffer-order 'left)
+  (setq centaur-tabs-adjust-buffer-order 'right)
   (defun centaur-tabs-hide-tab (x)
     "Do no to show buffer X in tabs."
     (let ((name (format "%s" x)))
