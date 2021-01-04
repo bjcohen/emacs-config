@@ -897,6 +897,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (lsp-ui-doc-frame-mode . centaur-tabs-local-mode)
   (lsp-ui-imenu-mode . centaur-tabs-local-mode)
   (rustic-compilation-mode . centaur-tabs-local-mode)
+  (helm-major-mode . centaur-tabs-local-mode)
   )
 
 (use-package ctrlf
