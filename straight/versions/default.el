@@ -114,6 +114,7 @@
  ("tablist" . "faab7a035ef2258cc4ea2182f67e3aedab7e2af9")
  ("tox.el" . "7655eb254038d5e34433e8a9d66b3ffc9c72e40c")
  ("transient" . "4a2b7fdf75c6940b5b311d930ea26f7e85a08cd4")
+ ("transient-posframe" . "dcd898d1d35183a7d4f2c8f0ebcb43b4f8e70ebe")
  ("treemacs" . "0f5341503ae8eb5d10770875183411703e0e4a86")
  ("treepy.el" . "3ac940e97f3d03e48ca9d7fcd74916a9b01c72f3")
  ("ucs-utils" . "cbfd42f822bf5717934fa2d92060e6e24a813433")

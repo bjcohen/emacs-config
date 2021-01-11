@@ -142,6 +142,12 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (use-package forge
   :after magit)
 
+(use-package transient-posframe
+  :straight (transient-posframe :type git :host github
+                                :repo "yanghaoxie/transient-posframe")
+  :config
+  (transient-posframe-mode))
+
 (electric-pair-mode)
 
 ;;; random stuff
