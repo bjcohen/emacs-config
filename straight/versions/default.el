@@ -12,7 +12,6 @@
  ("closql" . "c864c1fadfea4a05fff29cb60891b7a32ac88c78")
  ("company-box" . "be37a9a30dc112ab172af21af694e2cb04a74f85")
  ("company-mode" . "dccd04b7fb658d366c2081b6ce7ddcd208ce7ae0")
- ("company-org-roam" . "1132663bd68022aa7ea005ff53c7c7571890769d")
  ("company-statistics" . "e62157d43b2c874d2edbd547c3bdfb05d0a7ae5c")
  ("ctrlf" . "5acefdc9a6f8e35febf6f71b6a34a0d4fc499269")
  ("dap-mode" . "041db8eb7f0ceb9477ffff1730b5940814001158")
