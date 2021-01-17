@@ -321,6 +321,10 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   :config
   (smex-initialize))
 
+(use-package ido-grid-mode
+  :config
+  (ido-grid-mode 1))
+
 (use-package go-mode)
 
 (use-package iedit)

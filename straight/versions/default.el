@@ -64,6 +64,7 @@
  ("helm-rg" . "ee0a3c09da0c843715344919400ab0a0190cc9dc")
  ("ht.el" . "2850301d19176b8d3bb6cc8d95af6ab7e529bd56")
  ("hydra" . "2d553787aca1aceb3e6927e426200e9bb9f056f1")
+ ("ido-grid-mode.el" . "7cfca3988a6dc3ad18e28abe114218095ff2366f")
  ("iedit" . "313997a2504e565a34e84fdb59a5a7ffd223328b")
  ("jinja2-mode" . "ecd19a40b7832bb00f0a2244e3b0713d0bf3850d")
  ("let-alist" . "b299c78897cc307f9d5521927376fbd06a26f123")
