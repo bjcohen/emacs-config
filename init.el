@@ -524,7 +524,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (setq
    mu4e-get-mail-command "offlineimap"
    mu4e-update-interval nil
-   mu4e-trash-folder "/Trash"
    mu4e-split-view 'single-window)
   (add-to-list 'mu4e-view-actions
                '("View in browser" . mu4e-action-view-in-browser) t)
@@ -532,15 +531,15 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (setq mu4e-bookmarks '())
   (add-to-list 'mu4e-bookmarks
                '(:name "Reading list"
-                       :query "tag:reading-list and (flag:unread or date:today) and not maildir:/Trash"
+                       :query "(tag:reading-list or tag:\\\\Important and maildir:/Gmail/INBOX) and (flag:unread or date:today) and not flag:trashed"
                        :key ?l))
   (add-to-list 'mu4e-bookmarks
                '(:name "Today's messages"
-                       :query "date:today..now and not maildir:/Trash"
+                       :query "date:today..now and not flag:trashed"
                        :key ?t))
   (add-to-list 'mu4e-bookmarks
                '(:name "Last 7 days"
-                       :query "date:7d..now and not maildir:/Trash"
+                       :query "date:7d..now and not flag:trashed"
                        :key ?w))
   (setq mu4e-bookmarks (reverse mu4e-bookmarks))
   (add-to-list 'mu4e-marks
