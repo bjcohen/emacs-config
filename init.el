@@ -788,18 +788,11 @@ COMMAND and ARG are as per the documentation of `company-backends'."
   :hook
   (prog-mode . rainbow-delimiters-mode))
 
-(defun my/paredit-backward-kill-word-and-reindent ()
-  (interactive)
-  (paredit-backward-kill-word)
-  (paredit-reindent-defun))
-
 (use-package paredit
   :diminish
   :hook
   (lisp-data-mode . paredit-mode)
-  (emacs-lisp-mode . paredit-mode)
-  :bind
-  (:map paredit-mode-map ("M-DEL" . my/paredit-backward-kill-word-and-reindent)))
+  (emacs-lisp-mode . paredit-mode))
 
 ;; (use-package lispy
 ;;   :diminish
