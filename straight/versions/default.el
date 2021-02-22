@@ -100,6 +100,7 @@
  ("posframe" . "ae8ac91744010c8975f07cf18282f58ce56605d0")
  ("powerline" . "b293abf83c0a2b2988af19dd0ef0426c3b1d1501")
  ("projectile" . "1f2887696ec4fa7ecc005f258da276c445db039c")
+ ("protobuf" . "133e5e75263be696c06599ab97614a1e1e6d9c66")
  ("pyvenv" . "9b3678bc29192d2dba64df90fbdb17393ef8d877")
  ("rainbow-delimiters" . "f43d48a24602be3ec899345a3326ed0247b960c6")
  ("rainbow-identifiers" . "19fbfded1baa98d12335f26f6d7b20e5ae44ce2e")

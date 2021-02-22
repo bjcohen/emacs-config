@@ -907,6 +907,8 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (ctrlf-mode +1)
   (add-hook 'ido-minibuffer-setup-hook (lambda () (ctrlf-local-mode -1))))
 
+(use-package protobuf-mode)
+
 (el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))
