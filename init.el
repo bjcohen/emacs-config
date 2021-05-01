@@ -520,7 +520,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
 (let ((straight-current-profile 'pinned))
   (add-to-list 'straight-x-pinned-packages
-               '("org" . "03b0009faf3962f20139098523db5653de02ad71")))
+               '("org" . "a804a57063010b060756d084291b1f5d28d1fedd"))) ;; 9.4.5
 
 (use-package mu4e
   :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
