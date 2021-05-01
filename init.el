@@ -443,6 +443,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
 (use-package lsp-mode
   :diminish lsp-mode
+  :config
+  (add-to-list 'lsp-language-id-configuration '(emacs-lisp-mode . "elisp"))
   :hook
   (prog-mode . lsp))
 
