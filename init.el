@@ -502,9 +502,9 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (set-fontset-font
    t 'symbol (font-spec :family "Apple Color Emoji") nil 'prepend))
 
-(use-package unicode-fonts
-  :config
-  (unicode-fonts-setup))
+;; (use-package unicode-fonts
+;;   :config
+;;   (unicode-fonts-setup))
 
 (use-package org
   :hook
