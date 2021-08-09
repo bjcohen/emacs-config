@@ -7,6 +7,8 @@
         ;; Packages which are pinned to a specific commit.
         (pinned . "pinned.el")))
 
+(defvaralias 'comp-deferred-compilation-deny-list 'native-comp-deferred-compilation-deny-list)
+
 (eval-when-compile
   (defvar bootstrap-version)
   (let ((bootstrap-file
