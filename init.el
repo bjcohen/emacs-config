@@ -703,6 +703,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
      "* %?"
      :if-new (file+head "%<%Y-%m-%d>.org"
                         "#+title: %<%Y-%m-%d>\n#+roam_tags: daily\n\n* Reading"))))
+  (org-roam-dailies-directory "daily/")
   (org-roam-completion-everywhere t)
   :bind (("C-c l" . org-store-link)
          :map org-mode-map
