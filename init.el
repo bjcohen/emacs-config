@@ -596,6 +596,47 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (add-hook 'mu4e-index-updated-hook #'autotag-reading-list)
   (setq shr-use-colors nil))
 
+(setq slug-trim-chars
+      '(;; Combining Diacritical Marks https://www.unicode.org/charts/PDF/U0300.pdf
+        768 ; U+0300 COMBINING GRAVE ACCENT
+        769 ; U+0301 COMBINING ACUTE ACCENT
+        770 ; U+0302 COMBINING CIRCUMFLEX ACCENT
+        771 ; U+0303 COMBINING TILDE
+        772 ; U+0304 COMBINING MACRON
+        774 ; U+0306 COMBINING BREVE
+        775 ; U+0307 COMBINING DOT ABOVE
+        776 ; U+0308 COMBINING DIAERESIS
+        777 ; U+0309 COMBINING HOOK ABOVE
+        778 ; U+030A COMBINING RING ABOVE
+        780 ; U+030C COMBINING CARON
+        795 ; U+031B COMBINING HORN
+        803 ; U+0323 COMBINING DOT BELOW
+        804 ; U+0324 COMBINING DIAERESIS BELOW
+        805 ; U+0325 COMBINING RING BELOW
+        807 ; U+0327 COMBINING CEDILLA
+        813 ; U+032D COMBINING CIRCUMFLEX ACCENT BELOW
+        814 ; U+032E COMBINING BREVE BELOW
+        816 ; U+0330 COMBINING TILDE BELOW
+        817 ; U+0331 COMBINING MACRON BELOW
+        ))
+
+(defun my/title-to-slug (title)
+  "Convert TITLE to a filename-suitable slug."
+  (cl-flet* ((nonspacing-mark-p (char)
+                                (memq char slug-trim-chars))
+             (strip-nonspacing-marks (s)
+                                     (ucs-normalize-NFC-string
+                                      (apply #'string (seq-remove #'nonspacing-mark-p
+                                                                  (ucs-normalize-NFD-string s)))))
+             (cl-replace (title pair)
+                         (replace-regexp-in-string (car pair) (cdr pair) title)))
+    (let* ((pairs `(("[^[:alnum:][:digit:]]" . "_")  ;; convert anything not alphanumeric
+                    ("__*" . "_")  ;; remove sequential underscores
+                    ("^_" . "")  ;; remove starting underscore
+                    ("_$" . "")))  ;; remove ending underscore
+           (slug (-reduce-from #'cl-replace (strip-nonspacing-marks title) pairs)))
+      (downcase slug))))
+
 (cl-defun my/pocket-reader-open-url-function (url &key (show-buffer-fn #'switch-to-buffer))
   "Open a URL with org-web-tools and then do post-conversion setup.  Pass SHOW-BUFFER-FN on."
   (org-web-tools-read-url-as-org url :show-buffer-fn show-buffer-fn)
@@ -646,29 +687,31 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (diminish 'visual-line-mode)
 
 (use-package org-roam
-  :diminish org-roam-mode
-  :hook
-  (after-init . org-roam-mode)
+  :straight (org-roam :type git :flavor melpa :host github :repo "org-roam/org-roam"
+                      :files (:defaults "extensions/*.el"))
+  :init
+  (setq org-roam-v2-ack t)
+  :config
+  (org-roam-setup)
   :custom
   (org-roam-enable-headline-linking nil)
   (org-roam-completion-system 'helm)
   (org-roam-dailies-capture-templates
-   '(("d" "daily" plain (function org-roam-capture--get-point)
-      ""
-      :immediate-finish t
-      :file-name "%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d>\n#+roam_tags: daily\n\n* Reading")))
+   `(("d" "default" entry
+     "* %?"
+     :if-new (file+head "%<%Y-%m-%d>.org"
+                        "#+title: %<%Y-%m-%d>\n#+roam_tags: daily\n\n* Reading"))))
   (org-roam-completion-everywhere t)
   :bind (("C-c l" . org-store-link)
-         :map org-roam-mode-map
-         ("C-c n l" . org-roam)
-         ("C-c n f" . org-roam-find-file)
-         ("C-c n g" . org-roam-show-graph)
-         ("C-c n t" . org-roam-dailies-find-today)
-         ("C-c n y" . org-roam-dailies-find-yesterday)
-         ("C-c n m" . org-roam-dailies-find-tomorrow)
          :map org-mode-map
-         ("C-c n i" . org-roam-insert)))
+         ("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n t" . org-roam-dailies-goto-today)
+         ("C-c n y" . org-roam-dailies-goto-yesterday)
+         ("C-c n m" . org-roam-dailies-goto-tomorrow)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)))
 
 (use-package helm-org-rifle)
 
