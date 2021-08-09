@@ -537,15 +537,15 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (setq mu4e-bookmarks '())
   (add-to-list 'mu4e-bookmarks
                '(:name "Reading list"
-                       :query "(tag:reading-list or tag:\\\\Important and maildir:/Gmail/INBOX) and (flag:unread or date:today) and not flag:trashed"
+                       :query "(tag:reading-list or tag:\\\\Important and maildir:/Gmail/INBOX) and (flag:unread or date:today) and not (flag:trashed or maildir:/Ionos/Trash)"
                        :key ?l))
   (add-to-list 'mu4e-bookmarks
                '(:name "Today's messages"
-                       :query "date:today..now and not flag:trashed"
+                       :query "date:today..now and not (flag:trashed or maildir:/Ionos/Trash)"
                        :key ?t))
   (add-to-list 'mu4e-bookmarks
                '(:name "Last 7 days"
-                       :query "date:7d..now and not flag:trashed"
+                       :query "date:7d..now and not (flag:trashed or maildir:/Ionos/Trash)"
                        :key ?w))
   (setq mu4e-bookmarks (reverse mu4e-bookmarks))
   (add-to-list 'mu4e-marks
