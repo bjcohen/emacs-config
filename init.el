@@ -861,8 +861,8 @@ COMMAND and ARG are as per the documentation of `company-backends'."
   :config
   (centaur-tabs-mode t)
   (centaur-tabs-enable-buffer-reordering)
-  (setq centaur-tabs-adjust-buffer-order 'right)
-  (defun centaur-tabs-hide-tab (x)
+  (setq centaur-tabs-adjust-buffer-order 'left)
+  (defun my/centaur-tabs-hide-tab (x)
     "Do no to show buffer X in tabs."
     (let ((name (format "%s" x)))
       (or
@@ -870,8 +870,10 @@ COMMAND and ARG are as per the documentation of `company-backends'."
        ;; Buffer name not match below blacklist.
        (string-prefix-p "*org-roam" name)
        (string-prefix-p "*company" name)
-       (string-equal "*mu4e-loading*" name))))
-  (defun centaur-tabs-buffer-groups ()
+       (string-prefix-p " *mu4e" name)
+       )))
+  (setq centaur-tabs-hide-tab-function 'my/centaur-tabs-hide-tab)
+  (defun my/centaur-tabs-buffer-groups ()
     "`centaur-tabs-buffer-groups' control buffers' group rules.
 
 Group centaur-tabs with mode if buffer is derived from `eshell-mode'
@@ -884,8 +886,14 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
            (string-equal "*pocket-reader*" (buffer-name))
            (and (string-prefix-p "*elfeed-" (buffer-name))
                 (not (string-equal "*elfeed-log*" (buffer-name))))
-           (memq major-mode '(org-mode org-agenda-mode diary-mode)))
+           (and (derived-mode-p 'org-mode)
+                (save-excursion
+                  (goto-char (point-min))
+                  (search-forward "#+roam_tags: website pocket" nil t)))
+           (string-equal "*Article*" (buffer-name)))
        "Reading")
+      ((memq major-mode '(org-mode org-agenda-mode diary-mode))
+       "Writing")
       ((string-equal "*" (substring (buffer-name) 0 1))
        "Emacs")
       ((memq major-mode '(magit-process-mode
@@ -905,6 +913,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
        "Dired")
       (t
        (centaur-tabs-get-group-name (current-buffer))))))
+  (setq centaur-tabs-buffer-groups-function 'my/centaur-tabs-buffer-groups)
   (setq centaur-tabs-cycle-scope 'tabs)
   (defun centaur-tabs-nth-tab (n)
     (let* ((tabset (centaur-tabs-current-tabset t))
