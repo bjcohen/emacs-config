@@ -32,3 +32,4 @@ elpy/
 /company-statistics-cache.el
 /places
 /org-roam.db
+/eln-cache/
