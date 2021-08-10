@@ -111,8 +111,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (scroll-bar-mode -1)
 (display-battery-mode 1)
 
-(global-set-key (kbd "C-w") #'backward-kill-word)
-
 (use-package yascroll
   :config
   (global-yascroll-bar-mode 1))
