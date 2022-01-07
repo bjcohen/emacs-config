@@ -33,3 +33,5 @@ elpy/
 /places
 /org-roam.db
 /eln-cache/
+.DS_Store
+/projects
