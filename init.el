@@ -224,7 +224,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (add-hook 'after-init-hook
             (lambda () (persp-state-load (concat user-emacs-directory "persp-save"))))
   :custom
-  (persp-state-default-file (concat user-emacs-directory "persp-save")))
+  (persp-state-default-file (concat user-emacs-directory "persp-save"))
+  (persp-mode-prefix-key (kbd "C-x x")))
 
 (use-package evil
   :diminish undo-tree-mode
