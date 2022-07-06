@@ -575,7 +575,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
     (let* ((temp-file (make-temp-file "mu4e"))
            (mu-output (shell-command-to-string
                        (concat "mu find not tag:reading-list from:" email " --format=sexp")))
-           (messages (if (string-prefix-p "error: no matches for search expression" mu-output)
+           (messages (if (string-prefix-p "no matches for search expression" mu-output)
                          '()
                        (read-all-from-string mu-output)))
            (paths (mapcar (lambda (x) (plist-get x :path)) messages))
@@ -591,9 +591,10 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (defvar reading-list-emails '() "Email addresses to filter to reading-list in mu4e.")
   (defun autotag-reading-list ()
     "Hook to auto-tag messages from certain senders."
-    (progn
-      (mapc (lambda (e) (autotag-reading-list-from e)) reading-list-emails)
-      (mu4e-update-index)))
+    (if (> (plist-get mu4e-index-update-status :updated) 0)
+        (progn
+          (mapc (lambda (e) (autotag-reading-list-from e)) reading-list-emails)))
+    )
   (add-hook 'mu4e-index-updated-hook #'autotag-reading-list)
   (setq shr-use-colors nil))
 

@@ -75,7 +75,7 @@
  ("markdown-mode" . "4477f381de0068a04b55e198c32614793f67b38a")
  ("marshal.el" . "490496d974d03906f784707ecc2e0ac36ed84b96")
  ("melpa" . "4f3fa2076ce777618f2982a7ba69b497d68aebc3")
- ("mu" . "201acfbbd38d030826698f39e49d50878e025590")
+ ("mu" . "39d7096bba656cc64ec3ca8cc21ea3e6de9c2056")
  ("org" . "c508ff41e44c45626e71bab6324a5b03b98d8803")
  ("org-noter" . "9ead81d42dd4dd5074782d239b2efddf9b8b7b3d")
  ("org-pdftools" . "967f48fb5038bba32915ee9da8dc4e8b10ba3376")
