@@ -585,7 +585,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
                   (call-process-shell-command
                    (concat "formail -A \"X-Keywords: reading-list\" > " temp-file) path)
                   (rename-file temp-file path t)
-                  (mu4e-refresh-message path)
+                  (mu4e--refresh-message path)
                   path))
               paths)))
   (defvar reading-list-emails '() "Email addresses to filter to reading-list in mu4e.")
