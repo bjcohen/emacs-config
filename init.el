@@ -531,7 +531,9 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (setq
    mu4e-get-mail-command "offlineimap"
    mu4e-update-interval nil
-   mu4e-split-view 'single-window)
+   mu4e-split-view 'single-window
+   mu4e-headers-date-format "%Y-%m-%d"
+   mu4e-headers-fields '((:human-date . 10) (:flags . 6) (:tags . 12) (:from . 22) (:subject)))
   (add-to-list 'mu4e-view-actions
                '("View in browser" . mu4e-action-view-in-browser) t)
   (setq mu4e-completing-read-function 'completing-read)
@@ -558,7 +560,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
                                 (mu4e-action-retag-message msg "+reading-list"))))
   (mu4e~headers-defun-mark-for tag)
   (define-key mu4e-headers-mode-map (kbd "l") 'mu4e-headers-mark-for-tag)
-  (setq mu4e-headers-fields '((:human-date . 8) (:flags . 6) (:tags . 12) (:from . 22) (:subject)))
 
   (defun read-all-from-string (string)
     "Call `read-from-string` iteratively on the STRING until the end."
