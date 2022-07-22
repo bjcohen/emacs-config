@@ -885,7 +885,8 @@ All buffer name start with * will group to \"Emacs\".
 Other buffer group by `centaur-tabs-get-group-name' with project name."
     (list
      (cond
-      ((or (string-prefix-p "*mu4e" (buffer-name))
+      ((or (and (string-prefix-p "*mu4e" (buffer-name))
+                (not (string-equal "*mu4e-server*" (buffer-name))))
            (string-equal "*pocket-reader*" (buffer-name))
            (and (string-prefix-p "*elfeed-" (buffer-name))
                 (not (string-equal "*elfeed-log*" (buffer-name))))
