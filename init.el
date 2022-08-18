@@ -435,8 +435,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (use-package rust-mode
   :hook
   (flycheck-mode . flycheck-rust-setup)
-  :config
-  (lsp-rust-switch-server 'rust-analyzer))
+  )
 
 (use-package rustic
   :config
@@ -488,7 +487,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (use-package auctex
   :defer t
   :ensure t)
-(use-package ecb)
 (use-package gist)
 (use-package git-gutter
   :diminish git-gutter-mode
@@ -521,7 +519,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
 (let ((straight-current-profile 'pinned))
   (add-to-list 'straight-x-pinned-packages
-               '("org" . "a804a57063010b060756d084291b1f5d28d1fedd"))) ;; 9.4.5
+               '("org" . "e0b05b07528dea684f3439c017370436b8d37b50"))) ;; 9.5.4
 
 (use-package mu4e
   :load-path "/usr/local/share/emacs/site-lisp/mu/mu4e"
