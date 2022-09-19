@@ -130,8 +130,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-(global-set-key [?\M-g] 'goto-line)  ; easier to jump to specific lines (M-g)
-
 ;; ispell
 (add-hook 'text-mode-hook (lambda () (flyspell-mode 1)))
 (diminish 'flyspell-mode)
@@ -141,12 +139,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
 (use-package forge
   :after magit)
-
-(use-package transient-posframe
-  :straight (transient-posframe :type git :host github
-                                :repo "yanghaoxie/transient-posframe")
-  :config
-  (transient-posframe-mode))
 
 (electric-pair-mode)
 
@@ -237,94 +229,9 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   :config
   (global-evil-surround-mode))
 
-(defun my-check-modified ()
-  "Interactive prompt to check file modification."
-  (interactive)
-  (if (not (verify-visited-file-modtime (current-buffer)))
-      (if (yes-or-no-p "Buffer modified, reload? ")
-          (if (buffer-modified-p)
-              (revert-buffer)
-            (revert-buffer t t))
-        (if (yes-or-no-p "Overwrite external modifications? ")
-            (clear-visited-file-modtime)
-          (set-buffer-modified-p (current-buffer))
-          (save-buffer)))))
-
 (diminish 'auto-revert-mode)
 
-(use-package helm
-  :diminish helm-mode
-  :bind (("C-x r b" . 'helm-filtered-bookmarks)
-         ("C-x C-f" . 'helm-find-files)
-         ("C-x C-r" . 'helm-recentf)
-         ("C-x b" . 'helm-mini))
-  :config
-  (recentf-mode t)
-  (setq recentf-max-menu-items 25)
-  (helm-mode t)
-  :config/el-patch
-  (defun helm-mini ()
-    "Preconfigured `helm' displaying `helm-mini-default-sources'."
-    (interactive)
-    (require 'helm-x-files)
-    (unless helm-source-buffers-list
-      (setq helm-source-buffers-list
-            (helm-make-source "Buffers" 'helm-source-buffers)))
-    (helm :sources helm-mini-default-sources
-          :buffer "*helm mini*"
-          :ff-transformer-show-only-basename nil
-          :truncate-lines helm-buffers-truncate-lines
-          :left-margin-width helm-buffers-left-margin-width)
-    (el-patch-add (my-check-modified))))
-
-(use-package helm-icons
-  :config
-  (helm-icons-enable))
-
-(use-package helm-posframe
-  :custom
-  (helm-display-header-line nil)
-  (helm-echo-input-in-header-line nil)
-  (helm-posframe-border-width 1)
-  (helm-posframe-parameters '((left-fringe . 1)
-                              (right-fringe . 1)))
-  (helm-posframe-poshandler #'posframe-poshandler-point-top-left-corner)
-  :config
-  (helm-posframe-enable))
-
-(use-package helm-projectile
-  :bind
-  (:map projectile-mode-map
-        ("C-c p s g" . 'helm-projectile-grep)
-        ("C-c p s r" . 'helm-projectile-rg)))
-
-(use-package helm-lsp
-  :config
-  (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
-  :bind
-  (:map lsp-mode-map
-        ("C-<return>" . 'helm-lsp-code-actions)))
-
-(use-package flx)
-
-(use-package helm-flx
-  :config
-  (helm-flx-mode +1))
-
 (use-package ripgrep)
-
-(use-package helm-rg)
-
-(use-package smex
-  :bind
-  (("M-x" . 'smex)
-   ("M-X" . 'smex-major-mode-commands))
-  :config
-  (smex-initialize))
-
-(use-package ido-grid-mode
-  :config
-  (ido-grid-mode 1))
 
 (use-package go-mode)
 
@@ -454,7 +361,10 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
   (lsp-ui-peek-enable t)
   (setq lsp-ui-doc-position 'at-point
-        lsp-ui-sideline-show-hover t))
+        lsp-ui-sideline-show-hover t
+        lsp-ui-sideline-show-code-actions t
+        lsp-ui-sideline-show-diagnostics t
+        lsp-ui-peek-enable t))
 
 (use-package lsp-treemacs
   :config
@@ -695,7 +605,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (org-roam-setup)
   :custom
   (org-roam-enable-headline-linking nil)
-  (org-roam-completion-system 'helm)
   (org-roam-dailies-capture-templates
    `(("d" "default" entry
      "* %?"
@@ -713,8 +622,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
          ("C-c n m" . org-roam-dailies-goto-tomorrow)
          ("C-c n i" . org-roam-node-insert)
          ("C-c n c" . org-roam-capture)))
-
-(use-package helm-org-rifle)
 
 (define-key visual-line-mode-map (kbd "M-n") #'next-logical-line)
 (define-key visual-line-mode-map (kbd "M-p") #'previous-logical-line)
@@ -955,7 +862,6 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (lsp-ui-doc-frame-mode . centaur-tabs-local-mode)
   (lsp-ui-imenu-mode . centaur-tabs-local-mode)
   (rustic-compilation-mode . centaur-tabs-local-mode)
-  (helm-major-mode . centaur-tabs-local-mode)
   )
 
 (use-package ctrlf
@@ -964,6 +870,130 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (add-hook 'ido-minibuffer-setup-hook (lambda () (ctrlf-local-mode -1))))
 
 (use-package protobuf-mode)
+
+;; https://codeberg.org/vifon/emacs-config/src/branch/master/emacs.d/lisp/20-completing-read.el
+
+(use-package vertico
+  :straight (vertico :files (:defaults "extensions/*"))
+  :init
+  (vertico-mode)
+
+  :bind
+  (("C-x M-r" . vertico-repeat)
+   :map vertico-map
+   ("C-l" . vertico-directory-delete-word)
+   ("M-g" . vertico-multiform-grid)
+   ("M-q" . vertico-multiform-flat))
+
+  :config
+  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
+  (vertico-multiform-mode 1)
+  (setq vertico-multiform-categories '((consult-grep buffer))
+                  vertico-multiform-commands '((tmm-menubar flat)
+                                               (tmm-shortcut flat))))
+
+(use-package savehist
+  :init
+  (savehist-mode))
+
+(use-package orderless
+  :init
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion))))
+  (setq orderless-matching-styles '(orderless-regexp
+                                    orderless-initialism
+                                    orderless-prefixes)
+        orderless-component-separator #'orderless-escapable-split-on-space))
+
+(use-package marginalia
+  :config
+  (marginalia-mode))
+
+(use-package all-the-icons-completion
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode))
+
+(use-package embark
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  :config
+
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+(use-package consult
+  :bind
+  (("M-g g" . consult-goto-line)
+   ("M-g l" . consult-line)
+   ("M-g o" . consult-outline)
+   ("M-g i" . consult-imenu)
+   ("M-g r" . consult-ripgrep)
+   ("C-x C-r" . consult-recent-file)
+   ([remap switch-to-buffer] . consult-buffer)
+   ([remap yank-pop] . consult-yank-pop)
+   :map minibuffer-local-map
+   ([remap previous-matching-history-element] . consult-history))
+  :config
+  (setq consult-project-root-function #'vc-root-dir)
+  (recentf-mode t)
+  (setq recentf-max-menu-items 25)
+  (consult-customize
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-recent-file
+   consult--source-project-recent-file
+   :preview-key (kbd "M-."))
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-function (lambda (_) (projectile-project-root))))
+
+(use-package embark-consult)
+
+(use-package emacs
+  :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+  ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+  ;; Vertico commands are hidden in normal buffers.
+  (setq read-extended-command-predicate
+        #'command-completion-default-include-p)
+
+  ;; Enable recursive minibuffers
+  (setq enable-recursive-minibuffers t)
+  (minibuffer-depth-indicate-mode 1))
+
+(use-package corfu
+  :straight t
+  :init (global-corfu-mode 1))
 
 (el-patch-validate-all)
 
