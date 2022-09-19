@@ -949,6 +949,10 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
    ([remap yank-pop] . consult-yank-pop)
    :map minibuffer-local-map
    ([remap previous-matching-history-element] . consult-history))
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+  :init
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
   :config
   (setq consult-project-root-function #'vc-root-dir)
   (recentf-mode t)
@@ -959,6 +963,8 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
    consult--source-bookmark consult--source-recent-file
    consult--source-project-recent-file
    :preview-key (kbd "M-."))
+  (setq consult-narrow-key "<")
+  (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
   (autoload 'projectile-project-root "projectile")
   (setq consult-project-function (lambda (_) (projectile-project-root))))
 
