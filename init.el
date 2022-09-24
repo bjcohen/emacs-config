@@ -1001,6 +1001,61 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   :straight t
   :init (global-corfu-mode 1))
 
+(use-package consult-lsp
+  :bind
+  (([remap xref-find-apropos] . #'consult-lsp-symbols)
+   ("C-<return>" . #'bc/consult-lsp-code-actions)))
+
+(setq bc/consult-lsp-codeactions-group
+      '((?q . "Quick Fix (q)")
+        (?f . "Refactor (f)")
+        (?e . "Extract (e)")
+        (?i . "Inline (i)")
+        (?r . "Rewrite (r)")))
+
+(setq bc/consult-lsp-codeactions-narrow
+      '((?q . "quickfix")
+        (?f . "refactor")
+        (?e . "refactor.extract")
+        (?i . "refactor.inline")
+        (?r . "refactor.rewrite")))
+
+(defun bc/consult-lsp-code-actions ()
+  "Show lsp code actions using consult."
+  (interactive)
+  (let ((actions (lsp-code-actions-at-point)))
+    (cond
+     ((seq-empty-p actions) (signal 'lsp-no-code-actions nil))
+     ((and (eq (seq-length actions) 1) lsp-auto-execute-action)
+      (lsp-execute-code-action (lsp-seq-first actions)))
+     (t (consult--read
+         (mapcar
+          (lambda (action) (propertize (lsp:code-action-title action)
+                                  'consult--candidate action
+                                  'consult--type (car (rassoc (gethash "kind" action)
+                                                              bc/consult-lsp-codeactions-narrow))
+                                  ))
+          (lsp-code-actions-at-point))
+         :prompt "LSP code actions: "
+         :require-match t
+         :lookup #'consult--lookup-candidate
+         :group (consult--type-group bc/consult-lsp-codeactions-group)
+         :narrow (consult--type-narrow bc/consult-lsp-codeactions-group)
+         :state
+         (let ((change-group nil))
+           (lambda (action cand)
+             (pcase action
+               ('preview
+                (consult--async-log "preview: %s %s\n" action cand)
+                (when change-group
+                  (cancel-change-group change-group)
+                  (setq change-group nil))
+                (when cand
+                  (setq change-group (prepare-change-group))
+                  (activate-change-group change-group)
+                  (lsp-execute-code-action cand)))
+               ('return (when cand (lsp-execute-code-action cand)))))))))))
+
 (el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))

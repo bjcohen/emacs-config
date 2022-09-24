@@ -16,6 +16,7 @@
  ("company-statistics" . "e62157d43b2c874d2edbd547c3bdfb05d0a7ae5c")
  ("compat" . "cbb057e9b568fa2c8ae443088b17dce7c2d66cfc")
  ("consult" . "ad6cceb95eaa72f996bb8f0ccd6054f626d35f3b")
+ ("consult-lsp" . "19606a03cf854e1b0930c4526ed92c4560dccdc2")
  ("corfu" . "1b159d55adfdec6782441602bcd8352b18256650")
  ("ctrlf" . "cefb0aff9d316bd03e911f7f483f8d01f15cf5a2")
  ("dap-mode" . "e2a37cc0a4ec2da858022badd33ccc086b283075")
