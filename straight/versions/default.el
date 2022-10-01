@@ -26,6 +26,7 @@
  ("el-get" . "bf3dba444dcd240b8cb358a0850c8c5a92606134")
  ("el-patch" . "156c61b72c1c9c61bd886b5931b8a382153f52fa")
  ("elfeed" . "162d7d545ed41c27967d108c04aa31f5a61c8e16")
+ ("elisp-tree-sitter" . "3cfab8a0e945db9b3df84437f27945746a43cc71")
  ("elpy" . "de31d30003c515c25ff7bfd3a361c70c298f78bb")
  ("emacs" . "37b3979b91b06a0520a0d326bc323b4dda280123")
  ("emacs-google-this" . "8a2e3ca5da6a8c89bfe99a21486c6c7db125dc84")

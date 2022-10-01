@@ -257,8 +257,14 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
         python-shell-prompt-detect-failure-warning nil)
   (add-to-list 'python-shell-completion-native-disabled-interpreters
                "jupyter")
-  ;;; (elpy-clean-modeline)
   (setq elpy-modules (remove 'elpy-module-flymake elpy-modules)))
+
+(use-package lsp-jedi
+  :config
+  (with-eval-after-load "lsp-mode"
+    (add-to-list 'lsp-disabled-clients 'pyls)
+    (add-to-list 'lsp-disabled-clients 'pylsp)
+    ))
 
 (use-package ess)
 
