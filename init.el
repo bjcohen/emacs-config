@@ -159,7 +159,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (use-package compile
   :config
   (defun close-on-successful-exit (_ desc)
-    "Close the compilation BUFFER in two seconds if DESC indei it exited successfully."
+    "Close the compilation BUFFER in two seconds if DESC exited successfully."
     (unless (string-match "exited abnormally" desc)
       (run-at-time
        "2 sec" nil 'delete-windows-on
@@ -555,7 +555,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
       (downcase slug))))
 
 (cl-defun my/pocket-reader-open-url-function (url &key (show-buffer-fn #'switch-to-buffer))
-  "Open a URL with org-web-tools and then do post-conversion setup.  Pass SHOW-BUFFER-FN on."
+  "Open a URL with org-web-tools and then do post-conversion setup.
+Pass SHOW-BUFFER-FN on."
   (org-web-tools-read-url-as-org url :show-buffer-fn show-buffer-fn)
   (let* ((link (org-web-tools--read-org-bracket-link))
          (title (cdr link))
@@ -657,7 +658,9 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (pdf-tools-install))
 
 (use-package org-pdftools
-  :hook (org-load . org-pdftools-setup-link))
+  :config
+  (with-eval-after-load 'org-mode
+    (org-pdftools-setup-link)))
 
 (use-package org-noter-pdftools
   :config
