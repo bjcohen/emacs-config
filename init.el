@@ -1010,6 +1010,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (recentf-mode t)
   (setq recentf-max-menu-items 25)
   (consult-customize
+   consult-theme
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
    consult--source-bookmark consult--source-recent-file
