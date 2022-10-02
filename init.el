@@ -358,19 +358,29 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   :diminish lsp-mode
   :config
   (add-to-list 'lsp-language-id-configuration '(emacs-lisp-mode . "elisp"))
+  (defun corfu-setup-lsp ()
+    "Use orderless completion style with lsp-capf instead of the
+  default lsp-passthrough."
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless))
   :hook
-  (prog-mode . lsp))
+  ((prog-mode . lsp)
+   (lsp-completion-mode . corfu-setup-lsp))
+  :custom
+  (lsp-completion-provider :none))
 
 (use-package lsp-ui
   :config
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
   (lsp-ui-peek-enable t)
-  (setq lsp-ui-doc-position 'at-point
+  (setq lsp-ui-doc-enable t
+        lsp-ui-doc-position 'at-point
         lsp-ui-sideline-show-hover t
         lsp-ui-sideline-show-code-actions t
         lsp-ui-sideline-show-diagnostics t
-        lsp-ui-peek-enable t))
+        lsp-ui-peek-enable t
+        lsp-ui-imenu-auto-refresh t))
 
 (use-package lsp-treemacs
   :config
@@ -1037,11 +1047,56 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
 
   ;; Enable recursive minibuffers
   (setq enable-recursive-minibuffers t)
-  (minibuffer-depth-indicate-mode 1))
+  (minibuffer-depth-indicate-mode 1)
+
+  (setq tab-always-indent 'complete))
 
 (use-package corfu
   :straight t
-  :init (global-corfu-mode 1))
+  :init
+  (global-corfu-mode 1)
+  :config
+  (defun corfu-enable-in-minibuffer ()
+    "Enable Corfu in the minibuffer if `completion-at-point' is bound."
+    (when (where-is-internal #'completion-at-point (list (current-local-map)))
+      (setq-local corfu-auto t)
+      (corfu-mode 1)))
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
+  (defun corfu-move-to-minibuffer ()
+    (interactive)
+    (let ((completion-extra-properties corfu--extra)
+          completion-cycle-threshold completion-cycling)
+      (apply #'consult-completion-in-region completion-in-region--data)))
+  (define-key corfu-map "\M-m" #'corfu-move-to-minibuffer)
+  :custom
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.25)
+  (corfu-quit-at-boundary 'separator)
+  (corfu-separator ?\s)
+  (corfu-quit-no-match 'separator)
+  (corfu-preview-current 'insert)
+  (corfu-preselect-first t))
+
+(use-package corfu-doc
+  :after corfu
+  :hook
+  ((corfu-mode . corfu-doc-mode))
+  :bind
+  (:map corfu-map
+        ("M-d" . #'corfu-doc-toggle))
+  :custom
+  (corfu-echo-documentation nil))
+
+(use-package kind-icon
+  :after corfu
+  :custom
+  (kind-icon-use-icons t)
+  (kind-icon-default-face 'corfu-default)
+  (kind-icon-blend-background nil)
+  (kind-icon-blend-frac 0.08)
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package consult-lsp
   :bind
