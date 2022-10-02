@@ -362,7 +362,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
     "Use orderless completion style with lsp-capf instead of the
   default lsp-passthrough."
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(orderless))
+          '(orderless)))
   :hook
   ((prog-mode . lsp)
    (lsp-completion-mode . corfu-setup-lsp))
@@ -837,7 +837,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (savehist-mode))
 
 (use-package orderless
-  :init
+  :config
   (defvar +orderless-dispatch-alist
     '((?% . char-fold-to-regexp)
       (?! . orderless-without-literal)
