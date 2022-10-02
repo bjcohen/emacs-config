@@ -524,7 +524,24 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
           (mapc (lambda (e) (autotag-reading-list-from e)) reading-list-emails)))
     )
   (add-hook 'mu4e-index-updated-hook #'autotag-reading-list)
-  (setq shr-use-colors nil))
+  (setq shr-use-colors nil)
+
+  (defvar bc/bw-token nil)
+
+  (defun bc/get-bw-token ()
+    "Get a Bitwarden token if none exists."
+    (unless bc/bw-token
+      (let* ((pw (read-passwd "Enter password: "))
+             (token (shell-command-to-string (concat "bw unlock " pw " --raw"))))
+        (setq bc/bw-token token)
+        nil)))
+
+  (defun bc/get-bw-token-and-set-mu4e-update-command ()
+    "Get a Bitwarden token and set it as env"
+    (bc/get-bw-token)
+    (setq mu4e-get-mail-command (concat "BW_SESSION=" bc/bw-token " offlineimap")))
+
+  (add-hook 'mu4e-update-pre-hook #'bc/get-bw-token-and-set-mu4e-update-command))
 
 (setq slug-trim-chars
       '(;; Combining Diacritical Marks https://www.unicode.org/charts/PDF/U0300.pdf
