@@ -907,16 +907,49 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
 
 (use-package orderless
   :init
-  ;; Configure a custom style dispatcher (see the Consult wiki)
-  ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
-  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (defvar +orderless-dispatch-alist
+    '((?% . char-fold-to-regexp)
+      (?! . orderless-without-literal)
+      (?`. orderless-initialism)
+      (?= . orderless-literal)
+      (?~ . orderless-flex)))
+
+  (defun +orderless--suffix-regexp ()
+    (if (and (boundp 'consult--tofu-char) (boundp 'consult--tofu-range))
+        (format "[%c-%c]*$"
+                consult--tofu-char
+                (+ consult--tofu-char consult--tofu-range -1))
+      "$"))
+
+  (defun +orderless-dispatch (word _index _total)
+    (cond
+     ;; Ensure that $ works with Consult commands, which add disambiguation suffixes
+     ((string-suffix-p "$" word)
+      `(orderless-regexp . ,(concat (substring word 0 -1) (+orderless--suffix-regexp))))
+     ;; File extensions
+     ((and (or minibuffer-completing-file-name
+               (derived-mode-p 'eshell-mode))
+           (string-match-p "\\`\\.." word))
+      `(orderless-regexp . ,(concat "\\." (substring word 1) (+orderless--suffix-regexp))))
+     ;; Ignore single !
+     ((equal "!" word) `(orderless-literal . ""))
+     ;; Prefix and suffix
+     ((if-let (x (assq (aref word 0) +orderless-dispatch-alist))
+          (cons (cdr x) (substring word 1))
+        (when-let (x (assq (aref word (1- (length word))) +orderless-dispatch-alist))
+          (cons (cdr x) (substring word 0 -1)))))))
+
+  (orderless-define-completion-style +orderless-with-initialism
+    (orderless-matching-styles '(orderless-initialism orderless-literal orderless-regexp)))
+
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion))))
-  (setq orderless-matching-styles '(orderless-regexp
-                                    orderless-initialism
-                                    orderless-prefixes)
-        orderless-component-separator #'orderless-escapable-split-on-space))
+        completion-category-overrides '((file (styles partial-completion))
+                                        (command (styles +orderless-with-initialism))
+                                        (variable (styles +orderless-with-initialism))
+                                        (symbol (styles +orderless-with-initialism)))
+        orderless-component-separator #'orderless-escapable-split-on-space
+        orderless-style-dispatchers '(+orderless-dispatch)))
 
 (use-package marginalia
   :config
