@@ -1084,6 +1084,10 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
                 ))
              ('return (when cand (lsp-execute-code-action cand))))))))))
 
+(use-package consult-flycheck)
+
+(use-package consult-projectile)
+
 (el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))
