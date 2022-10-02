@@ -1046,7 +1046,6 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
               (with-current-buffer buffer
                 (when change-group
                   (cancel-change-group change-group)
-
                   (setq change-group nil))
                 (mapcar
                  (lambda (action)
@@ -1070,7 +1069,8 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
               (when cand
                 (setq change-group (prepare-change-group))
                 (activate-change-group change-group)
-                (lsp-execute-code-action cand)
+                (let ((inhibit-message t))
+                  (lsp-execute-code-action cand))
                 ))
              ('return (when cand (lsp-execute-code-action cand))))))))))
 
