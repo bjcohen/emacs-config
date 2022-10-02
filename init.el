@@ -677,18 +677,6 @@ Pass SHOW-BUFFER-FN on."
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
-(use-package company
-  :config
-  (add-hook 'after-init-hook 'global-company-mode))
-
-(use-package company-box
-  :diminish
-  :hook (company-mode . company-box-mode))
-
-(use-package company-statistics
-  :config
-  (company-statistics-mode))
-
 (use-package s)
 (use-package dash)
 
@@ -697,60 +685,6 @@ Pass SHOW-BUFFER-FN on."
   (if (string-match org-link-any-re s)
       (match-string 3 s)
     s))
-
-(defun company-org-headings (command &optional arg &rest _)
-  "Define a company backend for Org headings.
-COMMAND and ARG are as per the documentation of `company-backends'."
-  (interactive (list 'interactive))
-  (cl-case command
-    (interactive (company-begin-backend #'company-org-headings))
-    (prefix (save-excursion
-              (if (looking-back "]][[:word:]]*" (point-at-bol))
-                  (let ((start (point))
-                        (c 1))
-                    (re-search-backward "]]\\|\\[\\[" (point-at-bol))
-                    (while (and (> c 0) (ignore-errors (re-search-backward "]]\\|\\[\\[" (point-at-bol))))
-                      (if (string= (match-string-no-properties 0) "]]")
-                          (setq c (1+ c))
-                        (setq c (1- c))))
-                    (if (= c 0) (buffer-substring-no-properties (point) start))))))
-    (candidates
-     (let* ((link-and-rest
-             (with-temp-buffer
-               (insert arg)
-               (goto-char 0)
-               (let* ((link (org-element-link-parser)))
-                 (re-search-forward org-link-any-re)
-                 (cons link (buffer-substring-no-properties (point) (point-max))))))
-            (link (car link-and-rest))
-            (rest (cdr link-and-rest))
-            (type (org-element-property :type link))
-            (path (org-element-property :path link)))
-       (if (string= type "file")
-           (->> (with-temp-buffer
-                 (insert-file-contents path)
-                 (s-match-strings-all org-heading-regexp (buffer-string)))
-                (-map (lambda (c) (nth 2 c)))
-                (-filter (lambda (c) (string-match-p (concat "\\(^\\|[^[:word:]]\\)" rest) c)))
-                (-map (lambda (c) (format "[[file:%s::*%s][%s]]"
-                                          path
-                                          (replace-regexp-in-string "\]\\[" "\\\\][" (replace-regexp-in-string "\]\]" "]\\\\]" c))
-                                          (org-link-get-title c))))))))
-    (location
-     (let* ((link (with-temp-buffer
-                    (insert arg)
-                    (goto-char 0)
-                    (org-element-link-parser)))
-            (path (org-element-property :path link))
-            (search-option (org-element-property :search-option link))
-            (line (with-temp-buffer
-                    (insert-file-contents path)
-                    (org-link-search search-option)
-                    (count-lines 1 (point)))))
-       (cons path line)))
-    ))
-
-(push 'company-org-headings company-backends)
 
 (use-package ace-jump-mode
   :bind
@@ -784,7 +718,6 @@ COMMAND and ARG are as per the documentation of `company-backends'."
 
 (use-package centaur-tabs
   :demand t
-  :after company-box
   :config
   (centaur-tabs-mode t)
   (centaur-tabs-enable-buffer-reordering)
@@ -796,7 +729,6 @@ COMMAND and ARG are as per the documentation of `company-backends'."
        ;; Current window is not dedicated window.
        ;; Buffer name not match below blacklist.
        (string-prefix-p "*org-roam" name)
-       (string-prefix-p "*company" name)
        (string-prefix-p " *mu4e" name)
        )))
   (setq centaur-tabs-hide-tab-function 'my/centaur-tabs-hide-tab)
@@ -851,17 +783,6 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
                   (nth (- (+ 1 n)) (reverse tabs)))))
       (when tab
         (centaur-tabs-buffer-select-tab tab))))
-  :config/el-patch
-  (defun company-box--get-buffer (&optional suffix)
-    "Construct the buffer name, it should be unique for each frame."
-    (el-patch-let ((mkbuf (get-buffer-create
-                           (concat " *company-box-" (company-box--get-id) suffix "*"))))
-      (el-patch-swap
-        mkbuf
-        (let ((buf mkbuf))
-          (with-current-buffer buf
-            (centaur-tabs-local-mode))
-          buf))))
   :bind
   ("S-s-<tab>" . centaur-tabs-backward)
   ("s-<tab>" . centaur-tabs-forward)
