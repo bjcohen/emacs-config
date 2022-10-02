@@ -66,6 +66,7 @@
  ("let-alist" . "592553db5929b54db40af0df90c5add0aaca045b")
  ("logito" . "d5934ce10ba3a70d3fcfb94d742ce3b9136ce124")
  ("lsp-docker" . "a0d7cbf80652429c0be4dc7d39e1887ba4691ec7")
+ ("lsp-jedi" . "5e3eb3e160c2d38b8bd2b5cd3b86fa4f823f9330")
  ("lsp-mode" . "866e9a3ccb1b615b2b624499e8fc1ef8a0a80614")
  ("lsp-treemacs" . "9859326df6b8e8c954a3c227e53b6878e54aaae8")
  ("lsp-ui" . "8d4fa5a14f5b5c6f57bc69f454eba6861ed2ba9f")
