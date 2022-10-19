@@ -458,10 +458,16 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
     (mapc (lambda (msg)
             (if (seq-contains-p reading-list-emails
                                 msg
-                                (lambda (a b) (string-prefix-p
-                                          a
-                                          (plist-get (seq-first (plist-get b :from)) :email))))
-                (mu4e-action-retag-message msg "+reading-list")))
+                                (lambda (email msg)
+                                  (and (not (seq-contains-p (mu4e-message-field msg :tags) "reading-list"))
+                                       (or (string-prefix-p
+                                            email
+                                            (plist-get (seq-first (plist-get msg :from)) :email))
+                                           (string-prefix-p
+                                            email
+                                            (plist-get (seq-first (plist-get msg :from)) :name))))))
+                (let ((inhibit-message t))
+                  (mu4e-action-retag-message msg "+reading-list"))))
           msglst)
     (funcall #'mu4e~headers-append-handler msglst))
   (setq mu4e-headers-append-func #'bc/retag-headers-append-handler)
