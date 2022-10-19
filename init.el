@@ -452,6 +452,20 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
                   :files (:defaults "mu4e/*.el")
                   :pre-build (("./autogen.sh")
                               ("ninja" "-C" "build")))
+  :init
+  (defvar reading-list-emails '() "Email addresses to filter to reading-list in mu4e.")
+  (defun bc/retag-headers-append-handler (msglst)
+    (mapc (lambda (msg)
+            (if (seq-contains-p reading-list-emails
+                                msg
+                                (lambda (a b) (string-prefix-p
+                                          a
+                                          (plist-get (seq-first (plist-get b :from)) :email))))
+                (mu4e-action-retag-message msg "+reading-list")))
+          msglst)
+    (funcall #'mu4e~headers-append-handler msglst))
+  (setq mu4e-headers-append-func #'bc/retag-headers-append-handler)
+
   :config
   (require 'org-mu4e)
 
@@ -488,42 +502,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (mu4e~headers-defun-mark-for tag)
   (define-key mu4e-headers-mode-map (kbd "l") 'mu4e-headers-mark-for-tag)
 
-  (defun read-all-from-string (string)
-    "Call `read-from-string` iteratively on the STRING until the end."
-    (let ((offset 0) (result '()))
-      (condition-case nil
-          (while t
-            (let ((readresult (read-from-string string offset)))
-              (progn
-                (add-to-list 'result (car readresult))
-                (setq offset (cdr readresult)))))
-        (end-of-file (reverse result)))))
-  (defun autotag-reading-list-from (email)
-    "Auto-tag messages from EMAIL."
-    (let* ((temp-file (make-temp-file "mu4e"))
-           (mu-output (shell-command-to-string
-                       (concat "mu find not tag:reading-list from:" email " --format=sexp")))
-           (messages (if (string-prefix-p "no matches for search expression" mu-output)
-                         '()
-                       (read-all-from-string mu-output)))
-           (paths (mapcar (lambda (x) (plist-get x :path)) messages))
-           )
-      (mapcar (lambda (path)
-                (progn
-                  (call-process-shell-command
-                   (concat "formail -A \"X-Keywords: reading-list\" > " temp-file) path)
-                  (rename-file temp-file path t)
-                  (mu4e--refresh-message path)
-                  path))
-              paths)))
-  (defvar reading-list-emails '() "Email addresses to filter to reading-list in mu4e.")
-  (defun autotag-reading-list ()
-    "Hook to auto-tag messages from certain senders."
-    (if (> (plist-get mu4e-index-update-status :updated) 0)
-        (progn
-          (mapc (lambda (e) (autotag-reading-list-from e)) reading-list-emails)))
-    )
-  (add-hook 'mu4e-index-updated-hook #'autotag-reading-list)
   (setq shr-use-colors nil)
 
   (defvar bc/bw-token nil)
