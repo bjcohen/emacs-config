@@ -141,6 +141,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   :after magit)
 
 (electric-pair-mode)
+(add-hook 'minibuffer-setup-hook (lambda () (electric-pair-local-mode 0)))
 
 ;;; random stuff
 
