@@ -242,30 +242,22 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
 (global-set-key (kbd "C-`") 'other-frame)
 
-;; python
-;; pip install elpy rope jedi
-(use-package elpy
-  :bind
-  (:map elpy-mode-map
-        ("M-n" . 'elpy-nav-next-iblock)
-        ("M-p" . 'elpy-nav-previous-iblock)
-        ("S-n" . 'elpy-nav-forward-iblock)
-        ("S-p" . 'elpy-nav-backward-iblock))
+(use-package python
   :config
-  (elpy-enable)
-  (setq python-shell-interpreter "jupyter"
-        python-shell-interpreter-args "console --simple-prompt"
-        python-shell-prompt-detect-failure-warning nil)
-  (add-to-list 'python-shell-completion-native-disabled-interpreters
-               "jupyter")
-  (setq elpy-modules (remove 'elpy-module-flymake elpy-modules)))
+  ;; Remove guess indent python message
+  (setq python-indent-guess-indent-offset-verbose nil))
 
-(use-package lsp-jedi
-  :config
-  (with-eval-after-load "lsp-mode"
-    (add-to-list 'lsp-disabled-clients 'pyls)
-    (add-to-list 'lsp-disabled-clients 'pylsp)
-    ))
+(use-package blacken
+  :custom
+  (blacken-skip-string-normalization t)
+  :hook (python-mode . blacken-mode))
+
+(use-package tree-sitter
+  :hook (python-mode . (lambda ()
+                         (tree-sitter-mode)
+                         (tree-sitter-hl-mode))))
+
+(use-package tree-sitter-langs)
 
 (use-package ess)
 
@@ -353,39 +345,23 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
 (use-package rustic
   :config
-  (setq rustic-lsp-server 'rust-analyzer))
+  (setq rustic-lsp-client 'eglot))
 
-(use-package lsp-mode
-  :diminish lsp-mode
-  :config
-  (add-to-list 'lsp-language-id-configuration '(emacs-lisp-mode . "elisp"))
-  (defun corfu-setup-lsp ()
-    "Use orderless completion style with lsp-capf instead of the
-  default lsp-passthrough."
-    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(orderless)))
+(use-package eglot
+  :bind
+  (:map eglot-mode-map
+        ("C-<return>" . eglot-code-actions))
   :hook
-  ((prog-mode . lsp)
-   (lsp-completion-mode . corfu-setup-lsp))
-  :custom
-  (lsp-completion-provider :none))
-
-(use-package lsp-ui
+  ((eglot--managed-mode . (lambda () (flymake-mode -1)))
+   (prog-mode . eglot))
   :config
-  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
-  (lsp-ui-peek-enable t)
-  (setq lsp-ui-doc-enable t
-        lsp-ui-doc-position 'at-point
-        lsp-ui-sideline-show-hover t
-        lsp-ui-sideline-show-code-actions t
-        lsp-ui-sideline-show-diagnostics t
-        lsp-ui-peek-enable t
-        lsp-ui-imenu-auto-refresh t))
+  (add-to-list 'eglot-server-programs
+               `(python-mode
+                 . ,(eglot-alternatives '(("pyright-langserver" "--stdio"))))))
 
-(use-package lsp-treemacs
-  :config
-  (lsp-treemacs-sync-mode 1))
+;; (use-package eldoc-box
+;;   :hook
+;;   ((eglot-managed-mode . #'eldoc-box-hover-mode)))
 
 (use-package dap-mode
   :config
@@ -996,10 +972,12 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
       (apply #'consult-completion-in-region completion-in-region--data)))
   (define-key corfu-map "\M-m" #'corfu-move-to-minibuffer)
   :custom
+  (corfu-cycle t)
   (corfu-auto t)
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.25)
   (corfu-quit-at-boundary 'separator)
+  (corfu-quit-no-match t)
   (corfu-separator ?\s)
   (corfu-quit-no-match 'separator)
   (corfu-preview-current 'insert)
@@ -1024,70 +1002,6 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (kind-icon-blend-frac 0.08)
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
-
-(use-package consult-lsp
-  :bind
-  (([remap xref-find-apropos] . #'consult-lsp-symbols)
-   ("C-<return>" . #'bc/consult-lsp-code-actions)))
-
-(setq bc/consult-lsp-codeactions-group
-      '((?q . "Quick Fix (q)")
-        (?f . "Refactor (f)")
-        (?e . "Extract (e)")
-        (?i . "Inline (i)")
-        (?r . "Rewrite (r)")))
-
-(setq bc/consult-lsp-codeactions-narrow
-      '((?q . "quickfix")
-        (?f . "refactor")
-        (?e . "refactor.extract")
-        (?i . "refactor.inline")
-        (?r . "refactor.rewrite")))
-
-(defun bc/consult-lsp-code-actions ()
-  "Show lsp code actions using consult."
-  (interactive)
-  (let ((actions (lsp-code-actions-at-point))
-        (buffer (current-buffer))
-        change-group)
-    (cond
-     ((seq-empty-p actions) (signal 'lsp-no-code-actions nil))
-     ((and (eq (seq-length actions) 1) lsp-auto-execute-action)
-      (lsp-execute-code-action (lsp-seq-first actions)))
-     (t (consult--read
-         (lambda (action)
-           (pcase action
-             ('nil
-              (with-current-buffer buffer
-                (when change-group
-                  (cancel-change-group change-group)
-                  (setq change-group nil))
-                (mapcar
-                 (lambda (action)
-                   (propertize (lsp:code-action-title action)
-                               'consult--candidate action
-                               'consult--type (car (rassoc (gethash "kind" action)
-                                                           bc/consult-lsp-codeactions-narrow))))
-                 (lsp-code-actions-at-point))))))
-         :prompt "LSP code actions: "
-         :require-match t
-         :lookup #'consult--lookup-candidate
-         :group (consult--type-group bc/consult-lsp-codeactions-group)
-         :narrow (consult--type-narrow bc/consult-lsp-codeactions-group)
-         :state
-         (lambda (action cand)
-           (pcase action
-             ('preview
-              (when change-group
-                (cancel-change-group change-group)
-                (setq change-group nil))
-              (when cand
-                (setq change-group (prepare-change-group))
-                (activate-change-group change-group)
-                (let ((inhibit-message t))
-                  (lsp-execute-code-action cand))
-                ))
-             ('return (when cand (lsp-execute-code-action cand))))))))))
 
 (use-package consult-flycheck)
 
