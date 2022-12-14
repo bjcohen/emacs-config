@@ -353,11 +353,13 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
         ("C-<return>" . eglot-code-actions))
   :hook
   ((eglot--managed-mode . (lambda () (flymake-mode -1)))
-   (prog-mode . eglot))
+   (prog-mode . eglot-ensure))
   :config
   (add-to-list 'eglot-server-programs
                `(python-mode
-                 . ,(eglot-alternatives '(("pyright-langserver" "--stdio"))))))
+                 . ,(eglot-alternatives '(("pyright-langserver" "--stdio")))))
+  (add-to-list 'eglot-server-programs
+               '(rustic-mode "rustup" "run" "stable" "rust-analyzer")))
 
 ;; (use-package eldoc-box
 ;;   :hook
