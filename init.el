@@ -253,9 +253,10 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   :hook (python-mode . blacken-mode))
 
 (use-package tree-sitter
-  :hook (python-mode . (lambda ()
-                         (tree-sitter-mode)
-                         (tree-sitter-hl-mode))))
+  :hook
+  (tree-sitter-after-on . tree-sitter-hl-mode)
+  :config
+  (global-tree-sitter-mode))
 
 (use-package tree-sitter-langs)
 
