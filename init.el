@@ -366,16 +366,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 ;;   :hook
 ;;   ((eglot-managed-mode . #'eldoc-box-hover-mode)))
 
-(use-package dap-mode
-  :config
-  (require 'dap-lldb)
-  (dap-mode 1)
-  (dap-ui-mode 1)
-  (dap-tooltip-mode 1)
-  (tooltip-mode 1)
-  (require 'dap-gdb-lldb)
-  (dap-gdb-lldb-setup))
-
 (use-package treemacs)
 
 (use-package treemacs-projectile)
@@ -958,9 +948,11 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (setq tab-always-indent 'complete))
 
 (use-package corfu
-  :straight t
+  :straight (:files (:defaults "extensions/*"))
   :init
   (global-corfu-mode 1)
+  (corfu-history-mode t)
+  (corfu-popupinfo-mode)
   :config
   (defun corfu-enable-in-minibuffer ()
     "Enable Corfu in the minibuffer if `completion-at-point' is bound."
@@ -984,17 +976,11 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   (corfu-separator ?\s)
   (corfu-quit-no-match 'separator)
   (corfu-preview-current 'insert)
-  (corfu-preselect-first t))
-
-(use-package corfu-doc
-  :after corfu
-  :hook
-  ((corfu-mode . corfu-doc-mode))
+  (corfu-preselect-first t)
   :bind
-  (:map corfu-map
-        ("M-d" . #'corfu-doc-toggle))
-  :custom
-  (corfu-echo-documentation nil))
+  (:map corfu-popupinfo-map
+        ("M-d" . #'corfu-popupinfo-toggle))
+  )
 
 (use-package kind-icon
   :after corfu
