@@ -450,7 +450,9 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
    mu4e-update-interval nil
    mu4e-split-view 'single-window
    mu4e-headers-date-format "%Y-%m-%d"
-   mu4e-headers-fields '((:human-date . 10) (:flags . 6) (:tags . 12) (:from . 22) (:subject)))
+   mu4e-headers-fields '((:human-date . 10) (:flags . 6) (:tags . 12) (:from . 22) (:subject))
+   mu4e-headers-report-render-time t
+   mu4e-headers-advance-after-mark t)
   (add-to-list 'mu4e-view-actions
                '("View in browser" . mu4e-action-view-in-browser) t)
   (setq mu4e-completing-read-function 'completing-read)

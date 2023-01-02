@@ -67,7 +67,7 @@
  ("markdown-mode" . "d95107f5b77d6c010e89259e05adfcd79a21f26a")
  ("marshal.el" . "bc00044d9073482f589aad959e34d563598f682a")
  ("melpa" . "835c996cefd39c06768790b33d0a0823765c98ef")
- ("mu4e" . "ec1d6c47df3656a70dc83986441f9725d8c7ce8e")
+ ("mu4e" . "5bf6fa399b3159ddf668e6540e7e0c0c204ec82c")
  ("nongnu-elpa" . "b552c0281318bbde11e618e3101f5bf45dc8c19f")
  ("orderless" . "e3062280f924933e9c6f5dd1a71729ed98c8493a")
  ("org" . "e0b05b07528dea684f3439c017370436b8d37b50")
