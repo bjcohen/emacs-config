@@ -68,7 +68,6 @@
  ("marshal.el" . "bc00044d9073482f589aad959e34d563598f682a")
  ("melpa" . "835c996cefd39c06768790b33d0a0823765c98ef")
  ("mu" . "b1b11eb0cbbab3f0831ae4e0900bae66348b28ce")
- ("mu4e" . "5bf6fa399b3159ddf668e6540e7e0c0c204ec82c")
  ("nongnu-elpa" . "b552c0281318bbde11e618e3101f5bf45dc8c19f")
  ("orderless" . "e3062280f924933e9c6f5dd1a71729ed98c8493a")
  ("org" . "e0b05b07528dea684f3439c017370436b8d37b50")
