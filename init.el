@@ -418,7 +418,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
                '("org" . "e0b05b07528dea684f3439c017370436b8d37b50"))) ;; 9.5.4
 
 (use-package mu4e
-  :straight (mu4e :type git :host github :repo "emacsmirror/mu4e"
+  :straight (mu4e :type git :host github :repo "djcb/mu"
                   :files (:defaults "mu4e/*.el")
                   :pre-build (("./autogen.sh")
                               ("ninja" "-C" "build")))
