@@ -13,6 +13,7 @@
  ("compat" . "7ca7d300d1d256f674f83932d2918d8e70cd28f6")
  ("consult" . "794e000e02d5efb19362f5e89e7171e9fdd1fb7e")
  ("consult-flycheck" . "7a10be316d728d3384fa25574a30857c53fb3655")
+ ("consult-org-roam" . "96c95e5a14378cc6fc9c22981f5bfd9e18c419f6")
  ("consult-projectile" . "5ef1ada3be767ea766255801050210f5d796deec")
  ("corfu" . "7bf3ec4622372ed23e83a0778ded53222c4e1187")
  ("ctrlf" . "9b4cf6c79a961f2bfbb949805aa300fcf1eb40a6")

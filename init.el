@@ -607,7 +607,7 @@ Pass SHOW-BUFFER-FN on."
   (org-roam-completion-everywhere t)
   :bind (("C-c l" . org-store-link)
          :map org-mode-map
-         ("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n p" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
          ("C-c n t" . org-roam-dailies-goto-today)
@@ -615,6 +615,26 @@ Pass SHOW-BUFFER-FN on."
          ("C-c n m" . org-roam-dailies-goto-tomorrow)
          ("C-c n i" . org-roam-node-insert)
          ("C-c n c" . org-roam-capture)))
+
+(use-package consult-org-roam
+  :after org-roam
+  :init
+  (require 'consult-org-roam)
+  (consult-org-roam-mode 1)
+  :custom
+  (consult-org-roam-grep-func #'consult-ripgrep)
+  (consult-org-roam-buffer-narrow-key ?r)
+  (consult-org-roam-buffer-after-buffers t)
+  :config
+  (consult-customize
+   consult-org-roam-forward-links
+   :preview-key (kbd "M-."))
+  :bind
+  (:map org-mode-map
+        ("C-c n e" . consult-org-roam-file-find)
+        ("C-c n b" . consult-org-roam-backlinks)
+        ("C-c n l" . consult-org-roam-forward-links)
+        ("C-c n r" . consult-org-roam-search)))
 
 (define-key visual-line-mode-map (kbd "M-n") #'next-logical-line)
 (define-key visual-line-mode-map (kbd "M-p") #'previous-logical-line)
