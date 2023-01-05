@@ -197,6 +197,10 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (yas-global-mode 1)
   (define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand))
 
+(use-package yasnippet-snippets)
+
+(use-package consult-yasnippet)
+
 (setq-default indent-tabs-mode nil)
 (add-hook 'prog-mode-hook #'whitespace-mode)
 (setq whitespace-style '(face trailing lines-tail tabs empty))
@@ -361,6 +365,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
                  . ,(eglot-alternatives '(("pyright-langserver" "--stdio")))))
   (add-to-list 'eglot-server-programs
                '(rustic-mode "rustup" "run" "stable" "rust-analyzer")))
+
+(use-package consult-eglot)
 
 ;; (use-package eldoc-box
 ;;   :hook
@@ -642,16 +648,6 @@ Pass SHOW-BUFFER-FN on."
 (use-package vterm
   :if module-file-suffix
   :ensure t)
-
-(use-package spotify
-  :straight (spotify :type git :host github :repo "danielfm/spotify.el"
-                     :fork "bjcohen/spotify.el"
-                     :files (:defaults "spotify_oauth2_callback_server.py"))
-  :config
-  (setq spotify-transport 'connect
-        spotify-player-status-refresh-interval 15)
-  (global-spotify-remote-mode 0)
-  :bind-keymap ("C-c ." . spotify-command-map))
 
 (use-package unfill)
 
