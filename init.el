@@ -363,6 +363,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (setq rustic-lsp-client 'eglot))
 
 (use-package eglot
+  :straight (:type built-in)
   :bind
   (:map eglot-mode-map
         ("C-<return>" . eglot-code-actions))

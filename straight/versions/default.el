@@ -22,7 +22,6 @@
  ("dash.el" . "3df46d7d9fe74f52a661565888e4d31fd760f0df")
  ("diminish.el" . "fbd5d846611bad828e336b25d2e131d1bc06b83d")
  ("editorconfig-emacs" . "ffd331da5f760723c09e8bc9dd45602a1f5ec488")
- ("eglot" . "e501275e06952889056268dabe08ccd0dbaf23e5")
  ("el-get" . "d28d617972d11e7df2cb1df86cc145f47f025a18")
  ("el-patch" . "156c61b72c1c9c61bd886b5931b8a382153f52fa")
  ("eldoc" . "192bcd5571a84e4b4084a840565f40fbec0b0abc")
