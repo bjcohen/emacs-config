@@ -250,7 +250,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (use-package go-mode)
 
 (use-package iedit)
-(use-package google-this)
 (use-package bm)
 
 (global-set-key (kbd "C-`") 'other-frame)
