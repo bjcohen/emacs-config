@@ -27,7 +27,6 @@
  ("elfeed" . "162d7d545ed41c27967d108c04aa31f5a61c8e16")
  ("elisp-tree-sitter" . "3cfab8a0e945db9b3df84437f27945746a43cc71")
  ("emacs" . "fdf057f5e80037814098dc8bb67888886c89a761")
- ("emacs-google-this" . "8a2e3ca5da6a8c89bfe99a21486c6c7db125dc84")
  ("emacs-kv" . "721148475bce38a70e0b678ba8aa923652e8900e")
  ("emacs-libvterm" . "f14d113ee4618f052879509ec378feb9766b871b")
  ("emacs-request" . "fe567ec0222a1ba658866697a9e7fb6b63d71ff7")
