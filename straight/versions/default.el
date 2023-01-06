@@ -73,7 +73,7 @@
  ("mu" . "b1b11eb0cbbab3f0831ae4e0900bae66348b28ce")
  ("nongnu-elpa" . "b552c0281318bbde11e618e3101f5bf45dc8c19f")
  ("orderless" . "e3062280f924933e9c6f5dd1a71729ed98c8493a")
- ("org" . "e0b05b07528dea684f3439c017370436b8d37b50")
+ ("org" . "a3815a169a6b50a786bfec7911b3485026119f4b")
  ("org-noter" . "9ead81d42dd4dd5074782d239b2efddf9b8b7b3d")
  ("org-pdftools" . "967f48fb5038bba32915ee9da8dc4e8b10ba3376")
  ("org-roam" . "45a6863e074f049489a2b9fa94f14635bcce4788")

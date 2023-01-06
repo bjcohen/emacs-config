@@ -106,6 +106,16 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   :config
   (exec-path-from-shell-initialize))
 
+(use-package org
+  :hook
+  (org-mode . (lambda () (electric-pair-local-mode 0)))
+  :config
+  (setq org-pretty-entities t
+        org-use-speed-commands t)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t))))
+
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
@@ -408,20 +418,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 ;; (use-package unicode-fonts
 ;;   :config
 ;;   (unicode-fonts-setup))
-
-(use-package org
-  :hook
-  (org-mode . (lambda () (electric-pair-local-mode 0)))
-  :config
-  (setq org-pretty-entities t
-        org-use-speed-commands t)
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((python . t))))
-
-(let ((straight-current-profile 'pinned))
-  (add-to-list 'straight-x-pinned-packages
-               '("org" . "e0b05b07528dea684f3439c017370436b8d37b50"))) ;; 9.5.4
 
 (use-package mu4e
   :straight (mu4e :type git :host github :repo "djcb/mu"
