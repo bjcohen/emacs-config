@@ -102,7 +102,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
-  :ensure t
   :config
   (exec-path-from-shell-initialize))
 
@@ -398,8 +397,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (treemacs-load-theme "all-the-icons"))
 
 (use-package auctex
-  :defer t
-  :ensure t)
+  :defer t)
 (use-package gist)
 (use-package git-gutter
   :diminish git-gutter-mode
@@ -644,7 +642,7 @@ Pass SHOW-BUFFER-FN on."
 
 (use-package vterm
   :if module-file-suffix
-  :ensure t)
+  :straight t)
 
 (use-package unfill)
 
