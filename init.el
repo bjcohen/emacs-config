@@ -405,7 +405,6 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (use-package handlebars-mode)
 (use-package jinja2-mode)
 (use-package paradox)
-(use-package popup)
 
 (if (version< "27.0" emacs-version)
     (set-fontset-font
@@ -662,9 +661,6 @@ Pass SHOW-BUFFER-FN on."
   :config
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
-
-(use-package s)
-(use-package dash)
 
 (defun org-link-get-title (s)
   "Get the title from a (possibly nested) link string S."

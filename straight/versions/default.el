@@ -84,7 +84,6 @@
  ("pkg-info" . "76ba7415480687d05a4353b27fea2ae02b8d9d61")
  ("pocket-lib.el" . "f794e3e619e1f6cad25bbfd5fe019a7e62820bf4")
  ("pocket-reader.el" . "f652b3c88c0c1a2ae7569a9e4d6238d717f5dc00")
- ("popup-el" . "c762dda36a337421ddd30ec145b3474950974c41")
  ("posframe" . "aa88860a16e28a311f81e18f1d9ed2e7d9e33991")
  ("powerline" . "c35c35bdf5ce2d992882c1f06f0f078058870d4a")
  ("project" . "53d1784ca2dda1a2da9b8f2f168a9706f6b36ccf")
