@@ -9,7 +9,7 @@
  ("bm" . "9a31c61f44e6f1033ca43bd7f3eb33ffdb2ca595")
  ("centaur-tabs" . "7d9fad0daa44ffb2acecf6525759e46e08e35f2c")
  ("cfrs" . "f3a21f237b2a54e6b9f8a420a9da42b4f0a63121")
- ("closql" . "820e95170acb79de0fb554577a0dc9b707e23aea")
+ ("closql" . "1aba69658061ae67d5e39e846aaa02ed2749940f")
  ("compat" . "7ca7d300d1d256f674f83932d2918d8e70cd28f6")
  ("consult" . "794e000e02d5efb19362f5e89e7171e9fdd1fb7e")
  ("consult-eglot" . "0da8801dd8435160ce1f62ad8066bd52e38f5cbd")
