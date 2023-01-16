@@ -225,7 +225,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   :straight (:type built-in)
   :hook prog-mode
   :diminish
-  :config
+  :init
   (setq whitespace-style '(face trailing lines-tail tabs empty))
 
   (setq whitespace-trailing 'font-lock-warning-face)
