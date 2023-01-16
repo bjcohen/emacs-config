@@ -107,7 +107,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
 (use-package org
   :hook
-  (org-mode . (lambda () (electric-pair-local-mode 0)))
+  ((org-mode . (lambda () (electric-pair-local-mode 0)))
+   (org-mode . visual-line-mode))
   :config
   (setq org-pretty-entities t
         org-use-speed-commands t)
@@ -139,9 +140,13 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-;; ispell
-(add-hook 'text-mode-hook (lambda () (flyspell-mode 1)))
-(diminish 'flyspell-mode)
+(use-package flyspell
+  :straight (:type built-in)
+
+  :diminish
+
+  :hook
+  (text-mode . (lambda () (flyspell-mode 1))))
 
 (use-package magit
   :demand t)
@@ -149,15 +154,21 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (use-package forge
   :after magit)
 
-(electric-pair-mode)
-(add-hook 'minibuffer-setup-hook (lambda () (electric-pair-local-mode 0)))
+(use-package elec-pair
+  :straight (:type built-in)
+  :config
+  (electric-pair-mode)
+  :hook
+  (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
 
 ;;; random stuff
 
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (font-lock-add-keywords nil
-                                    '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t)))))
+(use-package prog-mode
+  :straight (:type built-in)
+  :hook
+  (prog-mode . (lambda ()
+                 (font-lock-add-keywords nil
+                                         '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t))))))
 
 (use-package haskell-mode
   :config
@@ -196,10 +207,8 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (load-theme 'dracula t))
 
 (use-package ruby-mode
-  :config
-  (autoload 'ruby-mode "ruby-mode" "Major mode for ruby files" t)
-  (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
-  (add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode)))
+  :mode "\\.rb$"
+  :interpreter "ruby")
 
 (use-package yasnippet
   :config
@@ -211,14 +220,18 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (use-package consult-yasnippet)
 
 (setq-default indent-tabs-mode nil)
-(add-hook 'prog-mode-hook #'whitespace-mode)
-(setq whitespace-style '(face trailing lines-tail tabs empty))
-(diminish 'whitespace-mode)
 
-(setq whitespace-trailing 'font-lock-warning-face)
-(setq whitespace-line 'font-lock-warning-face)
-(setq whitespace-line-column 100)
-(setq whitespace-empty 'font-lock-warning-face)
+(use-package whitespace-mode
+  :straight (:type built-in)
+  :hook prog-mode
+  :diminish
+  :config
+  (setq whitespace-style '(face trailing lines-tail tabs empty))
+
+  (setq whitespace-trailing 'font-lock-warning-face)
+  (setq whitespace-line 'font-lock-warning-face)
+  (setq whitespace-line-column 100)
+  (setq whitespace-empty 'font-lock-warning-face))
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
@@ -226,9 +239,11 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (use-package perspective
   :config
   (persp-mode)
-  (add-hook 'kill-emacs-hook #'persp-state-save)
-  (add-hook 'after-init-hook
-            (lambda () (persp-state-load (concat user-emacs-directory "persp-save"))))
+
+  :hook
+  ((kill-emacs . persp-state-save)
+   (after-init . (lambda () (persp-state-load (concat user-emacs-directory "persp-save")))))
+
   :custom
   (persp-state-default-file (concat user-emacs-directory "persp-save"))
   (persp-mode-prefix-key (kbd "C-x x")))
@@ -262,7 +277,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 (use-package blacken
   :custom
   (blacken-skip-string-normalization t)
-  :hook (python-mode . blacken-mode))
+  :hook python-mode)
 
 (use-package tree-sitter
   :hook
@@ -274,11 +289,13 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
 (use-package ess)
 
-;; html/js stuff
-(add-hook 'html-mode-hook
-          (lambda ()
-            (setq sgml-basic-offset 2)
-            (setq indent-tabs-mode nil)))
+(use-package sgml-mode
+  :straight (:type built-in)
+
+  :hook
+  (html-mode . (lambda ()
+                 (setq sgml-basic-offset 2)
+                 (setq indent-tabs-mode nil))))
 
 ;; quick register access to this file
 (set-register ?e '(file . "~/.emacs.d/init.el"))
@@ -333,7 +350,7 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
   (add-hook 'flycheck-mode-hook #'flycheck-virtualenv-setup))
 
 (use-package flycheck-inline
-  :hook ((flycheck-mode . flycheck-inline-mode)))
+  :hook flycheck-mode)
 
 (use-package flycheck-rust)
 
@@ -377,9 +394,10 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
 
 (use-package consult-eglot)
 
-;; (use-package eldoc-box
-;;   :hook
-;;   ((eglot-managed-mode . #'eldoc-box-hover-mode)))
+(use-package eldoc-box
+  :disabled
+  :hook
+  ((eglot-managed-mode . #'eldoc-box-hover-mode)))
 
 (use-package treemacs)
 
@@ -585,7 +603,6 @@ Pass SHOW-BUFFER-FN on."
         ("h" . backward-char)
         ("l" . forward-char)))
 
-(add-hook 'org-mode-hook #'visual-line-mode)
 (diminish 'visual-line-mode)
 
 (use-package org-roam
@@ -676,19 +693,17 @@ Pass SHOW-BUFFER-FN on."
 (use-package elfeed)
 
 (use-package rainbow-delimiters
-  :hook
-  (prog-mode . rainbow-delimiters-mode))
+  :hook prog-mode)
 
 (use-package paredit
   :diminish
-  :hook
-  (lisp-data-mode . paredit-mode)
-  (emacs-lisp-mode . paredit-mode))
+  :hook (lisp-data-mode emacs-lisp-mode))
 
-;; (use-package lispy
-;;   :diminish
-;;   :hook
-;;   (prog-mode . lispy-mode))
+(use-package lispy
+  :disabled
+  :diminish
+  :hook
+  (prog-mode . lispy-mode))
 
 (use-package ace-window
   :bind
@@ -788,8 +803,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
 
 (use-package ctrlf
   :config
-  (ctrlf-mode +1)
-  (add-hook 'ido-minibuffer-setup-hook (lambda () (ctrlf-local-mode -1))))
+  (ctrlf-mode +1))
 
 (use-package protobuf-mode)
 
@@ -808,11 +822,13 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
    ("M-q" . vertico-multiform-flat))
 
   :config
-  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
   (vertico-multiform-mode 1)
   (setq vertico-multiform-categories '((consult-grep buffer))
                   vertico-multiform-commands '((tmm-menubar flat)
-                                               (tmm-shortcut flat))))
+                                               (tmm-shortcut flat)))
+
+  :hook
+  (minibuffer-setup . vertico-repeat-save))
 
 (use-package savehist
   :init
@@ -927,6 +943,9 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
 (use-package embark-consult)
 
 (use-package emacs
+  :hook
+  (minibuffer-setup . cursor-intangible-mode)
+
   :init
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
@@ -942,7 +961,6 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
   ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
   ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
   ;; Vertico commands are hidden in normal buffers.
@@ -967,13 +985,14 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
     (when (where-is-internal #'completion-at-point (list (current-local-map)))
       (setq-local corfu-auto t)
       (corfu-mode 1)))
-  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
   (defun corfu-move-to-minibuffer ()
     (interactive)
     (let ((completion-extra-properties corfu--extra)
           completion-cycle-threshold completion-cycling)
       (apply #'consult-completion-in-region completion-in-region--data)))
   (define-key corfu-map "\M-m" #'corfu-move-to-minibuffer)
+  :hook
+  (minibuffer-setup . corfu-enable-in-minibuffer)
   :custom
   (corfu-cycle t)
   (corfu-auto t)
