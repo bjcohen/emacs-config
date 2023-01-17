@@ -1040,6 +1040,18 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
 
 (use-package consult-projectile)
 
+(use-package proced
+  :straight (:type built-in)
+  :commands proced
+  :config
+  (setq-default proced-auto-update-flag t)
+  (setq proced-auto-update-interval 1
+        proced-enable-color-flag t)
+  (add-to-list
+   'proced-format-alist
+   '(custom user pid ppid sess tree pcpu pmem rss start time state (args comm)))
+  (setq-default proced-format 'custom))
+
 (el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))
