@@ -114,7 +114,23 @@ See the docstrings of `defalias' and `make-obsolete' for more details."
         org-use-speed-commands t)
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((python . t))))
+   '((python . t)))
+
+  (defun org+-flyspell-skip-code-and-props (b e _ignored)
+    "Returns non-nil if current word is code.
+This function is intended for `flyspell-incorrect-hook'."
+    (save-excursion
+      (goto-char b)
+      (memq (org-element-type (org-element-context))
+            '(code src-block node-property property-drawer))))
+
+  (defun org+-config-flyspell ()
+    "Configure flyspell for org-mode."
+    (add-hook 'flyspell-incorrect-hook #'org+-flyspell-skip-code-and-props nil t))
+
+  (add-hook 'org-mode-hook #'org+-config-flyspell)
+
+  (add-to-list 'ispell-skip-region-alist '(":PROPERTIES:" ":END:")))
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -727,6 +743,7 @@ Pass SHOW-BUFFER-FN on."
        ;; Buffer name not match below blacklist.
        (string-prefix-p "*org-roam" name)
        (string-prefix-p " *mu4e" name)
+       (string-equal ispell-choices-buffer name)
        )))
   (setq centaur-tabs-hide-tab-function 'my/centaur-tabs-hide-tab)
   (defun my/centaur-tabs-buffer-groups ()
