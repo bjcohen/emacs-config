@@ -1052,6 +1052,78 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
    '(custom user pid ppid sess tree pcpu pmem rss start time state (args comm)))
   (setq-default proced-format 'custom))
 
+(use-package combobulate
+  :straight (:type git :host github :repo "mickeynp/combobulate")
+  :hook (python-mode rustic-mode)
+  :config
+  (defun combobulate-setup-rustic ()
+    (setq combobulate-navigation-node-types '(use_declaration
+                                              use_list
+                                              use_wildcard
+                                              scoped_use_list
+
+                                              attribute_item
+                                              function_item
+                                              block
+                                              let_declaration
+                                              try_expression
+                                              while_let_expression
+                                              call_expression
+                                              generic_function
+                                              macro_invocation
+                                              function_signature_item
+                                              field_declaration
+                                              if_let_expression
+                                              for_expression
+                                              assignment_expression
+                                              token_binding_pattern
+                                              try_expression
+                                              await_expression)))
+
+  (add-to-list 'combobulate-setup-functions-alist '(rustic-mode . combobulate-setup-rustic)))
+
+(use-package hydra)
+
+(use-package smerge-mode
+  :straight (:type built-in)
+  :config
+  (defhydra unpackaged/smerge-hydra
+    (:color pink :hint nil :post (smerge-auto-leave))
+    "
+^Move^       ^Keep^               ^Diff^                 ^Other^
+^^-----------^^-------------------^^---------------------^^-------
+_n_ext       _b_ase               _<_: upper/base        _C_ombine
+_p_rev       _u_pper              _=_: upper/lower       _r_esolve
+^^           _l_ower              _>_: base/lower        _k_ill current
+^^           _a_ll                _R_efine
+^^           _RET_: current       _E_diff
+"
+    ("n" smerge-next)
+    ("p" smerge-prev)
+    ("b" smerge-keep-base)
+    ("u" smerge-keep-upper)
+    ("l" smerge-keep-lower)
+    ("a" smerge-keep-all)
+    ("RET" smerge-keep-current)
+    ("\C-m" smerge-keep-current)
+    ("<" smerge-diff-base-upper)
+    ("=" smerge-diff-upper-lower)
+    (">" smerge-diff-base-lower)
+    ("R" smerge-refine)
+    ("E" smerge-ediff)
+    ("C" smerge-combine-with-next)
+    ("r" smerge-resolve)
+    ("k" smerge-kill-current)
+    ("ZZ" (lambda ()
+            (interactive)
+            (save-buffer)
+            (bury-buffer))
+     "Save and bury buffer" :color blue)
+    ("q" nil "cancel" :color blue))
+  :hook (magit-diff-visit-file . (lambda ()
+                                   (when smerge-mode
+                                     (unpackaged/smerge-hydra/body)))))
+
 (el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))
