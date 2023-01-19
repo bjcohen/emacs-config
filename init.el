@@ -493,7 +493,8 @@ This function is intended for `flyspell-incorrect-hook'."
   (add-to-list 'mu4e-bookmarks
                '(:name "Reading list"
                        :query "(tag:reading-list or tag:\\\\Important and maildir:/Gmail/INBOX) and (flag:unread or date:today) and not (flag:trashed or maildir:/Ionos/Trash)"
-                       :key ?l))
+                       :key ?l
+                       :favorite t))
   (add-to-list 'mu4e-bookmarks
                '(:name "Today's messages"
                        :query "date:today..now and not (flag:trashed or maildir:/Ionos/Trash)"
