@@ -388,7 +388,7 @@ This function is intended for `flyspell-incorrect-hook'."
 
 (use-package mu4e
   :straight (mu4e :type git :host github :repo "djcb/mu"
-                  :files (:defaults "mu4e/*.el")
+                  :files (:defaults "build/mu4e/*.el" "build/mu/mu")
                   :pre-build (("./autogen.sh")
                               ("ninja" "-C" "build")))
   :init
@@ -412,7 +412,6 @@ This function is intended for `flyspell-incorrect-hook'."
   (setq mu4e-headers-append-func #'bc/retag-headers-append-handler)
 
   :config
-  (require 'org-mu4e)
 
   (setq
    mu4e-get-mail-command "offlineimap"
@@ -421,7 +420,8 @@ This function is intended for `flyspell-incorrect-hook'."
    mu4e-headers-date-format "%Y-%m-%d"
    mu4e-headers-fields '((:human-date . 10) (:flags . 6) (:tags . 12) (:from . 22) (:subject))
    mu4e-headers-report-render-time t
-   mu4e-headers-advance-after-mark t)
+   mu4e-headers-advance-after-mark t
+   mu4e-mu-binary (concat user-emacs-directory "straight/build/mu4e/mu"))
   (add-to-list 'mu4e-view-actions
                '("View in browser" . mu4e-action-view-in-browser) t)
   (setq mu4e-completing-read-function 'completing-read)
