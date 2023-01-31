@@ -66,7 +66,7 @@
  ("markdown-mode" . "d95107f5b77d6c010e89259e05adfcd79a21f26a")
  ("marshal.el" . "bc00044d9073482f589aad959e34d563598f682a")
  ("melpa" . "97da7168e5f82e3eeb1a29a29ad27991d5a0abe6")
- ("mu" . "c23dad70586bbb54891c506629f2ce2ed8e463d2")
+ ("mu" . "b71fe1ef95048326fc9e348e7302aadc75c3af84")
  ("multiple-cursors.el" . "16223efc2d6dece2d43bbccc189d7a4bab6de571")
  ("nongnu-elpa" . "0e54bf5f6d048bdb87ae648237dbadc2b2217b4b")
  ("orderless" . "e3062280f924933e9c6f5dd1a71729ed98c8493a")
