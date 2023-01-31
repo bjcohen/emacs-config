@@ -1061,6 +1061,30 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
                                    (when smerge-mode
                                      (unpackaged/smerge-hydra/body)))))
 
+(use-package tempel
+  :bind (("M-+" . tempel-complete)
+         ("M-*" . tempel-insert))
+
+  :custom
+  (tempel-trigger-prefix "<")
+
+  :config
+
+  (defun tempel-setup-capf ()
+    (setq-local completion-at-point-functions
+                (cons #'tempel-complete
+                      completion-at-point-functions)))
+
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  (add-hook 'text-mode-hook 'tempel-setup-capf)
+
+  (defvar my/tempel-elisp-templates
+    '((use "(use-package " (p "p") n> ":bind" n> p n> ":init" n> p n> ")")))
+
+  (add-to-list 'tempel-template-sources 'my/tempel-elisp-templates))
+
+(use-package tempel-collection)
+
 (el-patch-validate-all)
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))

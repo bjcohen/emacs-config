@@ -101,6 +101,8 @@
  ("straight.el" . "3eca39dfc6797243ec7d1c6a7d45142407f73f88")
  ("svg-lib" . "da72b81d8589d045731140a836cfbc2891e4ebf3")
  ("tablist" . "faab7a035ef2258cc4ea2182f67e3aedab7e2af9")
+ ("tempel" . "d3f44ccf213d058bb6f28c3895fd1f588e331d5d")
+ ("tempel-collection" . "7ef22ea7aaf699632a1d02d47a9a505ae8bc52c3")
  ("tox.el" . "7655eb254038d5e34433e8a9d66b3ffc9c72e40c")
  ("transient" . "c6cf2f2705ab56cd89d807e723ce45b9fcdfb9e1")
  ("tree-sitter-langs" . "bf125472c185f098136b26b30d5e74332b4ee46b")
