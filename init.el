@@ -45,6 +45,8 @@
   :hook
   ((org-mode . (lambda () (electric-pair-local-mode 0)))
    (org-mode . visual-line-mode))
+  :custom
+  (org-startup-folded 'content)
   :config
   (setq org-pretty-entities t
         org-use-speed-commands t)
