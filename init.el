@@ -619,6 +619,8 @@ Pass SHOW-BUFFER-FN on."
 (use-package org-noter)
 
 (use-package pdf-tools
+  :straight (:pre-build ("make" "autobuild")
+             :files (:defaults "server/epdfinfo"))
   :config
   (pdf-tools-install))
 
