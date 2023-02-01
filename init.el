@@ -1089,7 +1089,11 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
 (use-package tempel-collection)
 
-(el-patch-validate-all)
+(condition-case err
+    (el-patch-validate-all)
+  (user-error (if (string= "No patches defined" (cadr err))
+                  nil
+                (signal (car err) (cdr err)))))
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))
   (when (file-exists-p init-local)
