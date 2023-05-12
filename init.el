@@ -431,17 +431,21 @@ This function is intended for `flyspell-incorrect-hook'."
   (setq mu4e-bookmarks '())
   (add-to-list 'mu4e-bookmarks
                '(:name "Reading list"
-                       :query "(tag:reading-list or tag:\\\\Important and maildir:/Gmail/INBOX) and (flag:unread or date:today) and not (flag:trashed or maildir:/Ionos/Trash)"
+                       :query "tag:reading-list and (flag:unread or date:today) and not (flag:trashed or maildir:/Ionos/Trash or maildir:/Ionos/Spam)"
                        :key ?l
                        :favorite t))
   (add-to-list 'mu4e-bookmarks
                '(:name "Today's messages"
-                       :query "date:today..now and not (flag:trashed or maildir:/Ionos/Trash)"
+                       :query "date:today..now and not (flag:trashed or maildir:/Ionos/Trash or maildir:/Ionos/Spam)"
                        :key ?t))
   (add-to-list 'mu4e-bookmarks
                '(:name "Last 7 days"
-                       :query "date:7d..now and not (flag:trashed or maildir:/Ionos/Trash)"
+                       :query "date:7d..now and not (flag:trashed or maildir:/Ionos/Trash or maildir:/Ionos/Spam)"
                        :key ?w))
+  (add-to-list 'mu4e-bookmarks
+               '(:name "Spam"
+                       :query "maildir:/Ionos/Spam"
+                       :key ?s))
   (setq mu4e-bookmarks (reverse mu4e-bookmarks))
   (add-to-list 'mu4e-marks
                '(tag
