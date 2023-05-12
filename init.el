@@ -7,7 +7,7 @@
         ;; Packages which are pinned to a specific commit.
         (pinned . "pinned.el")))
 
-(defvaralias 'comp-deferred-compilation-deny-list 'native-comp-deferred-compilation-deny-list)
+(defvaralias 'native-comp-deferred-compilation-deny-list 'native-comp-jit-compilation-deny-list)
 
 (eval-when-compile
   (defvar bootstrap-version)
@@ -304,7 +304,8 @@ This function is intended for `flyspell-incorrect-hook'."
   (add-hook 'flycheck-mode-hook #'flycheck-virtualenv-setup))
 
 (use-package flycheck-inline
-  :hook flycheck-mode)
+  :hook
+  (flycheck-mode . flycheck-inline-mode))
 
 (use-package flycheck-rust)
 
@@ -650,11 +651,13 @@ Pass SHOW-BUFFER-FN on."
 (use-package elfeed)
 
 (use-package rainbow-delimiters
-  :hook prog-mode)
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
 
 (use-package paredit
   :diminish
-  :hook (lisp-data-mode emacs-lisp-mode))
+  :hook
+  ((lisp-data-mode emacs-lisp-mode) . paredit-mode))
 
 (use-package lispy
   :disabled
@@ -892,7 +895,7 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
    consult-bookmark consult-recent-file consult-xref
    consult--source-bookmark consult--source-recent-file
    consult--source-project-recent-file
-   :preview-key (kbd "M-."))
+   :preview-key "M-.")
   (setq consult-narrow-key "<")
   (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
   (autoload 'projectile-project-root "projectile")
