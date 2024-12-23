@@ -42,6 +42,8 @@
 
 ;;; General Config
 
+(desktop-save-mode 1)
+
 (use-package diminish)
 (use-package bind-key)
 
@@ -200,18 +202,6 @@ This function is intended for `flyspell-incorrect-hook'."
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
-
-(use-package perspective
-  :config
-  (persp-mode)
-
-  :hook
-  ((kill-emacs . persp-state-save)
-   (after-init . (lambda () (persp-state-load (concat user-emacs-directory "persp-save")))))
-
-  :custom
-  (persp-state-default-file (concat user-emacs-directory "persp-save"))
-  (persp-mode-prefix-key (kbd "C-x x")))
 
 (use-package evil
   :diminish undo-tree-mode
