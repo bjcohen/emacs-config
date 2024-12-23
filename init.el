@@ -143,6 +143,8 @@ This function is intended for `flyspell-incorrect-hook'."
 
   (add-hook 'compilation-finish-functions 'close-on-successful-exit))
 
+(use-package project)
+
 (use-package projectile
   :diminish projectile-mode
   :bind-keymap
@@ -677,94 +679,11 @@ Pass SHOW-BUFFER-FN on."
   :bind
   ("C-:" . avy-goto-char-timer))
 
-(use-package centaur-tabs
-  :demand t
-  :config
-  (centaur-tabs-mode t)
-  (centaur-tabs-enable-buffer-reordering)
-  (setq centaur-tabs-adjust-buffer-order 'left)
-  (defun my/centaur-tabs-hide-tab (x)
-    "Do no to show buffer X in tabs."
-    (let ((name (format "%s" x)))
-      (or
-       ;; Current window is not dedicated window.
-       ;; Buffer name not match below blacklist.
-       (string-prefix-p "*org-roam" name)
-       (string-prefix-p " *mu4e" name)
-       (string-equal ispell-choices-buffer name)
-       )))
-  (setq centaur-tabs-hide-tab-function 'my/centaur-tabs-hide-tab)
-  (defun my/centaur-tabs-buffer-groups ()
-    "`centaur-tabs-buffer-groups' control buffers' group rules.
-
-Group centaur-tabs with mode if buffer is derived from `eshell-mode'
-`emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
-All buffer name start with * will group to \"Emacs\".
-Other buffer group by `centaur-tabs-get-group-name' with project name."
-    (list
-     (cond
-      ((or (and (string-prefix-p "*mu4e" (buffer-name))
-                (not (string-equal "*mu4e-server*" (buffer-name))))
-           (string-equal "*pocket-reader*" (buffer-name))
-           (and (string-prefix-p "*elfeed-" (buffer-name))
-                (not (string-equal "*elfeed-log*" (buffer-name))))
-           (and (derived-mode-p 'org-mode)
-                (save-excursion
-                  (goto-char (point-min))
-                  (search-forward "#+roam_tags: website pocket" nil t)))
-           (string-equal "*Article*" (buffer-name)))
-       "Reading")
-      ((memq major-mode '(org-mode org-agenda-mode diary-mode))
-       "Writing")
-      ((string-equal "*" (substring (buffer-name) 0 1))
-       "Emacs")
-      ((memq major-mode '(magit-process-mode
-                          magit-status-mode
-                          magit-diff-mode
-                          magit-log-mode
-                          magit-file-mode
-                          magit-blob-mode
-                          magit-blame-mode
-                          ))
-       "Magit")
-      ((derived-mode-p 'eshell-mode)
-       "EShell")
-      ((derived-mode-p 'emacs-lisp-mode)
-       "Elisp")
-      ((derived-mode-p 'dired-mode)
-       "Dired")
-      (t
-       (centaur-tabs-get-group-name (current-buffer))))))
-  (setq centaur-tabs-buffer-groups-function 'my/centaur-tabs-buffer-groups)
-  (setq centaur-tabs-cycle-scope 'tabs)
-  (defun centaur-tabs-nth-tab (n)
-    (let* ((tabset (centaur-tabs-current-tabset t))
-           (tabs (centaur-tabs-tabs tabset))
-           (tab (if (>= n 0)
-                    (nth n tabs)
-                  (nth (- (+ 1 n)) (reverse tabs)))))
-      (when tab
-        (centaur-tabs-buffer-select-tab tab))))
-  :bind
-  ("S-s-<tab>" . centaur-tabs-backward)
-  ("s-<tab>" . centaur-tabs-forward)
-  ("C-1" . (lambda () (interactive) (centaur-tabs-nth-tab 0)))
-  ("C-2" . (lambda () (interactive) (centaur-tabs-nth-tab 1)))
-  ("C-3" . (lambda () (interactive) (centaur-tabs-nth-tab 2)))
-  ("C-4" . (lambda () (interactive) (centaur-tabs-nth-tab 3)))
-  ("C-5" . (lambda () (interactive) (centaur-tabs-nth-tab 4)))
-  ("C-6" . (lambda () (interactive) (centaur-tabs-nth-tab 5)))
-  ("C-7" . (lambda () (interactive) (centaur-tabs-nth-tab 6)))
-  ("C-8" . (lambda () (interactive) (centaur-tabs-nth-tab -2)))
-  ("C-9" . (lambda () (interactive) (centaur-tabs-nth-tab -1)))
-  :hook
-  (treemacs-mode . centaur-tabs-local-mode)
-  (mu4e~update-mail-mode . centaur-tabs-local-mode)
-  (ediff-mode . centaur-tabs-local-mode)
-  (lsp-ui-doc-frame-mode . centaur-tabs-local-mode)
-  (lsp-ui-imenu-mode . centaur-tabs-local-mode)
-  (rustic-compilation-mode . centaur-tabs-local-mode)
-  )
+(use-package otpp
+  :after project
+  :init
+  (otpp-mode 1)
+  (otpp-override-mode 1))
 
 (use-package ctrlf
   :config
@@ -1096,6 +1015,16 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
 (use-package tempel-collection)
 
+(use-package tab-bar
+  :bind
+  (("<s-tab>" . tab-next)
+   ("<S-s-tab>" . tab-previous)
+   ("C-1" . (lambda () (interactive) (tab-select 1)))
+   ("C-2" . (lambda () (interactive) (tab-select 2)))
+   ("C-3" . (lambda () (interactive) (tab-select 3)))
+   ("C-4" . (lambda () (interactive) (tab-select 4)))
+   ("C-5" . (lambda () (interactive) (tab-select 5)))
+   ("C-9" . (lambda () (interactive) (tab-select -1)))))
 (condition-case err
     (el-patch-validate-all)
   (user-error (if (string= "No patches defined" (cadr err))
