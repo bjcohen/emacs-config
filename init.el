@@ -1,6 +1,15 @@
 ;;; init.el --- bjcohen's Emacs configuration -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
+;;; Straight
+
+(if init-file-debug
+    (setq use-package-verbose t
+          use-package-expand-minimally nil
+          use-package-compute-statistics t
+          debug-on-error t)
+  (setq use-package-verbose nil
+        use-package-expand-minimally t))
 
 (setq straight-profiles
       '((nil . "default.el")
