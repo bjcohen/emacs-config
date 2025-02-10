@@ -1037,6 +1037,15 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ;; Optional: Set a key binding for the transient menu
   (global-set-key (kbd "C-c a") 'aider-transient-menu))
 
+(use-package consult-mu
+  :straight (consult-mu :type git :host github :repo "armindarvish/consult-mu" :files (:defaults "extras/*.el"))
+  :after (mu4e consult)
+  :custom
+  (consult-mu-mark-previewed-as-read nil)
+  :config
+  (require 'consult-mu-embark)
+  )
+
 (use-package tab-bar
   :bind
   (("<s-tab>" . tab-next)
