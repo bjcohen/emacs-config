@@ -390,8 +390,8 @@ See URL `http://pypi.python.org/pypi/ruff'."
   :config
   (treemacs-load-theme "all-the-icons"))
 
-(use-package auctex
-  :defer t)
+;; (use-package auctex
+;;   :defer t)
 (use-package gist)
 (use-package git-gutter
   :diminish git-gutter-mode
@@ -646,22 +646,6 @@ Pass SHOW-BUFFER-FN on."
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 (use-package org-noter)
-
-(use-package pdf-tools
-  :straight (:pre-build ("make" "autobuild")
-             :files (:defaults "server/epdfinfo"))
-  :config
-  (pdf-tools-install))
-
-(use-package org-pdftools
-  :config
-  (with-eval-after-load 'org-mode
-    (org-pdftools-setup-link)))
-
-(use-package org-noter-pdftools
-  :config
-  (with-eval-after-load 'pdf-annot
-    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
 (defun org-link-get-title (s)
   "Get the title from a (possibly nested) link string S."
