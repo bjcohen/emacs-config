@@ -1055,11 +1055,16 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
                  '(devicetree "https://github.com/joelspadin/tree-sitter-devicetree")))
   (treesit-install-language-grammar 'devicetree)
   (add-hook 'devicetree-ts-mode-hook (lambda () (setq-local whitespace-line-column 200))))
+
+;;; Validate Patches
+
 (condition-case err
     (el-patch-validate-all)
   (user-error (if (string= "No patches defined" (cadr err))
                   nil
                 (signal (car err) (cdr err)))))
+
+;;; Load init-local.el and custom.el
 
 (let ((init-local (concat user-emacs-directory "init-local.el")))
   (when (file-exists-p init-local)
@@ -1074,4 +1079,8 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
 ;; Local Variables:
 ;; byte-compile-warnings: (not free-vars noruntime unresolved)
+;; outline-minor-mode-cycle: t
+;; outline-regexp: ";;; "
+;; eval: (outline-minor-mode)
+;; eval: (outline-hide-body)
 ;; End:
