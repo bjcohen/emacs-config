@@ -1074,14 +1074,6 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (treesit-install-language-grammar 'devicetree)
   (add-hook 'devicetree-ts-mode-hook (lambda () (setq-local whitespace-line-column 200))))
 
-;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
-(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
-;; ## end of OPAM user-setup addition for emacs / base ## keep this line
-
-(require 'dune)
-(require 'dune-flymake)
-(require 'dune-watch)
-
 (use-package tuareg
   :config
   (add-to-list 'tuareg-prettify-symbols-extra-alist '("|>" . ?▷))
