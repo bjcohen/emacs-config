@@ -53,6 +53,7 @@
   (exec-path-from-shell-initialize))
 
 (use-package org
+  :after python
   :hook
   ((org-mode . (lambda () (electric-pair-local-mode 0)))
    (org-mode . visual-line-mode))
@@ -116,8 +117,10 @@ This function is intended for `flyspell-incorrect-hook'."
 (use-package magit
   :demand t)
 
+(use-package emacsql)
+
 (use-package forge
-  :after magit)
+  :after (magit emacsql))
 
 (use-package elec-pair
   :straight (:type built-in)
@@ -657,8 +660,6 @@ Pass SHOW-BUFFER-FN on."
   :bind
   (("C-c SPC" . ace-jump-mode)
    ("C-c C-c SPC" . ace-jump-line-mode)))
-
-(use-package elfeed)
 
 (use-package rainbow-delimiters
   :hook
