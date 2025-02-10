@@ -239,11 +239,14 @@ This function is intended for `flyspell-incorrect-hook'."
   :config
   (add-hook 'python-base-mode-hook 'pet-mode -10))
 
-(use-package blacken
-  :after python
-  :custom
-  (blacken-skip-string-normalization nil)
-  :hook python-mode)
+(use-package reformatter
+  :hook
+  (python-mode . ruff-format-on-save-mode)
+  (python-ts-mode . ruff-format-on-save-mode)
+  :config
+  (reformatter-define ruff-format
+    :program "ruff"
+    :args `("format" "--stdin-filename" ,buffer-file-name "-")))
 
 (use-package treesit-langs
   :straight (treesit-langs :type git :host github :repo "emacs-tree-sitter/treesit-langs")
