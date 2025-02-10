@@ -134,9 +134,11 @@ This function is intended for `flyspell-incorrect-hook'."
 (use-package prog-mode
   :straight (:type built-in)
   :hook
-  (prog-mode . (lambda ()
-                 (font-lock-add-keywords nil
-                                         '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t))))))
+  (prog-mode .
+             (lambda ()
+               (font-lock-add-keywords
+                nil
+                '(("\\<\\(FIXME\\|TODO\\|BUG\\)" 1 font-lock-warning-face t))))))
 
 (use-package haskell-mode
   :config
@@ -422,20 +424,22 @@ See URL `http://pypi.python.org/pypi/ruff'."
   :init
   (defvar reading-list-emails '() "Email addresses to filter to reading-list in mu4e.")
   (defun bc/retag-headers-append-handler (msglst)
-    (mapc (lambda (msg)
-            (if (seq-contains-p reading-list-emails
-                                msg
-                                (lambda (email msg)
-                                  (and (not (seq-contains-p (mu4e-message-field msg :tags) "reading-list"))
-                                       (or (string-prefix-p
-                                            email
-                                            (plist-get (seq-first (plist-get msg :from)) :email))
-                                           (string-prefix-p
-                                            email
-                                            (plist-get (seq-first (plist-get msg :from)) :name))))))
-                (let ((inhibit-message t))
-                  (mu4e-action-retag-message msg "+reading-list"))))
-          msglst)
+    (mapc
+     (lambda (msg)
+       (if (seq-contains-p
+            reading-list-emails
+            msg
+            (lambda (email msg)
+              (and (not (seq-contains-p (mu4e-message-field msg :tags) "reading-list"))
+                   (or (string-prefix-p
+                        email
+                        (plist-get (seq-first (plist-get msg :from)) :email))
+                       (string-prefix-p
+                        email
+                        (plist-get (seq-first (plist-get msg :from)) :name))))))
+           (let ((inhibit-message t))
+             (mu4e-action-retag-message msg "+reading-list"))))
+     msglst)
     (funcall #'mu4e~headers-append-handler msglst))
   (setq mu4e-headers-append-func #'bc/retag-headers-append-handler)
 
@@ -454,23 +458,27 @@ See URL `http://pypi.python.org/pypi/ruff'."
                '("View in browser" . mu4e-action-view-in-browser) t)
   (setq mu4e-completing-read-function 'completing-read)
   (setq mu4e-bookmarks '())
-  (add-to-list 'mu4e-bookmarks
-               '(:name "Reading list"
-                       :query "tag:reading-list and (flag:unread or date:today) and not (flag:trashed or maildir:/Ionos/Trash or maildir:/Ionos/Spam)"
-                       :key ?l
-                       :favorite t))
-  (add-to-list 'mu4e-bookmarks
-               '(:name "Today's messages"
-                       :query "date:today..now and not (flag:trashed or maildir:/Ionos/Trash or maildir:/Ionos/Spam)"
-                       :key ?t))
-  (add-to-list 'mu4e-bookmarks
-               '(:name "Last 7 days"
-                       :query "date:7d..now and not (flag:trashed or maildir:/Ionos/Trash or maildir:/Ionos/Spam)"
-                       :key ?w))
-  (add-to-list 'mu4e-bookmarks
-               '(:name "Spam"
-                       :query "maildir:/Ionos/Spam"
-                       :key ?s))
+  (add-to-list
+   'mu4e-bookmarks
+   '(:name "Reading list"
+           :query "tag:reading-list and (flag:unread or date:today) and not (flag:trashed or maildir:/Ionos/Trash or maildir:/Ionos/Spam)"
+           :key ?l
+           :favorite t))
+  (add-to-list
+   'mu4e-bookmarks
+   '(:name "Today's messages"
+           :query "date:today..now and not (flag:trashed or maildir:/Ionos/Trash or maildir:/Ionos/Spam)"
+           :key ?t))
+  (add-to-list
+   'mu4e-bookmarks
+   '(:name "Last 7 days"
+           :query "date:7d..now and not (flag:trashed or maildir:/Ionos/Trash or maildir:/Ionos/Spam)"
+           :key ?w))
+  (add-to-list
+   'mu4e-bookmarks
+   '(:name "Spam"
+           :query "maildir:/Ionos/Spam"
+           :key ?s))
   (setq mu4e-bookmarks (reverse mu4e-bookmarks))
   (add-to-list 'mu4e-marks
                '(tag
