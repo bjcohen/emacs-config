@@ -40,3 +40,4 @@ elpy/
 .emacs.desktop.lock
 tramp
 opam-user-setup.el
+/tree-sitter
