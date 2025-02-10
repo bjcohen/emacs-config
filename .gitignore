@@ -38,3 +38,5 @@ elpy/
 /history
 .emacs.desktop
 .emacs.desktop.lock
+tramp
+opam-user-setup.el
