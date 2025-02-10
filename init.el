@@ -226,21 +226,24 @@ This function is intended for `flyspell-incorrect-hook'."
 
 (use-package python
   :config
-  ;; Remove guess indent python message
-  (setq python-indent-guess-indent-offset-verbose nil))
+  (setq python-indent-guess-indent-offset-verbose nil)
+  :hook
+  (python-mode-hook . font-lock-mode))
+
+(use-package pet
+  :config
+  (add-hook 'python-base-mode-hook 'pet-mode -10))
 
 (use-package blacken
+  :after python
   :custom
-  (blacken-skip-string-normalization t)
+  (blacken-skip-string-normalization nil)
   :hook python-mode)
 
-(use-package tree-sitter
-  :hook
-  (tree-sitter-after-on . tree-sitter-hl-mode)
+(use-package treesit-langs
+  :straight (treesit-langs :type git :host github :repo "emacs-tree-sitter/treesit-langs")
   :config
-  (global-tree-sitter-mode))
-
-(use-package tree-sitter-langs)
+  (treesit-langs-major-mode-setup))
 
 (use-package ess)
 
@@ -283,13 +286,6 @@ This function is intended for `flyspell-incorrect-hook'."
       (when (and eslint (file-executable-p eslint))
         (setq-local flycheck-javascript-eslint-executable eslint))))
   (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
-  (defun my-get-venv-path (&optional path)
-    "Get the virtualenv path starting at PATH if it exists."
-    (cond ((or (string= path "/") (eq (buffer-file-name) nil)) nil)
-          ((eq path nil) (my-get-venv-path (buffer-file-name)))
-          ((file-directory-p (concat path "venv")) (concat path "venv"))
-          ((file-exists-p path) (my-get-venv-path (file-name-directory (directory-file-name path))))
-          (t "default")))
   (declare-function python-shell-calculate-exec-path "python")
   (defun flycheck-virtualenv-executable-find (executable)
     "Find an EXECUTABLE in the current virtualenv if any."
@@ -300,7 +296,6 @@ This function is intended for `flyspell-incorrect-hook'."
   (defun flycheck-virtualenv-setup ()
     "Setup Flycheck for the current virtualenv."
     (progn
-      (setq-local python-shell-virtualenv-path (my-get-venv-path))
       (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find)))
   (add-hook 'flycheck-mode-hook #'flycheck-virtualenv-setup))
 
@@ -310,9 +305,35 @@ This function is intended for `flyspell-incorrect-hook'."
 
 (use-package flycheck-rust)
 
-(use-package flycheck-pycheckers
-  :hook
-  ((flycheck-mode . flycheck-pycheckers-setup)))
+(flycheck-define-checker python-ruff
+  "A Python syntax and style checker using the ruff utility.
+To override the path to the ruff executable, set
+`flycheck-python-ruff-executable'.
+See URL `http://pypi.python.org/pypi/ruff'."
+  :command ("ruff"
+            "check"
+            "--output-format=concise"
+            (eval (when buffer-file-name
+                    (concat "--stdin-filename=" buffer-file-name)))
+            "-")
+  :standard-input t
+  :error-filter (lambda (errors)
+                  (let ((errors (flycheck-sanitize-errors errors)))
+                    (seq-map #'flycheck-flake8-fix-error-level errors)))
+  :error-patterns
+  ((warning line-start
+            (file-name) ":" line ":" (optional column ":") " "
+            (id (one-or-more (any alpha)) (one-or-more digit)) " "
+            (optional "[*]" " ")
+            (message (one-or-more not-newline))
+            line-end))
+  :modes python-mode)
+
+(add-hook 'python-mode-hook
+          (lambda ()
+            (when (buffer-file-name)
+              (setq-local flycheck-checkers '(python-ruff))
+              (flycheck-mode 1))))
 
 (use-package tox)
 
@@ -343,10 +364,10 @@ This function is intended for `flyspell-incorrect-hook'."
    (prog-mode . eglot-ensure))
   :config
   (add-to-list 'eglot-server-programs
-               `(python-mode
-                 . ,(eglot-alternatives '(("pyright-langserver" "--stdio")))))
+               '(rustic-mode "rustup" "run" "stable" "rust-analyzer"))
   (add-to-list 'eglot-server-programs
-               '(rustic-mode "rustup" "run" "stable" "rust-analyzer")))
+               '((python-mode python-ts-mode)
+                 "uv" "run" "basedpyright-langserver" "--stdio")))
 
 (use-package consult-eglot)
 
@@ -1024,6 +1045,14 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
    ("C-4" . (lambda () (interactive) (tab-select 4)))
    ("C-5" . (lambda () (interactive) (tab-select 5)))
    ("C-9" . (lambda () (interactive) (tab-select -1)))))
+
+(use-package devicetree-ts-mode
+  :init
+  (with-eval-after-load 'treesit
+    (add-to-list 'treesit-language-source-alist
+                 '(devicetree "https://github.com/joelspadin/tree-sitter-devicetree")))
+  (treesit-install-language-grammar 'devicetree)
+  (add-hook 'devicetree-ts-mode-hook (lambda () (setq-local whitespace-line-column 200))))
 (condition-case err
     (el-patch-validate-all)
   (user-error (if (string= "No patches defined" (cadr err))
