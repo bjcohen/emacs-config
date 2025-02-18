@@ -368,7 +368,7 @@ See URL `http://pypi.python.org/pypi/ruff'."
   (:map eglot-mode-map
         ("C-<return>" . eglot-code-actions))
   :hook
-  ((eglot--managed-mode . (lambda () (flymake-mode -1)))
+  ((eglot-managed-mode . (lambda () (flymake-mode -1)))
    (prog-mode . eglot-ensure))
   :config
   (add-to-list 'eglot-server-programs
@@ -391,6 +391,7 @@ See URL `http://pypi.python.org/pypi/ruff'."
 (use-package treemacs-evil)
 
 (use-package all-the-icons
+  :if (display-graphic-p)
   :config
   (all-the-icons-install-fonts t))
 
@@ -798,7 +799,13 @@ Pass SHOW-BUFFER-FN on."
   :init
 
   ;; Optionally replace the key help with a completing-read interface
-  (setq prefix-help-command #'embark-prefix-help-command)
+  (setq prefix-help-command #'embark-prefix-help-command
+        embark-prompter #'embark-completing-read-prompter
+        embark-indicators '(embark--vertico-indicator
+                            ;; embark-mixed-indicator
+                            embark-highlight-indicator
+                            embark-isearch-highlight-indicator)
+        embark-help-key "?")
 
   :config
 
@@ -840,7 +847,10 @@ Pass SHOW-BUFFER-FN on."
   (autoload 'projectile-project-root "projectile")
   (setq consult-project-function (lambda (_) (projectile-project-root))))
 
-(use-package embark-consult)
+(use-package embark-consult
+  :ensure t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package emacs
   :hook
@@ -886,11 +896,15 @@ Pass SHOW-BUFFER-FN on."
       (setq-local corfu-auto t)
       (corfu-mode 1)))
   (defun corfu-move-to-minibuffer ()
-    (interactive)
-    (let ((completion-extra-properties corfu--extra)
-          completion-cycle-threshold completion-cycling)
-      (apply #'consult-completion-in-region completion-in-region--data)))
-  (define-key corfu-map "\M-m" #'corfu-move-to-minibuffer)
+  (interactive)
+  (pcase completion-in-region--data
+    (`(,beg ,end ,table ,pred ,extras)
+     (let ((completion-extra-properties extras)
+           completion-cycle-threshold completion-cycling)
+       (consult-completion-in-region beg end table pred)))))
+  (keymap-set corfu-map "M-m" #'corfu-move-to-minibuffer)
+  (add-to-list 'corfu-continue-commands #'corfu-move-to-minibuffer)
+  (setq corfu-popupinfo-delay '(0.5 . 0))
   :hook
   (minibuffer-setup . corfu-enable-in-minibuffer)
   :custom
