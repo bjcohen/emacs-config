@@ -307,10 +307,6 @@ This function is intended for `flyspell-incorrect-hook'."
       (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find)))
   (add-hook 'flycheck-mode-hook #'flycheck-virtualenv-setup))
 
-(use-package flycheck-inline
-  :hook
-  (flycheck-mode . flycheck-inline-mode))
-
 (use-package flycheck-rust)
 
 (flycheck-define-checker python-ruff
@@ -335,12 +331,28 @@ See URL `http://pypi.python.org/pypi/ruff'."
             (optional "[*]" " ")
             (message (one-or-more not-newline))
             line-end))
-  :modes python-mode)
+  :modes (python-mode python-ts-mode))
+
+(flycheck-def-args-var flycheck-python-mypy-args python-mypy)
+
+(flycheck-define-checker python-mypy
+  "Python mypy checker."
+  :command ("mypy"
+            (eval flycheck-python-mypy-args)
+            source-original)
+  :working-directory nil
+  :error-patterns
+  ((error line-start (file-name) ":" line ":" (optional column) " error:" (message) line-end)
+   (warning line-start (file-name) ":" line ":" (optional column) " note:" (message) line-end)
+   (info line-start (file-name) ":" line ":" (optional column) " note:" (message) line-end))
+  :modes (python-mode python-ts-mode))
+
+(flycheck-add-next-checker 'python-ruff '(warning . python-mypy))
 
 (add-hook 'python-mode-hook
           (lambda ()
             (when (buffer-file-name)
-              (setq-local flycheck-checkers '(python-ruff))
+              (setq-local flycheck-checker 'python-ruff)
               (flycheck-mode 1))))
 
 (use-package tox)

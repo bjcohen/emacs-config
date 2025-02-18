@@ -42,7 +42,6 @@
  ("exec-path-from-shell" . "4896a797252fbfdac32fb77508500ac7d220f717")
  ("f.el" . "931b6d0667fe03e7bf1c6c282d6d8d7006143c52")
  ("flycheck" . "af1e8ca7257298dd6c51ed4424c09283b4fedb7a")
- ("flycheck-inline" . "0fece8283ceb7cb941f506b9f1e3f416a1c5aeda")
  ("flycheck-rust" . "d499471ec433a62898a95ce76561964e3d015ce5")
  ("forge" . "33b074f6fbfea3e990a20c144dc33955bacba518")
  ("gh.el" . "b5a8d8209340d49ad82dab22d23dae0434499fdf")
