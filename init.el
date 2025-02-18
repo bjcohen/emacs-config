@@ -523,7 +523,11 @@ See URL `http://pypi.python.org/pypi/ruff'."
     (bc/get-bw-token)
     (setq mu4e-get-mail-command (concat "BW_SESSION=" bc/bw-token " offlineimap")))
 
-  (add-hook 'mu4e-update-pre-hook #'bc/get-bw-token-and-set-mu4e-update-command))
+  (add-hook 'mu4e-update-pre-hook #'bc/get-bw-token-and-set-mu4e-update-command)
+
+  :bind
+  (:map mu4e-headers-mode-map
+        ("C-c n t" . org-roam-dailies-goto-today)))
 
 (setq slug-trim-chars
       '(;; Combining Diacritical Marks https://www.unicode.org/charts/PDF/U0300.pdf
@@ -786,7 +790,7 @@ Pass SHOW-BUFFER-FN on."
 
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion))
+        completion-category-overrides '((file (styles +orderless-with-initialism))
                                         (command (styles +orderless-with-initialism))
                                         (variable (styles +orderless-with-initialism))
                                         (symbol (styles +orderless-with-initialism)))
@@ -794,6 +798,8 @@ Pass SHOW-BUFFER-FN on."
         orderless-style-dispatchers '(+orderless-dispatch)))
 
 (use-package marginalia
+  :bind (:map minibuffer-local-map
+              ("M-A" . marginalia-cycle))
   :config
   (marginalia-mode))
 
