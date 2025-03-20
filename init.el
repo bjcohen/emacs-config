@@ -119,8 +119,7 @@ This function is intended for `flyspell-incorrect-hook'."
 
 (use-package emacsql)
 
-(use-package forge
-  :after (magit emacsql))
+(use-package forge)
 
 (use-package elec-pair
   :straight (:type built-in)
@@ -280,6 +279,8 @@ This function is intended for `flyspell-incorrect-hook'."
 ;; flycheck
 (use-package flycheck
   :diminish flycheck-mode
+  :bind
+  (("M-g f" . consult-flycheck))
   :config
   (global-flycheck-mode)
 
@@ -1107,7 +1108,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     (add-to-list 'treesit-language-source-alist
                  '(devicetree "https://github.com/joelspadin/tree-sitter-devicetree")))
   (treesit-install-language-grammar 'devicetree)
-  (add-hook 'devicetree-ts-mode-hook (lambda () (setq-local whitespace-line-column 200))))
+  (add-hook 'devicetree-ts-mode-hook (lambda () (setq-local whitespace-line-column 200)))
+  :mode (("\\.overlay\\'" . devicetree-ts-mode)
+          ("\\.keymap\\'" . devicetree-ts-mode)))
 
 (use-package tuareg
   :config
